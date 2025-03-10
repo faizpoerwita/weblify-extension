@@ -10,40 +10,33 @@ const Popup = () => {
   const theme = useStorage(exampleThemeStorage);
 
   return (
-    <div
-      className="App"
-      style={{
-        backgroundColor: theme === "light" ? "#fff" : "#000",
-      }}
-    >
-      <header
-        className="App-header"
-        style={{ color: theme === "light" ? "#000" : "#fff" }}
-      >
+    <div className="App" style={{
+      backgroundColor: theme === "light" ? "#fff" : "#282c34",
+    }}>
+      <header className="App-header" style={{ 
+        color: theme === "light" ? "#333" : "#fff",
+      }}>
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/pages/popup/Popup.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            color: theme === "light" ? "#0281dc" : undefined,
-            marginBottom: "10px",
-          }}
-        >
-          Learn React!
-        </a>
+        
+        <div className="App-title">
+          <span className="App-title-emoji">🌐</span>
+          <span className="App-title-text">weblify.id</span>
+        </div>
+        
+        <div className="App-tagline" style={{ 
+          color: theme === "light" ? "#666" : "#ccc",
+        }}>
+          From Browsing to Automation
+        </div>
+        
         <button
+          className="App-button"
           style={{
-            backgroundColor: theme === "light" ? "#fff" : "#000",
-            color: theme === "light" ? "#000" : "#fff",
+            backgroundColor: theme === "light" ? "#4285f4" : "#34a853",
           }}
           onClick={exampleThemeStorage.toggle}
         >
-          Toggle theme
+          {theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
         </button>
       </header>
     </div>

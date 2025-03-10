@@ -6,7 +6,7 @@ import packageJson from "./package.json" with { type: "json" };
  */
 const manifest = {
   manifest_version: 3,
-  name: "Fuji",
+  name: "weblify.id - From Browsing to Automation",
   version: packageJson.version,
   description: packageJson.description,
   permissions: [
@@ -29,8 +29,8 @@ const manifest = {
     type: "module",
   },
   action: {
-    // default_popup: 'src/pages/popup/index.html',
-    default_title: "Click to open side panel",
+    default_popup: 'src/pages/popup/index.html',
+    default_title: "Open weblify.id Assistant",
     default_icon: "icon-128.png",
   },
   icons: {

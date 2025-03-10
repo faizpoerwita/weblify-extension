@@ -16,9 +16,7 @@ import TaskUI from "./TaskUI";
 import Settings from "./Settings";
 
 const App = () => {
-  const hasAPIKey = useAppState(
-    (state) => state.settings.anthropicKey || state.settings.openAIKey,
-  );
+  const hasAPIKey = useAppState((state) => state.settings.geminiKey);
   const [inSettingsView, setInSettingsView] = useState(false);
 
   return (
@@ -26,7 +24,7 @@ const App = () => {
       <Box p="8" pb="24" fontSize="lg" w="full">
         <HStack mb={4} alignItems="center">
           <Heading as="h1" size="lg" flex={1}>
-            Fuji 🗻
+            weblify.id
           </Heading>
           {hasAPIKey && (
             <IconButton
@@ -51,36 +49,29 @@ const App = () => {
         pos="fixed"
         w="100%"
         bottom={0}
-        zIndex={2}
-        as="footer"
-        backdropFilter="auto"
-        backdropBlur="6px"
-        backgroundColor="rgba(255, 255, 255, 0.6)"
+        py={4}
+        borderTop="1px"
+        borderColor="gray.200"
+        bg="white"
       >
-        <HStack
-          columnGap="1.5rem"
-          rowGap="0.5rem"
-          fontSize="md"
-          borderTop="1px dashed gray"
-          py="3"
-          justify="center"
-          shouldWrapChildren
-          wrap="wrap"
-        >
+        <HStack justify="center" spacing={4}>
           <Link
-            href="https://github.com/normal-computing/fuji-web#readme"
+            href="https://github.com/normal-computing/fuji-web"
             isExternal
+            display="flex"
+            alignItems="center"
           >
-            About this project
+            <Icon as={FaGithub} mr={2} />
+            GitHub
           </Link>
-          <Link href="https://forms.gle/isLeGyUvoKGiqT8W8" isExternal>
-            Leave Feedback
-          </Link>
-          <Link href="https://github.com/normal-computing/fuji-web" isExternal>
-            GitHub <Icon verticalAlign="text-bottom" as={FaGithub} />
-          </Link>
-          <Link href="https://discord.gg/yfMjZ8udb5" isExternal>
-            Join Our Discord <Icon verticalAlign="text-bottom" as={FaDiscord} />
+          <Link
+            href="https://discord.gg/NxCe2CXXGU"
+            isExternal
+            display="flex"
+            alignItems="center"
+          >
+            <Icon as={FaDiscord} mr={2} />
+            Join Our Discord
           </Link>
         </HStack>
       </Box>

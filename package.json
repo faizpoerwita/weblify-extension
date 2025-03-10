@@ -1,7 +1,7 @@
 {
-  "name": "fuji-web",
+  "name": "weblify.id",
   "version": "2.2.0",
-  "description": "A tool that redefines web interaction, making complex online tasks as simple as uttering a single command.",
+  "description": "From Browsing to Automation - Web automation assistant powered by AI",
   "repository": {
     "type": "git",
     "url": "https://github.com/normal-computing/fuji-web"
@@ -26,6 +26,7 @@
   "type": "module",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.19.1",
+    "@chakra-ui/form-control": "2.2.0",
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.4",

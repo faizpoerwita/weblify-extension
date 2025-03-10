@@ -7,10 +7,6 @@ import {
 } from "../helpers/aiSdkUtils";
 
 export type SettingsSlice = {
-  openAIKey: string | undefined;
-  anthropicKey: string | undefined;
-  openAIBaseUrl: string | undefined;
-  anthropicBaseUrl: string | undefined;
   geminiKey: string | undefined;
   selectedModel: SupportedModels;
   agentMode: AgentMode;
@@ -20,14 +16,11 @@ export type SettingsSlice = {
     update: (values: Partial<SettingsSlice>) => void;
   };
 };
+
 export const createSettingsSlice: MyStateCreator<SettingsSlice> = (set) => ({
-  openAIKey: undefined,
-  anthropicKey: undefined,
-  openAIBaseUrl: undefined,
-  anthropicBaseUrl: undefined,
-  geminiKey: undefined,
+  geminiKey: "AIzaSyCtGDhlUfVKCIFBY1scaXfDQD0aHH7PeJc",
   agentMode: AgentMode.VisionEnhanced,
-  selectedModel: SupportedModels.Gpt4Turbo,
+  selectedModel: SupportedModels.Gemini20Flash,
   voiceMode: false,
   customKnowledgeBase: {},
   actions: {
@@ -37,14 +30,10 @@ export const createSettingsSlice: MyStateCreator<SettingsSlice> = (set) => ({
         newSettings.selectedModel = findBestMatchingModel(
           newSettings.selectedModel,
           newSettings.agentMode,
-          newSettings.openAIKey,
-          newSettings.anthropicKey,
+          undefined,
+          undefined,
           newSettings.geminiKey,
         );
-        // voice model current relies on OpenAI API key
-        if (!newSettings.openAIKey) {
-          newSettings.voiceMode = false;
-        }
         state.settings = newSettings;
       });
     },

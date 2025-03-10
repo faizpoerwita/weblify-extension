@@ -38,11 +38,7 @@ export const useAppState = create<StoreType>()(
           instructions: state.ui.instructions,
         },
         settings: {
-          openAIKey: state.settings.openAIKey,
-          anthropicKey: state.settings.anthropicKey,
           geminiKey: state.settings.geminiKey,
-          openAIBaseUrl: state.settings.openAIBaseUrl,
-          anthropicBaseUrl: state.settings.anthropicBaseUrl,
           agentMode: state.settings.agentMode,
           selectedModel: state.settings.selectedModel,
           voiceMode: state.settings.voiceMode,
@@ -51,13 +47,15 @@ export const useAppState = create<StoreType>()(
       }),
       merge: (persistedState, currentState) => {
         const result = merge(currentState, persistedState);
-        result.settings.selectedModel = findBestMatchingModel(
-          result.settings.selectedModel,
-          result.settings.agentMode,
-          result.settings.openAIKey,
-          result.settings.anthropicKey,
-          result.settings.geminiKey,
-        );
+        if (result.settings) {
+          result.settings.selectedModel = findBestMatchingModel(
+            result.settings.selectedModel,
+            result.settings.agentMode,
+            undefined,
+            undefined,
+            result.settings.geminiKey,
+          );
+        }
         return result;
       },
     },

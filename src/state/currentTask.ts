@@ -40,10 +40,19 @@ export type CurrentTaskSlice = {
   tabId: number;
   isListening: boolean;
   history: TaskHistoryEntry[];
-  status: "idle" | "running" | "success" | "error" | "interrupted";
+  status: "idle" | "running" | "paused" | "success" | "error" | "interrupted";
+  executionState: {
+    isPaused: boolean;
+    savedContext?: {
+      step: number;
+      lastAction: any;
+      timestamp: number;
+    }
+  };
   knowledgeInUse: Knowledge | null;
   actionStatus:
     | "idle"
+    | "paused"
     | "attaching-debugger"
     | "pulling-dom"
     | "annotating-page"
@@ -54,6 +63,8 @@ export type CurrentTaskSlice = {
   actions: {
     runTask: (onError: (error: string) => void) => Promise<void>;
     interrupt: () => void;
+    pauseTask: (context?: any) => void;
+    resumeTask: () => void;
     attachDebugger: () => Promise<void>;
     detachDebugger: () => Promise<void>;
     showImagePrompt: () => Promise<void>;
@@ -71,6 +82,10 @@ export const createCurrentTaskSlice: MyStateCreator<CurrentTaskSlice> = (
   isListening: false,
   history: [],
   status: "idle",
+  executionState: {
+    isPaused: false,
+    savedContext: undefined
+  },
   actionStatus: "idle",
   knowledgeInUse: null,
   actions: {
@@ -94,7 +109,15 @@ export const createCurrentTaskSlice: MyStateCreator<CurrentTaskSlice> = (
 
       const agentMode = get().settings.agentMode;
 
-      const wasStopped = () => get().currentTask.status !== "running";
+      const wasStopped = () => {
+        const status = get().currentTask.status;
+        return status !== "running";
+      };
+
+      const isPaused = () => {
+        return get().currentTask.status === "paused";
+      };
+
       const setActionStatus = (status: CurrentTaskSlice["actionStatus"]) => {
         set((state) => {
           state.currentTask.actionStatus = status;
@@ -119,7 +142,26 @@ export const createCurrentTaskSlice: MyStateCreator<CurrentTaskSlice> = (
 
         // eslint-disable-next-line no-constant-condition
         while (true) {
-          if (wasStopped()) break;
+          if (wasStopped()) {
+            if (isPaused()) {
+              await new Promise(resolve => {
+                const checkStatus = () => {
+                  if (get().currentTask.status !== "paused") {
+                    resolve(true);
+                  } else {
+                    setTimeout(checkStatus, 500);
+                  }
+                };
+                checkStatus();
+              });
+              
+              if (wasStopped()) break;
+              
+              continue;
+            }
+            
+            break;
+          }
 
           // always get latest tab info, since actions such as button clicking might have changed it
           let activeTab = await findActiveTab();
@@ -299,6 +341,50 @@ export const createCurrentTaskSlice: MyStateCreator<CurrentTaskSlice> = (
       set((state) => {
         state.currentTask.status = "interrupted";
       });
+    },
+    pauseTask: (context) => {
+      const currentStatus = get().currentTask.status;
+      
+      if (currentStatus === "running") {
+        set((state) => {
+          state.currentTask.status = "paused";
+          state.currentTask.actionStatus = "paused";
+          state.currentTask.executionState = {
+            isPaused: true,
+            savedContext: context || {
+              step: state.currentTask.history.length,
+              lastAction: state.currentTask.history[state.currentTask.history.length - 1]?.action,
+              timestamp: Date.now()
+            }
+          };
+        });
+        
+        console.log("Task paused with context:", context);
+      }
+    },
+    resumeTask: () => {
+      const currentStatus = get().currentTask.status;
+      
+      if (currentStatus === "paused") {
+        set((state) => {
+          state.currentTask.status = "running";
+          state.currentTask.executionState.isPaused = false;
+          
+          const lastStatus = state.currentTask.actionStatus === "paused" 
+            ? "waiting"
+            : state.currentTask.actionStatus;
+            
+          state.currentTask.actionStatus = lastStatus;
+        });
+        
+        console.log("Task resumed with context:", get().currentTask.executionState.savedContext);
+        
+        const savedContext = get().currentTask.executionState.savedContext;
+        if (savedContext) {
+          // Di sini kita bisa menambahkan logika untuk melanjutkan dari context tertentu
+          // Misalnya dengan memanggil fungsi runTask khusus
+        }
+      }
     },
     // for debugging
     attachDebugger: async () => {

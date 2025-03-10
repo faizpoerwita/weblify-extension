@@ -8,14 +8,12 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
-  Switch,
   Button,
   VStack,
   Box,
   StackDivider,
   Flex,
   Spacer,
-  useToast,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -24,10 +22,8 @@ import { ArrowBackIcon, EditIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { useAppState } from "../state/store";
 import ModelDropdown from "./settings/ModelDropdown";
 import AgentModeDropdown from "./settings/AgentModeDropdown";
-import { callRPC } from "../helpers/rpc/pageRPC";
 import CustomKnowledgeBase from "./CustomKnowledgeBase";
 import SetAPIKey from "./settings/SetAPIKey";
-import { debugMode } from "../constants";
 import { isValidModelSettings } from "../helpers/aiSdkUtils";
 
 type SettingsProps = {
@@ -35,61 +31,19 @@ type SettingsProps = {
 };
 
 const Settings = ({ setInSettingsView }: SettingsProps) => {
-  const [view, setView] = useState<"settings" | "knowledge" | "api">(
-    "settings",
-  );
+  const [view, setView] = useState<"settings" | "knowledge" | "api">("settings");
   const state = useAppState((state) => ({
     updateSettings: state.settings.actions.update,
     selectedModel: state.settings.selectedModel,
     agentMode: state.settings.agentMode,
-    voiceMode: state.settings.voiceMode,
-    openAIKey: state.settings.openAIKey,
-    anthropicKey: state.settings.anthropicKey,
     geminiKey: state.settings.geminiKey,
   }));
-  const toast = useToast();
 
-  if (!state.openAIKey && !state.anthropicKey) return null;
+  if (!state.geminiKey) return null;
 
   const closeSetting = () => setInSettingsView(false);
   const openCKB = () => setView("knowledge");
   const backToSettings = () => setView("settings");
-
-  async function checkMicrophonePermission(): Promise<PermissionState> {
-    if (!navigator.permissions) {
-      return "prompt";
-    }
-    try {
-      const permission = await navigator.permissions.query({
-        name: "microphone" as PermissionName,
-      });
-      return permission.state;
-    } catch (error) {
-      console.error("Error checking microphone permission:", error);
-      return "denied";
-    }
-  }
-
-  const handleVoiceMode = async (isEnabled: boolean) => {
-    if (isEnabled) {
-      const permissionState = await checkMicrophonePermission();
-      if (permissionState === "denied") {
-        toast({
-          title: "Error",
-          description:
-            "Microphone access was previously blocked. Please enable it in your browser settings.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-        return;
-      } else if (permissionState === "prompt") {
-        callRPC("injectMicrophonePermissionIframe", []).catch(console.error);
-      } else if (permissionState === "granted") {
-        console.log("Microphone permission granted");
-      }
-    }
-  };
 
   return (
     <>
@@ -124,8 +78,7 @@ const Settings = ({ setInSettingsView }: SettingsProps) => {
       {view === "api" && (
         <SetAPIKey
           asInitializerView={false}
-          initialAnthropicKey={state.anthropicKey}
-          initialOpenAIKey={state.openAIKey}
+          initialGeminiKey={state.geminiKey}
           onClose={backToSettings}
         />
       )}
@@ -140,7 +93,7 @@ const Settings = ({ setInSettingsView }: SettingsProps) => {
             <Box>
               <FormLabel mb="0">API Settings</FormLabel>
               <FormHelperText>
-                The API key is stored locally on your device
+                API key disimpan secara lokal di perangkat Anda
               </FormHelperText>
             </Box>
             <Spacer />
@@ -149,29 +102,15 @@ const Settings = ({ setInSettingsView }: SettingsProps) => {
             </Button>
           </Flex>
 
-          {debugMode && (
-            <Button
-              onClick={() => {
-                state.updateSettings({
-                  openAIKey: "",
-                  anthropicKey: "",
-                });
-              }}
-              colorScheme="red"
-            >
-              Clear API Keys
-            </Button>
-          )}
-
           <Flex alignItems="center">
-            <FormLabel mb="0">Select Agent Mode</FormLabel>
+            <FormLabel mb="0">Mode Agent</FormLabel>
             <Spacer />
             <Box w="50%">
               <AgentModeDropdown />
             </Box>
           </Flex>
           <Flex alignItems="center">
-            <FormLabel mb="0">Select Model</FormLabel>
+            <FormLabel mb="0">Pilih Model</FormLabel>
             <Spacer />
             <Box w="50%">
               <ModelDropdown />
@@ -181,43 +120,20 @@ const Settings = ({ setInSettingsView }: SettingsProps) => {
           {!isValidModelSettings(
             state.selectedModel,
             state.agentMode,
-            state.openAIKey,
-            state.anthropicKey,
+            undefined,
+            undefined,
             state.geminiKey,
           ) ? (
             <Alert status="error">
               <AlertIcon />
               <AlertDescription>
-                The current model settings are not valid. <br />
-                Please verify your API keys, and note that some models are not
-                compatible with certain agent modes.
+                Pengaturan model saat ini tidak valid. <br />
+                Silakan verifikasi API key Anda, dan perhatikan bahwa beberapa model
+                mungkin tidak kompatibel dengan mode agent tertentu.
               </AlertDescription>
             </Alert>
           ) : null}
 
-          <Flex alignItems="center">
-            <FormLabel mb="0">Turn On Voice Mode</FormLabel>
-            <Spacer />
-            <Switch
-              id="voiceModeSwitch"
-              isChecked={state.voiceMode}
-              onChange={(e) => {
-                const isEnabled = e.target.checked;
-                if (isEnabled && !state.openAIKey) {
-                  toast({
-                    title: "Error",
-                    description: "Voice Mode requires an OpenAI API key.",
-                    status: "error",
-                    duration: 5000,
-                    isClosable: true,
-                  });
-                  return;
-                }
-                handleVoiceMode(isEnabled);
-                state.updateSettings({ voiceMode: isEnabled });
-              }}
-            />
-          </Flex>
           <Flex alignItems="center">
             <FormLabel mb="0">Custom Instructions</FormLabel>
             <Spacer />

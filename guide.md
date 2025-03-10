@@ -1,0 +1,129 @@
+# Panduan Pengembangan weblify.id Extension
+
+## Current Version
+**v1.0.1.27 (02-05-2025)**
+- Simplified Task Control UI:
+  - Penghapusan tombol pause pada progress bar untuk UI yang lebih sederhana dan fokus
+  - Konsentrasi pada fungsi stop dengan satu control button yang jelas dan tegas
+  - Penyesuaian state management tanpa fitur pause/resume untuk alur task yang lebih langsung
+  - Pengalaman pengguna yang lebih streamlined dengan mengurangi kompleksitas task control
+  - Optimasi visual styling dengan mempertahankan aspek estetika card yang sudah ada
+  - Single control paradigm untuk konsistensi dan kesederhanaan
+- Pause/Resume System:
+  - Implementasi fungsi tombol pause yang terintegrasi dengan task execution engine
+  - Penyimpanan context eksekusi saat pause untuk resume yang mulus
+  - Status transitioning dengan tambahan state "paused" pada task lifecycle
+  - Integrasi UI feedback dengan state manager melalui multi-layer state sync
+  - Pemrosesan loop execution yang dioptimasi untuk pause/resume tanpa kehilangan progress
+  - Visual feedback dengan indikator status task yang diperjelas
+  - Error handling untuk edge case saat pause/resume
+- Rich Gradient Frosted Glass Card:
+  - Direct card background gradient dengan backdropFilter blur(30px) untuk efek frosted yang merata
+  - Deep radial gradient dengan opacity 0.25-0.3 untuk warna lebih terlihat dan mendalam
+  - Frosted overlay dengan linear gradient dan border subtle untuk efek lapisan es
+  - Animasi frost-pulse yang membuat frosted effect bergerak dan berubah intensitas
+  - Box shadow yang lebih dramatis (0 15px 35px rgba) untuk kedalaman visual
+  - Lapisan gradien warna dengan variasi intensitas dan animasi pulse-bg
+  - Card animation dengan efek blur yang lebih halus dan natural
+- Crystal Frosted Glass Material Progress Bar:
+  - Ultra-extreme frosted glass dengan backdrop-filter blur(75px), saturate(160%), contrast(85%) dan brightness(105%)
+  - Multi-layer crystalline effect dengan tekstur es yang sangat realistis
+  - Crystalline texture layer dengan noise pattern SVG untuk tekstur kristal es yang autentik
+  - Spektrum cahaya dengan prism effect pada border menggunakan gradient animasi
+  - Crystal highlight points dengan cahaya berkilau pada permukaan kristal es
+  - Gradient dengan opasitas super rendah (0.04-0.14) untuk transparansi ekstrem
+  - Implementasi animasi crystal-shimmer untuk kesan kristal es yang bergerak
+- Extreme Frosted Glass Material Progress Bar:
+  - Ultra-blurry frosted glass dengan backdrop-filter blur(60px) dan saturate(140%) untuk kesan deep frost
+  - Multi-layer frosting dengan kombinasi blur pada beberapa lapisan (60px primary, 25px radial, 15px top layer)
+  - Penurunan drastis opasitas gradient background (0.05-0.2) untuk transparansi maksimal
+  - Penggunaan contrast(90%) pada backdrop-filter untuk efek frost yang lebih autentik
+  - Detail noise pattern dengan contrast ditingkatkan dan blur subtle untuk tekstur es
+  - Color manipulation dengan efek brightness dan contrast pada lapisan teratas
+- Advanced Glass Material Progress Bar:
+  - Neo-morphism effect untuk kesan premium dan tiga dimensi
+  - Surface texture glass dengan teknik noise pattern untuk kesan realistis
+  - Frosted glass effect dengan saturasi yang ditingkatkan untuk tampilan high-end
+  - Dynamic light reflection yang bergerak natural di permukaan glass
+  - Natural shimmer dengan gerakan diagonal dan transformasi lebih kompleks
+  - Multi-tone gradient dan radial highlight dengan teknik blending mode
+- Perbaikan Inner Glow Progress Bar:
+  - Implementasi inner glow yang jelas terlihat dengan box-shadow inset langsung
+  - Penerapan nilai opacity dan intensitas yang lebih tinggi untuk visibility maksimal
+  - Penggunaan animasi pulse-glow dengan variasi box-shadow untuk efek bernapas
+  - Peningkatan efek shimmer dengan opacity 60% agar lebih terlihat
+  - Penyederhanaan struktur layer untuk performa dan kejelasan visual 
+  - Optimasi animasi radial gradient dengan transformasi skala
+
+Perubahan terbaru:
+- Perbaikan implementasi inner glow murni tanpa outer glow
+- Penggunaan teknik pseudo-element ::before dengan inset box-shadow
+- Penerapan animasi pulse-inner-glow untuk efek berkedip secara dinamis
+- Peningkatan intensitas dan ukuran glow untuk visibility yang lebih baik
+- Penambahan gradient overlay dengan efek radial untuk fokus cahaya
+- Perbaikan implementasi inner glow dengan teknik box-shadow untuk efek visual yang lebih terlihat
+- Penggunaan lapisan ganda dengan container glow dan content container
+- Penambahan animasi pulse-glow untuk efek berkedip yang lebih dinamis
+- Peningkatan kontras warna background dan opasitas untuk visibility yang lebih baik
+- Penyesuaian ukuran dan intensitas glow untuk tampilan elegan
+- Perbaikan implementasi efek inner glow dengan animasi background gradient
+- Penggunaan teknik pseudo-element _after untuk membuat efek glow di belakang card
+- Penggantian animasi rotasi dengan animasi posisi background (slide gradient)
+- Peningkatan efek blur dengan filter yang lebih lembut
+- Penyesuaian warna background sesuai status running/paused/idle
+- Perbaikan implementasi efek gradient border yang berputar di sekitar progress bar
+- Peningkatan efek visual dengan penggunaan WebkitMask dan mask composite
+- Penambahan inner glow effect dengan gradient radial untuk memberikan kedalaman
+- Optimasi kode CSS untuk kompatibilitas yang lebih baik dengan Chakra UI
+- Perbaikan warna dan intensitas gradient untuk kontras visual yang lebih baik
+- Peningkatan UI dengan implementasi gradient inner glow yang lebih canggih
+- Penerapan efek rotasi gradient conic dengan animasi 360 derajat
+- Penggunaan teknik border-image dan filter blur untuk efek glow yang lebih elegan
+- Perubahan warna gradient berdasarkan status task (running/paused/idle)
+- Penggantian visual loading bar dengan efek gradient glow dinamis di sekitar card
+- Penggunaan animasi gradient flow untuk menandakan status tugas berjalan
+- Penggunaan warna gradient yang berbeda untuk status running, paused, dan idle
+- Penyesuaian UI card dengan shadow interior untuk tampilan yang lebih elegan
+- Perbaikan fungsionalitas tombol Stop pada progress bar
+- Implementasi integrasi dengan fungsi interrupt task dari state manager
+- Penambahan notifikasi toast saat task dihentikan
+- Perbaikan UI progress bar dengan desain elegan melalui gradien warna biru-ungu
+- Penambahan indikator status dinamis yang menampilkan tindakan yang sedang dilakukan (navigate, click, dll)
+- Perbaikan tombol kontrol dengan menambahkan pencegahan event bubbling dan tooltip
+- Penyempurnaan animasi progress bar untuk memberikan visual yang lebih baik saat tugas berjalan
+- Pengaturan ulang ukuran, warna, dan kontras untuk meningkatkan keterbacaan
+- Peningkatan UI progress bar dengan tampilan fixed floating
+- Penambahan fitur auto-hide progress bar saat scrolling ke bawah
+- Peningkatan keterbacaan teks tugas dengan ukuran font lebih besar
+- Penambahan indikator status tugas (sedang diproses/dijeda)
+- Perbaikan tombol kontrol dengan tampilan lebih modern dan responsif
+- Peningkatan tampilan UI progress bar menyerupai card berwarna biru muda
+- Penambahan efek animasi pulsing pada indikator status tugas berjalan
+- Pembaruan desain tombol pause dan stop untuk UX yang lebih baik
+- Penambahan tombol close (X) pada progress bar
+- Pembaruan halaman Popup dengan judul "🌐 weblify.id"
+- Penambahan tagline "From Browsing to Automation" di halaman Popup
+- Penyesuaian tampilan UI untuk halaman Popup
+- Penyederhanaan logo menjadi hanya emoji globe (🌐) tanpa teks tambahan
+- Perubahan logo menjadi emoji globe (🌐)
+- Perubahan tagline menjadi "From Browsing to Automation"
+- Pembaruan deskripsi di package.json
+- Perbaikan nama aplikasi di manifest.js dan package.json
+- Pembaruan konfigurasi manifest untuk memastikan nama benar di chrome://extensions/
+- Perubahan branding dari "Fuji" menjadi "weblify.id" di seluruh ekstensi
+- Pembaruan teks dan referensi interface untuk mencerminkan identitas brand baru
+- Implementasi API Key default (AIzaSyCtGDhlUfVKCIFBY1scaXfDQD0aHH7PeJc)
+- Konfigurasi popup default di manifest.json
+- Penanganan otomatis API Key di SidePanel.tsx
+
+## Informasi Teknis
+- Extension ini menggunakan Google Gemini API untuk AI processing
+- UI dibangun dengan React dan Chakra UI
+- State management menggunakan Zustand
+- Default API Key: AIzaSyCtGDhlUfVKCIFBY1scaXfDQD0aHH7PeJc
+
+## Struktur Proyek Utama
+- `/src/pages/popup`: Halaman popup utama yang ditampilkan saat extension dibuka
+- `/src/pages/sidepanel`: Panel samping yang dapat dibuka dari toolbar browser
+- `/src/state`: State management dan konfigurasi
+- `/src/helpers`: Utilitas dan helper functions 
