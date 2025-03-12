@@ -1,5 +1,64 @@
 # Changelog
 
+## v1.0.1.34 (03-05-2025)
+- Peningkatan intensitas warna biru muda pada gradient background di seluruh aplikasi
+- Penyesuaian animasi gradient-flow menjadi lebih dinamis dengan 4 keyframes
+- Peningkatan visibilitas dengan mengatur backgroundSize menjadi 300% dan timing 18 detik
+- Optimasi kontras dan saturasi warna untuk mendapatkan nuansa biru muda yang lebih cerah
+- Peningkatan opacity pada animasi blob untuk efek visual yang lebih menonjol
+
+## v1.0.1.33 (03-05-2025)
+- Implementasi background gradient biru muda yang seamless di seluruh aplikasi
+- Peningkatan konsistensi UI dengan gradient yang sama di App.tsx dan TaskUI.tsx
+- Optimasi animasi gradient dengan efek flow dan float yang lebih halus
+- Standardisasi warna dan gradient melalui variabel bersama untuk semua komponen
+- Penyempurnaan animasi blob untuk memberikan kesan dinamis namun elegan
+
+## v1.0.1.32 (03-05-2025)
+- Implementasi Portal untuk TaskProgressBar menggunakan Chakra UI Portal
+- Peningkatan visibilitas dengan merender TaskProgressBar langsung ke root DOM
+- Penambahan animasi masuk (appear) untuk meningkatkan kejelasan visualnya
+- Perbaikan struktur render untuk memastikan TaskProgressBar selalu muncul di atas komponen lain
+- Mengadopsi pola desain yang sama dengan Chakra UI Toast untuk konsistensi UI
+
+## v1.0.1.31 (03-05-2025)
+- Peningkatan visibilitas TaskProgressBar dengan z-index super tinggi (100000)
+- Perbesaran ukuran TaskProgressBar dengan transform scale(1.05)
+- Penambahan maxWidth 700px untuk tampilan yang lebih lebar dan menonjol
+- Peningkatan bayangan dengan boxShadow yang lebih kuat dan melebar
+- Penyesuaian background transparan untuk tampilan yang lebih clean
+
+## v1.0.1.30 (03-05-2025)
+- Modifikasi TaskProgressBar menjadi independen dari Chat UI dan selalu terlihat di layar
+- Peningkatan posisi TaskProgressBar agar muncul sebagai notifikasi di layar
+- Penyesuaian zIndex tinggi (9999) untuk memastikan TaskProgressBar selalu di atas komponen lain
+- Optimasi responsivitas dengan width yang beradaptasi di berbagai ukuran layar
+- Perbaikan posisi dan bayangan untuk memberikan tampilan yang lebih menonjol
+
+## v1.0.1.29 (03-05-2025)
+- Modifikasi TaskProgressBar agar posisinya fixed dan selalu terlihat saat scroll
+- Peningkatan tampilan TaskProgressBar dengan efek frost glass yang lebih tebal
+- Penambahan efek visual crystal glassmorphic untuk memberikan kesan premium
+- Optimasi layout agar TaskProgressBar terlihat di tengah layar dan responsif
+- Penyederhanaan struktur visual dengan mempertahankan estetika elegan
+
+## v1.0.1.28 (03-05-2025)
+- Peningkatan UI/UX seluruh ekstensi dengan implementasi desain glassmorphic modern
+- Penambahan efek frosted glass konsisten dengan gradient biru di seluruh interface
+- Peningkatan animasi dan transisi untuk pengalaman pengguna yang lebih fluid
+- Optimasi tampilan pesan chat dengan desain bubble chat yang lebih modern
+- Penyempurnaan tampilan input chat dengan efek glassmorphic dan highlight stylish
+- Perubahan tampilan recommended tasks dengan card bergaya glassmorphic dan icon
+- Peningkatan UI interaksi hover, focus, dan active untuk feedback visual yang lebih baik
+- Implementasi background animasi dengan gradient bergerak untuk nuansa premium
+
+## v1.0.1.27 (02-05-2025)
+- Penghapusan tombol pause pada progress bar untuk meningkatkan kesederhanaan UI
+- Penyederhanaan komponen TaskProgressBar dengan fokus pada fungsi stop
+- Penyesuaian state management tanpa fitur pause/resume
+- Optimasi penanganan running tasks tanpa interupsi sementara
+- Penyederhanaan visual dengan mempertahankan styling dan UI/UX yang sudah ada 
+
 ## v1.0.1.16 (02-05-2025)
 - Perbaikan implementasi inner glow murni tanpa outer glow
 - Penggunaan teknik pseudo-element ::before dengan inset box-shadow
@@ -170,10 +229,3 @@
 - Implementasi penyimpanan context eksekusi saat pause untuk lanjutkan saat resume
 - Peningkatan visual feedback saat task di-pause
 - Optimasi loop eksekusi untuk mendukung pause/resume tanpa kehilangan state 
-
-## v1.0.1.27 (02-05-2025)
-- Penghapusan tombol pause pada progress bar untuk meningkatkan kesederhanaan UI
-- Penyederhanaan komponen TaskProgressBar dengan fokus pada fungsi stop
-- Penyesuaian state management tanpa fitur pause/resume
-- Optimasi penanganan running tasks tanpa interupsi sementara
-- Penyederhanaan visual dengan mempertahankan styling dan UI/UX yang sudah ada 

@@ -15,6 +15,7 @@ import {
   Progress,
   IconButton,
   Tooltip,
+  Portal,
 } from "@chakra-ui/react";
 import { debugMode } from "../constants";
 import { useAppState } from "../state/store";
@@ -26,6 +27,16 @@ import RecommendedTasks from "./RecommendedTasks";
 import AutosizeTextarea from "./AutosizeTextarea";
 import type { TaskHistoryEntry as ImportedTaskHistoryEntry } from "../state/currentTask";
 import { css, Global } from "@emotion/react";
+
+// Gradient dan warna yang konsisten dengan App.tsx
+const gradientColors = {
+  light: {
+    primary: "linear-gradient(165deg, rgba(224,249,255,1) 0%, rgba(179,229,252,1) 40%, rgba(144,216,249,1) 60%, rgba(99,205,247,1) 100%)",
+    secondary: "linear-gradient(135deg, rgba(214,242,255,1) 0%, rgba(191,232,253,1) 50%, rgba(166,223,251,1) 100%)",
+    accent: "radial-gradient(circle, rgba(99,179,237,0.2) 0%, transparent 70%)",
+    accentAlt: "radial-gradient(circle, rgba(66,153,225,0.2) 0%, transparent 70%)"
+  }
+};
 
 const injectContentScript = async () => {
   const [tab] = await chrome.tabs.query({ currentWindow: true, active: true });
@@ -482,71 +493,27 @@ const TaskProgressBar: React.FC<TaskProgressBarProps> = ({
     ? "rgba(144, 205, 244, 1)" // Light blue highlight
     : "rgba(160, 174, 192, 1)"; // Light gray highlight
   
+  const actionText = getActionText();
+
   return (
     <Box 
-      position="fixed" 
-      top={isScrollingDown ? "-100px" : "10px"} 
-      left="50%"
-      transform="translateX(-50%)"
-      width="320px"
-      maxWidth="90%"
-      zIndex={1000}
-      transition="all 0.5s cubic-bezier(0.4, 0, 0.2, 1)"
-      opacity="1"
-      filter="none"
-      animation="slideInFade 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards"
-      sx={{
-        "@keyframes slideInFade": {
-          "0%": {
-            opacity: "0.7",
-            transform: "translate(-50%, -20px)",
-            filter: "grayscale(30%) blur(8px)"
-          },
-          "100%": {
-            opacity: "1",
-            transform: "translate(-50%, 0)",
-            filter: "grayscale(30%) blur(0px)"
-          }
-        },
-        "@keyframes slideOutFade": {
-          "0%": {
-            opacity: "1",
-            transform: "translate(-50%, 0)",
-            filter: "grayscale(30%) blur(0px)"
-          },
-          "100%": {
-            opacity: "0",
-            transform: "translate(-50%, -20px)",
-            filter: "blur(8px)",
-            pointerEvents: "none"
-          }
-        }
-      }}
-    >
-      {/* Card Container */}
-      <Box
-        className="card-container"
+      as="section"
         position="relative"
-        borderRadius="16px"
+      borderRadius="xl"
         overflow="hidden"
-        boxShadow="0 15px 35px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.1)"
-        transform={isRunning ? "translateY(0)" : "translateY(-2px)"}
-        transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-        animation={isRunning ? "card-appear 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards" : "card-disappear 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards"}
-        _after={{
-          content: '""',
-          position: "absolute",
-          top: "-110%",
-          left: "-210%",
-          width: "300%",
-          height: "200%",
-          opacity: "0.1",
-          transform: "rotate(30deg)",
-          background: "linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%)",
-          animation: isRunning ? "card-shine 8s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95)" : "none"
-        }}
-      >
-        {/* Deep Rich Gradient Background */}
+      backgroundColor={isRunning ? "rgba(240, 249, 255, 0.8)" : "rgba(240, 240, 245, 0.8)"}
+      borderColor={isRunning ? "rgba(179, 217, 255, 0.6)" : "rgba(226, 232, 240, 0.6)"}
+      borderWidth="1px"
+      boxShadow={`0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.06), 0 0 0 1px ${isRunning ? 'rgba(66, 153, 225, 0.15)' : 'rgba(203, 213, 224, 0.15)'}`}
+      sx={{
+        backdropFilter: "blur(20px) saturate(180%)",
+        transformOrigin: "center top"
+      }}
+      transition="all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+    >
+      {/* Styling tetap mempertahankan progress bar yang ada */}
+      {/* ... existing code ... */}
+      
     <Box 
       position="absolute" 
           top="0"
@@ -582,358 +549,75 @@ const TaskProgressBar: React.FC<TaskProgressBarProps> = ({
         />
 
         {/* Frosted Overlay with Border Gradient */}
-        <Box 
-          position="absolute"
-          top="1px"
-          left="1px"
-          right="1px"
-          bottom="1px"
-          borderRadius="15px"
-          zIndex="1"
-          sx={{
-            background: isRunning 
-              ? "linear-gradient(165deg, rgba(255,255,255,0.25) 0%, rgba(230,240,255,0.07) 50%, rgba(210,230,255,0.15) 100%)" 
-              : "linear-gradient(165deg, rgba(255,255,255,0.25) 0%, rgba(240,240,250,0.07) 50%, rgba(230,230,240,0.15) 100%)",
-            boxShadow: "inset 0 1px 1px rgba(255,255,255,0.3)",
-            border: "1px solid rgba(255,255,255,0.2)",
-            backdropFilter: "blur(12px) saturate(150%)",
-            animation: isRunning ? "frost-pulse 6s infinite alternate ease-in-out" : "none",
-            "@keyframes frost-pulse": {
-              "0%": { 
-                backdropFilter: "blur(12px) saturate(150%)",
-                background: isRunning 
-                  ? "linear-gradient(165deg, rgba(255,255,255,0.25) 0%, rgba(230,240,255,0.07) 50%, rgba(210,230,255,0.15) 100%)"
-                  : "linear-gradient(165deg, rgba(255,255,255,0.25) 0%, rgba(240,240,250,0.07) 50%, rgba(230,230,240,0.15) 100%)"
-              },
-              "50%": { 
-                backdropFilter: "blur(15px) saturate(170%)",
-                background: isRunning 
-                  ? "linear-gradient(165deg, rgba(255,255,255,0.3) 0%, rgba(230,240,255,0.1) 50%, rgba(210,230,255,0.2) 100%)"
-                  : "linear-gradient(165deg, rgba(255,255,255,0.3) 0%, rgba(240,240,250,0.1) 50%, rgba(230,230,240,0.2) 100%)"
-              },
-              "100%": { 
-                backdropFilter: "blur(12px) saturate(150%)",
-                background: isRunning 
-                  ? "linear-gradient(165deg, rgba(255,255,255,0.25) 0%, rgba(230,240,255,0.07) 50%, rgba(210,230,255,0.15) 100%)"
-                  : "linear-gradient(165deg, rgba(255,255,255,0.25) 0%, rgba(240,240,250,0.07) 50%, rgba(230,230,240,0.15) 100%)"
-              }
-            }
-          }}
-        />
-
-        {/* Neo-morphic Border Effect with Gradient */}
-        <Box 
-          position="absolute"
-          top="-1px"
-          left="-1px"
-          right="-1px"
-          bottom="-1px"
-          borderRadius="17px"
-          zIndex="1"
-          sx={{
-            background: isRunning 
-              ? "linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.3) 25%, rgba(210,230,255,0.5) 50%, rgba(180,210,250,0.3) 75%, rgba(255,255,255,0.6) 100%)" 
-              : "linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.3) 25%, rgba(255,235,210,0.5) 50%, rgba(250,220,180,0.3) 75%, rgba(255,255,255,0.6) 100%)",
-            backgroundSize: "400% 400%",
-            animation: isRunning ? "border-shine-animated 12s infinite ease" : "none",
-            opacity: 0.85
-          }}
-        />
-
-        {/* Glass Effect Container with Neo-morphism */}
-        <Box 
-          position="relative"
-          borderRadius="15px"
-          padding="0"
-          overflow="hidden"
-          zIndex="2"
-          _before={{
-            content: '""',
-            position: "absolute",
-            top: "0",
-            left: "0",
-            right: "0",
-            bottom: "0",
-            borderRadius: "15px",
-            padding: "1px",
-            boxShadow: "inset 0 0 2px 0 rgba(255, 255, 255, 0.9)",
-            zIndex: 2
-          }}
-        >
-          {/* Frosted Glass Background Layer */}
           <Box
             position="absolute"
             top="0"
             left="0"
             right="0"
             bottom="0"
-            borderRadius="15px"
-            backdropFilter="blur(75px) saturate(160%) contrast(85%) brightness(105%)" 
-            zIndex="1"
-          />
-          
-          {/* Enhanced Multi-Gradient Layer */}
-          <Box
-            position="absolute"
-            top="0"
-            left="0"
-            right="0"
-            bottom="0"
-            borderRadius="15px"
-            background={isRunning 
-              ? "linear-gradient(140deg, rgba(255,255,255,0.12) 0%, rgba(210,235,255,0.08) 20%, rgba(195,225,255,0.04) 40%, rgba(200,230,255,0.07) 60%, rgba(215,240,255,0.1) 80%, rgba(225,245,255,0.14) 100%)" 
-              : "linear-gradient(140deg, rgba(255,255,255,0.12) 0%, rgba(255,240,230,0.08) 20%, rgba(255,235,225,0.04) 40%, rgba(255,230,220,0.07) 60%, rgba(255,235,225,0.1) 80%, rgba(255,245,240,0.14) 100%)"
-            }
+        zIndex="5"
+        backgroundColor="transparent"
+        borderRadius="inherit"
             sx={{
-              _after: {
+          "&:before": {
                 content: '""',
                 position: "absolute",
                 top: 0,
                 left: 0,
                 right: 0,
                 bottom: 0,
-                background: isRunning
-                  ? "radial-gradient(circle at 20% 20%, rgba(230,245,255,0.35), transparent 70%), radial-gradient(circle at 80% 30%, rgba(210,235,255,0.25), transparent 75%), radial-gradient(circle at 40% 70%, rgba(200,225,255,0.2), transparent 75%), radial-gradient(circle at 70% 80%, rgba(220,240,255,0.3), transparent 75%)"
-                  : "radial-gradient(circle at 20% 20%, rgba(255,245,240,0.35), transparent 70%), radial-gradient(circle at 80% 30%, rgba(255,235,220,0.25), transparent 75%), radial-gradient(circle at 40% 70%, rgba(255,230,215,0.2), transparent 75%), radial-gradient(circle at 70% 80%, rgba(255,240,230,0.3), transparent 75%)"
-              },
-              filter: "blur(30px)",
-              opacity: 0.65,
-              mixBlendMode: "screen"
-            }}
-            zIndex="2"
-          />
-
-          {/* Crystalline Texture Layer */}
-          <Box
-            position="absolute"
-            top="0"
-            left="0"
-            right="0"
-            bottom="0"
-            borderRadius="15px"
-            zIndex="3"
-            opacity="0.25"
-            sx={{
-              background: "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPgogIDxmaWx0ZXIgaWQ9Im5vaXNlIj4KICAgIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjA1IiBudW1PY3RhdmVzPSI1IiBzdGl0Y2hUaWxlcz0ic3RpdGNoIiAvPgogIDwvZmlsdGVyPgogIDxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNub2lzZSkiIG9wYWNpdHk9IjAuNSIvPgo8L3N2Zz4=')",
-              filter: "contrast(170%) brightness(160%)",
-              mixBlendMode: "overlay"
-            }}
-          />
-
-          {/* Advanced Inner Glow with Light Diffusion */}
-          <Box
-            position="absolute"
-            top="0"
-            left="0"
-            right="0"
-            bottom="0"
-            borderRadius="15px"
-            background={isRunning
-              ? "rgba(255, 255, 255, 0.04)"
-              : "rgba(255, 255, 255, 0.03)"
-            }
-            boxShadow={isRunning 
-              ? `inset 0 0 40px 25px rgba(255, 255, 255, 0.35), inset 0 0 80px 45px rgba(235, 245, 255, 0.12)`
-              : `inset 0 0 40px 25px rgba(255, 255, 255, 0.25)`
-            }
-            animation={isRunning ? "diffused-glow 8s infinite alternate ease-in-out" : "none"}
-            sx={{
-              "@keyframes diffused-glow": {
-                "0%": { 
-                  boxShadow: `inset 0 0 35px 20px rgba(255, 255, 255, 0.3), inset 0 0 70px 40px rgba(235, 245, 255, 0.1)`,
-                  opacity: 0.65
-                },
-                "25%": {
-                  boxShadow: `inset 0 0 45px 30px rgba(255, 255, 255, 0.4), inset 0 0 90px 55px rgba(235, 245, 255, 0.13)`,
-                  opacity: 0.8
-                },
-                "50%": {
-                  boxShadow: `inset 0 0 40px 25px rgba(255, 255, 255, 0.35), inset 0 0 85px 50px rgba(235, 245, 255, 0.12)`,
-                  opacity: 0.7
-                },
-                "75%": {
-                  boxShadow: `inset 0 0 42px 27px rgba(255, 255, 255, 0.45), inset 0 0 90px 55px rgba(235, 245, 255, 0.14)`,
-                  opacity: 0.85
-                },
-                "100%": { 
-                  boxShadow: `inset 0 0 37px 22px rgba(255, 255, 255, 0.32), inset 0 0 75px 45px rgba(235, 245, 255, 0.11)`,
-                  opacity: 0.7
-                }
-              }
-            }}
-            zIndex="4"
-          />
-          
-          {/* Dynamic Light Reflection Effect */}
-          <Box
-            position="absolute"
-            top="0"
-            left="-100%"
-            right="0"
-            bottom="0"
-            opacity={isRunning ? "0.7" : "0.4"}
-            zIndex="5"
-            sx={{
+            background: "transparent",
+            borderRadius: "inherit",
+            border: isRunning
+              ? "1px solid rgba(144, 205, 244, 0.4)"
+              : "1px solid rgba(226, 232, 240, 0.3)",
+            opacity: 0.7,
+            animation: isRunning ? "frost-pulse 4s infinite ease-in-out" : "none",
+            "@keyframes frost-pulse": {
+              "0%": { opacity: 0.6 },
+              "50%": { opacity: 0.8 },
+              "100%": { opacity: 0.6 }
+            },
+          },
+          "&:after": {
+            content: '""',
+            position: "absolute",
+            inset: "-1px",
+            borderRadius: "inherit",
+            padding: "1px",
               background: isRunning
-                ? "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 20%, rgba(255,255,255,0.2) 40%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.2) 60%, rgba(255,255,255,0) 80%, transparent 100%)"
-                : "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 25%, rgba(255,255,255,0.1) 45%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 55%, rgba(255,255,255,0) 75%, transparent 100%)",
-              transform: "skewX(-15deg)",
-              filter: "blur(4px)",
-              animation: isRunning ? "light-sweep 10s infinite cubic-bezier(0.4, 0, 0.2, 1)" : "none"
-            }}
-          />
-          
-          {/* Enhanced Shimmer Effect with Natural Movement */}
-          <Box
-            position="absolute"
-            top="0"
-            left="-120%"
-            width="150%"
-            height="200%"
-            opacity={isRunning ? "0.6" : "0"}
-            transform="rotate(-25deg)"
-            animation={isRunning ? "natural-shimmer 8s infinite" : "none"}
-            sx={{
-              background: `
-                linear-gradient(
-                  to right,
-                  transparent 0%,
-                  rgba(255,255,255,0) 25%,
-                  rgba(255,255,255,0.5) 45%,
-                  rgba(255,255,255,0.8) 50%,
-                  rgba(255,255,255,0.5) 55%,
-                  rgba(255,255,255,0) 75%,
-                  transparent 100%
-                )
-              `,
+              ? `linear-gradient(135deg, ${primaryColor}55 0%, transparent 50%, ${secondaryColor}33 100%)`
+              : `linear-gradient(135deg, rgba(226, 232, 240, 0.4) 0%, transparent 50%, rgba(203, 213, 224, 0.2) 100%)`,
+            WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            WebkitMaskComposite: "xor",
+            maskComposite: "exclude",
+            animation: isRunning ? "natural-shimmer 6s infinite ease-in-out" : "none",
               "@keyframes natural-shimmer": {
-                "0%": { 
-                  left: "-120%", 
-                  top: "0%",
-                  opacity: 0, 
-                  filter: "blur(5px)"
-                },
-                "10%": { 
-                  opacity: 0.4, 
-                  filter: "blur(3px)"
-                },
-                "20%": { 
-                  opacity: 0.6, 
-                  filter: "blur(2px)"
-                },
-                "30%": { 
-                  opacity: 0.4, 
-                  filter: "blur(3px)"
-                },
-                "40%": { 
-                  opacity: 0.2, 
-                  filter: "blur(4px)"
-                },
-                "100%": { 
-                  left: "60%", 
-                  top: "100%",
-                  opacity: 0, 
-                  filter: "blur(5px)"
-                }
-              }
-            }}
-            zIndex="6"
-          />
+              "0%": { opacity: 0.8, transform: "translateX(0) translateY(0)" },
+              "33%": { opacity: 0.9, transform: "translateX(1%) translateY(-1%)" },
+              "67%": { opacity: 0.8, transform: "translateX(-1%) translateY(1%)" },
+              "100%": { opacity: 0.8, transform: "translateX(0) translateY(0)" }
+            }
+          }
+        }}
+      />
 
-          {/* Surface Texture for Realistic Glass */}
+      {/* Crystal effect overlay */}
           <Box
             position="absolute"
-            top="0"
-            left="0"
-            right="0"
-            bottom="0"
-            opacity="0.18"
-            zIndex="6"
+        inset="0"
+        zIndex="1"
+        background={`linear-gradient(130deg, transparent 0%, ${isRunning ? "rgba(255, 255, 255, 0.13)" : "rgba(255, 255, 255, 0.09)"} 40%, transparent 100%)`}
             sx={{
-              backgroundImage: "url('data:image/png;base64,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')",
-              mixBlendMode: "overlay",
-              filter: "blur(1px) contrast(160%) brightness(130%)",
-              backgroundSize: "200px 200px",
-              backgroundRepeat: "repeat",
-              backgroundPosition: "center center"
-            }}
-          />
-          
-          {/* Extra Frost Layer */}
-          <Box
-            position="absolute"
-            top="0"
-            left="0"
-            right="0"
-            bottom="0"
-            borderRadius="15px"
-            background="linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06), rgba(255,255,255,0.02), rgba(255,255,255,0.08))"
-            zIndex="7"
-            sx={{
-              backdropFilter: "blur(18px) saturate(125%)",
-              mixBlendMode: "overlay",
-              filter: "contrast(85%) brightness(115%)"
-            }}
-          />
-          
-          {/* Prism Effect for Edge Highlights */}
-          <Box
-            position="absolute"
-            top="-1px"
-            left="-1px"
-            right="-1px"
-            bottom="-1px"
-            borderRadius="16px"
-            opacity="0.35"
-            zIndex="8"
-            sx={{
-              background: "none",
-              border: "1px solid transparent",
-              borderImage: isRunning
-                ? "linear-gradient(135deg, rgba(255,255,255,0.9), rgba(200,220,255,0.4), rgba(220,235,255,0.1), rgba(255,255,255,0.7)) 1"
-                : "linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,230,210,0.4), rgba(255,235,220,0.1), rgba(255,255,255,0.7)) 1",
-              animation: isRunning ? "prism-shift 10s infinite linear" : "none",
-              boxShadow: "0 0 15px 1px rgba(255,255,255,0.5)",
-              filter: "blur(1px)"
-            }}
-          />
-          
-          {/* Crystal Highlights Layer */}
-          <Box
-            position="absolute"
-            top="0"
-            left="0"
-            right="0" 
-            bottom="0"
-            borderRadius="15px" 
-            zIndex="9"
-            opacity="0.3"
-            sx={{
-              background: "none",
-              backgroundImage: "radial-gradient(circle at 25% 25%, rgba(255,255,255,0.8) 0%, transparent 3%), radial-gradient(circle at 75% 15%, rgba(255,255,255,0.6) 0%, transparent 3%), radial-gradient(circle at 50% 40%, rgba(255,255,255,0.7) 0%, transparent 3%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.7) 0%, transparent 3%), radial-gradient(circle at 15% 60%, rgba(255,255,255,0.8) 0%, transparent 3%), radial-gradient(circle at 65% 80%, rgba(255,255,255,0.7) 0%, transparent 3%)",
-              animation: isRunning ? "crystal-shimmer 12s infinite alternate ease-in-out" : "none",
+          animation: isRunning ? "crystal-shimmer 10s infinite ease-in-out" : "none",
               "@keyframes crystal-shimmer": {
-                "0%": {
-                  opacity: "0.2",
-                  filter: "blur(2px) brightness(100%)"
-                },
-                "33%": { 
-                  opacity: "0.4",
-                  filter: "blur(1px) brightness(140%)"
-                },
-                "66%": { 
-                  opacity: "0.25",
-                  filter: "blur(1.5px) brightness(120%)" 
-                },
-                "100%": { 
-                  opacity: "0.35",
-                  filter: "blur(1px) brightness(150%)"
-                }
+            "0%": { opacity: 0.5, transform: "translateX(-5%) translateY(0)" },
+            "50%": { opacity: 0.7, transform: "translateX(5%) translateY(0)" },
+            "100%": { opacity: 0.5, transform: "translateX(-5%) translateY(0)" }
               }
             }}
           />
 
-          {/* Content Container with Padding */}
           <Box 
             position="relative" 
             zIndex="10"
@@ -987,97 +671,33 @@ const TaskProgressBar: React.FC<TaskProgressBarProps> = ({
           </HStack>
         </Flex>
             
-            <Flex align="center">
-              <Box
-                as="span"
-                display="inline-block"
-                w="6px"
-                h="6px"
+        {/* Execution status */}
+        <Flex
+          position="relative"
+          alignItems="center"
+          fontSize="12px"
+          color={isRunning ? "blue.600" : "gray.500"}
+          fontWeight="500"
+          mt="4px"
+          zIndex="1"
+        >
+          <Box
+            w="8px"
+            h="8px"
           borderRadius="full"
-                bg={isRunning ? primaryColor : "gray.500"}
                 mr="8px"
-                boxShadow={isRunning ? `0 0 8px ${primaryColor}` : "none"}
-                animation={isRunning ? "pulse-dot 2s infinite" : "none"}
+            bg={isRunning ? primaryColor : "gray.300"}
                 sx={{
-                  "@keyframes pulse-dot": {
-                    "0%": { 
-                      opacity: 1, 
-                      transform: "scale(1)",
-                      boxShadow: `0 0 8px ${primaryColor}`
-                    },
-                    "50%": { 
-                      opacity: 0.6, 
-                      transform: "scale(1.3)",
-                      boxShadow: `0 0 12px ${primaryColor}`
-                    },
-                    "100%": { 
-                      opacity: 1, 
-                      transform: "scale(1)",
-                      boxShadow: `0 0 8px ${primaryColor}`
-                    },
-                  },
-                }}
-              />
-              <Text
-                fontSize="13px"
-                fontWeight="500"
-                color={isRunning ? primaryColor : "gray.500"}
-                textShadow={isRunning ? `0 0 8px ${primaryColor}33` : "none"}
-                transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-              >
-                {getActionText()}
-              </Text>
+              animation: isRunning ? "pulse 1.5s infinite ease-in-out" : "none",
+              "@keyframes pulse": {
+                "0%": { opacity: 0.6, transform: "scale(0.75)" },
+                "50%": { opacity: 1, transform: "scale(1)" },
+                "100%": { opacity: 0.6, transform: "scale(0.75)" }
+              }
+            }}
+          />
+          {actionText}
       </Flex>
-          </Box>
-        </Box>
-        
-        {/* Global styles untuk keyframes */}
-        <Global styles={css`
-          @keyframes pulse-inner-glow-secondary {
-            0% {
-              box-shadow: inset 0 0 15px 8px ${secondaryColor}55;
-              opacity: 0.7;
-              transform: scale(0.995);
-            }
-            50% {
-              box-shadow: inset 0 0 25px 12px ${secondaryColor}66;
-              opacity: 0.85;
-              transform: scale(1);
-            }
-            100% {
-              box-shadow: inset 0 0 35px 16px ${secondaryColor}77;
-              opacity: 0.9;
-              transform: scale(0.998);
-            }
-          }
-
-          @keyframes breathe {
-            0% {
-              box-shadow: inset 0 0 30px 15px ${primaryColor}33;
-              opacity: 0.7;
-              transform: scale(0.995);
-            }
-            50% {
-              box-shadow: inset 0 0 45px 22px ${primaryColor}44;
-              opacity: 0.9;
-              transform: scale(1);
-            }
-            100% {
-              box-shadow: inset 0 0 30px 15px ${primaryColor}33;
-              opacity: 0.7;
-              transform: scale(0.995);
-            }
-          }
-
-          .card-container {
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-          }
-
-          .card-container:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-          }
-        `} />
       </Box>
     </Box>
   );
@@ -2100,11 +1720,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   status = ACTION_STATUSES.IDLE, 
   metadata 
 }) => {
-  const action = metadata?.action ? {
-    name: metadata.action,
-    args: {},
-  } : undefined;
-  const actionDisplay = action ? formatActionDisplay(action) : null;
+  // Definisikan action secara benar untuk mencegah error tipe
+  const actionName = metadata?.action?.name;
+  const action = actionName ? {
+    name: actionName,
+    args: metadata?.action?.args || {}
+  } as ActionType : undefined;
+  
   const isProcessing = status === ACTION_STATUSES.RUNNING;
 
   return (
@@ -2122,8 +1744,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     >
       {!isUser && (
         <Box
-          w="32px"
-          h="32px"
+          w="34px"
+          h="34px"
           mr={2}
           borderRadius="xl"
           bg="blue.50"
@@ -2133,39 +1755,82 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
           alignItems="center"
           justifyContent="center"
           flexShrink={0}
-          boxShadow="sm"
+          boxShadow="0 2px 8px rgba(0, 0, 0, 0.05)"
           _hover={{ transform: "scale(1.05)" }}
-          transition="transform 0.2s"
+          transition="transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+          position="relative"
+          overflow="hidden"
         >
-          <Text color="blue.500" fontSize="sm" fontWeight="bold">F</Text>
+          {/* Latar belakang dekoratif untuk avatar */}
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            right="0"
+            bottom="0"
+            bg="linear-gradient(135deg, rgba(214, 238, 255, 0.6) 0%, rgba(227, 246, 255, 0.4) 100%)"
+            opacity="0.8"
+          />
+          <Text 
+            color="blue.500" 
+            fontSize="sm" 
+            fontWeight="bold"
+            position="relative"
+            zIndex="1"
+          >F</Text>
         </Box>
       )}
       <Box
         maxW={isUser ? "80%" : "85%"}
-        bg={isUser ? "blue.500" : "white"}
+        bg={isUser 
+          ? "linear-gradient(135deg, #3182ce 0%, #4299e1 100%)" 
+          : "rgba(255, 255, 255, 0.85)"}
         color={isUser ? "white" : "gray.700"}
-        borderRadius="2xl"
-        boxShadow="lg"
+        borderRadius={isUser ? "2xl 2xl 0 2xl" : "0 2xl 2xl 2xl"}
+        boxShadow={isUser 
+          ? "0 4px 12px rgba(66, 153, 225, 0.24)" 
+          : "0 4px 12px rgba(0, 0, 0, 0.06)"}
         border="1px solid"
-        borderColor={isUser ? "blue.600" : "gray.100"}
+        borderColor={isUser ? "blue.500" : "rgba(226, 232, 240, 0.6)"}
         overflow="hidden"
-        transition="all 0.2s"
+        transition="all 0.2s ease"
         _hover={{
-          transform: "translateY(-1px)",
-          boxShadow: "xl"
+          transform: "translateY(-2px)",
+          boxShadow: isUser 
+            ? "0 6px 16px rgba(66, 153, 225, 0.3)" 
+            : "0 6px 16px rgba(0, 0, 0, 0.08)"
         }}
+        backdropFilter={isUser ? "none" : "blur(10px)"}
+        position="relative"
       >
-        <Box p={4}>
+        {/* Latar belakang dekoratif untuk pesan */}
+        {!isUser && (
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            width="100%"
+            height="100%"
+            opacity="0.05"
+            background="radial-gradient(circle at 30% 30%, rgba(99,179,237,0.4) 0%, transparent 70%)"
+            zIndex="0"
+            pointerEvents="none"
+          />
+        )}
+        
+        <Box p={4} position="relative" zIndex="1">
           <MessageContent content={content} isUser={isUser} />
         </Box>
 
         {!isUser && status && (
           <Box 
             borderTop="1px solid"
-            borderColor="gray.100"
+            borderColor="rgba(226, 232, 240, 0.6)"
             bg={`${getStatusColor(status, action)}.50`}
             px={4}
             py={3}
+            position="relative"
+            zIndex="1"
           >
             <StatusIndicator status={status} action={action} />
           </Box>
@@ -2396,7 +2061,7 @@ const TaskUI = () => {
   const [isScrollingDown, setIsScrollingDown] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   
-  // Track scroll direction
+  // Track scroll direction - tidak digunakan untuk TaskProgressBar karena selalu terlihat
   useEffect(() => {
     const handleScroll = () => {
       if (chatContainerRef.current) {
@@ -2508,42 +2173,187 @@ const TaskUI = () => {
   // Determine current action for display
   const currentAction = useMemo(() => {
     const lastHistoryEntry = state.taskHistory[state.taskHistory.length - 1];
-    return lastHistoryEntry?.action?.name;
+    return lastHistoryEntry?.action?.operation?.name;
   }, [state.taskHistory]);
 
   return (
-    <Box 
-      h="100%" 
-      display="flex" 
-      flexDirection="column" 
-      bg="gray.50"
-      position="relative"
-    >
+    <>
+      {/* Global styles untuk animasi */}
+      <Global 
+        styles={css`
+          @keyframes float {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(5px, 10px); }
+            100% { transform: translate(0, 0); }
+          }
+          
+          @keyframes gradient-flow {
+            0% { background-position: 0% 25%; }
+            25% { background-position: 50% 50%; }
+            50% { background-position: 100% 75%; }
+            75% { background-position: 50% 50%; }
+            100% { background-position: 0% 25%; }
+          }
+          
+          @keyframes pulse-subtle {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+            100% { opacity: 0.3; }
+          }
+        `}
+      />
+      
+      {/* TaskProgressBar yang independen, muncul sebagai notifikasi menggunakan Portal */}
       {taskInProgress && (
+        <Portal>
+          <Box
+            position="fixed"
+            top="16px"
+            left="50%"
+            transform="translateX(-50%) scale(1.05)"
+            width={["calc(100% - 32px)", "90%", "80%", "600px"]}
+            maxWidth="700px"
+            zIndex="100000" // Super tinggi zIndex
+            borderRadius="xl"
+            boxShadow="0 12px 40px rgba(0, 0, 0, 0.25)"
+            transition="all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+            className="task-progress-notification"
+            bg="transparent"
+            animation="task-notification-appear 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+            sx={{
+              "@keyframes task-notification-appear": {
+                "0%": { opacity: 0, transform: "translateX(-50%) translateY(-20px) scale(1.05)" },
+                "100%": { opacity: 1, transform: "translateX(-50%) translateY(0) scale(1.05)" }
+              }
+            }}
+          >
         <TaskProgressBar
           isRunning={taskInProgress}
           onStop={handleStopTask}
           currentTask={getCurrentTaskTitle(state.instructions || "")}
-          isScrollingDown={isScrollingDown}
-          currentAction={currentAction}
-        />
+              isScrollingDown={false}
+              currentAction={currentAction as ActionName}
+            />
+          </Box>
+        </Portal>
       )}
+
+      <Box 
+        h="100%" 
+        display="flex" 
+        flexDirection="column" 
+        position="relative"
+        background="transparent"
+        borderRadius="xl"
+        overflow="hidden"
+        boxShadow="0 8px 32px rgba(0, 0, 0, 0.08)"
+      >
+        {/* Background animasi gradient yang seamless dengan App.tsx */}
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          right="0"
+          bottom="0"
+          zIndex="0"
+          pointerEvents="none"
+          bg={gradientColors.light.primary}
+          backgroundSize="300% 300%"
+          animation="gradient-flow 18s ease-in-out infinite"
+          sx={{
+            "&:before": {
+              content: '""',
+              position: "absolute",
+              top: "0",
+              left: "0",
+              right: "0",
+              bottom: "0",
+              backdropFilter: "blur(10px)",
+              zIndex: "1"
+            }
+          }}
+        >
+          {/* Animated background layers - konsisten dengan App.tsx */}
+          <Box
+            position="absolute"
+            top="10%"
+            left="5%"
+            width="30%"
+            height="40%"
+            opacity="0.6"
+            animation="float 18s infinite ease-in-out"
+            sx={{
+              background: "radial-gradient(circle, rgba(99,179,237,0.12) 0%, transparent 70%)",
+              borderRadius: "50%"
+            }}
+          />
+          
+          <Box
+            position="absolute"
+            bottom="20%"
+            right="10%"
+            width="25%"
+            height="30%"
+            opacity="0.6"
+            animation="float 15s infinite ease-in-out reverse"
+            sx={{
+              background: "radial-gradient(circle, rgba(66,153,225,0.12) 0%, transparent 70%)",
+              borderRadius: "50%"
+            }}
+          />
+          
+          <Box
+            position="absolute"
+            top="60%"
+            left="25%"
+            width="20%"
+            height="25%"
+            opacity="0.5"
+            animation="float 20s infinite ease-in-out 2s"
+            sx={{
+              background: "radial-gradient(circle, rgba(144,205,244,0.1) 0%, transparent 70%)",
+              borderRadius: "50%"
+            }}
+          />
+          
+          <Box
+            position="absolute"
+            top="30%"
+            right="15%"
+            width="35%"
+            height="20%"
+            opacity="0.5" 
+            animation="float 25s infinite ease-in-out 1s"
+            sx={{
+              background: "radial-gradient(circle, rgba(129,198,246,0.1) 0%, transparent 70%)",
+              borderRadius: "50%"
+            }}
+          />
+        </Box>
+
+        {/* Konten utama */}
       <Box 
         flex="1" 
         overflowY="auto" 
         px={4} 
         pt={4}
         ref={chatContainerRef}
-        css={{
+          position="relative"
+          zIndex="1"
+          sx={{
           "&::-webkit-scrollbar": {
             width: "6px",
           },
           "&::-webkit-scrollbar-track": {
-            background: "transparent",
+              background: "rgba(237, 242, 247, 0.3)",
+              borderRadius: "3px",
           },
           "&::-webkit-scrollbar-thumb": {
-            background: "#CBD5E0",
+              background: "rgba(160, 174, 192, 0.5)",
             borderRadius: "3px",
+              "&:hover": {
+                background: "rgba(160, 174, 192, 0.7)",
+              }
           },
         }}
       >
@@ -2576,11 +2386,16 @@ const TaskUI = () => {
       <Box 
         p={3}
         borderTop="1px solid" 
-        borderColor="gray.200"
-        bg="white"
+          borderColor="rgba(226, 232, 240, 0.8)"
+          bg="rgba(255, 255, 255, 0.7)"
+          backdropFilter="blur(10px)"
+          position="relative"
+          zIndex="2"
+          transition="all 0.3s ease"
+          boxShadow="0 -2px 10px rgba(0, 0, 0, 0.03)"
       >
         <Flex gap={2} align="flex-end">
-          <Box flex="1">
+            <Box flex="1" position="relative">
             <AutosizeTextarea
               autoFocus
               placeholder="Tell weblify.id what to do..."
@@ -2590,38 +2405,66 @@ const TaskUI = () => {
               style={{
                 opacity: taskInProgress || state.isListening ? 0.4 : 1,
                 cursor: taskInProgress || state.isListening ? "not-allowed" : "text",
-                backgroundColor: taskInProgress || state.isListening ? "var(--chakra-colors-gray-50)" : "white",
-                border: "1px solid var(--chakra-colors-gray-200)",
+                  backgroundColor: taskInProgress || state.isListening ? "rgba(247, 250, 252, 0.8)" : "rgba(255, 255, 255, 0.8)",
+                  border: "1px solid rgba(226, 232, 240, 0.8)",
                 borderRadius: "1.25rem",
-                padding: "0.5rem 1rem",
+                  padding: "0.75rem 1.25rem",
                 resize: "none",
-                minHeight: "40px",
+                  minHeight: "44px",
                 maxHeight: "120px",
                 fontSize: "0.875rem",
-                lineHeight: "1.4",
+                  lineHeight: "1.5",
                 outline: "none",
                 transition: "all 0.2s ease",
-                overflowY: "auto"
+                  overflowY: "auto",
+                  backdropFilter: "blur(5px)",
+                  boxShadow: "0 2px 6px rgba(0, 0, 0, 0.04)"
               }}
               _focus={{
-                borderColor: "var(--chakra-colors-blue-500)",
-                boxShadow: "0 0 0 1px var(--chakra-colors-blue-500)"
-              }}
-            />
+                  borderColor: "var(--chakra-colors-blue-400)",
+                  boxShadow: "0 0 0 2px rgba(66, 153, 225, 0.3)"
+                }}
+              />
+              {/* Decorative accent for textarea */}
+              <Box
+                position="absolute"
+                bottom="6px"
+                left="16px"
+                width="30%"
+                height="2px"
+                background="linear-gradient(90deg, rgba(99,179,237,0.3) 0%, rgba(99,179,237,0) 100%)"
+                borderRadius="full"
+                opacity="0.7"
+                pointerEvents="none"
+              />
           </Box>
           <Button
             onClick={runTask}
             isDisabled={taskInProgress || state.isListening || !state.instructions?.trim()}
-            colorScheme="blue"
             size="sm"
             borderRadius="full"
-            h="36px"
-            w="36px"
-            minW="36px"
+              h="42px"
+              w="42px"
+              minW="42px"
             p={0}
+              bg="blue.500"
+              color="white"
+              _hover={{
+                bg: "blue.600",
+                transform: "translateY(-2px)",
+                boxShadow: "0 4px 12px rgba(66, 153, 225, 0.4)"
+              }}
+              _active={{
+                bg: "blue.700",
+                transform: "translateY(0)",
+                boxShadow: "0 2px 4px rgba(66, 153, 225, 0.3)"
+              }}
+              transition="all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
             _disabled={{
               opacity: 0.4,
               cursor: "not-allowed",
+                boxShadow: "none",
+                transform: "none"
             }}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2637,7 +2480,16 @@ const TaskUI = () => {
         </Flex>
 
         {state.voiceMode && (
-          <Alert status="info" borderRadius="xl" mt={2} py={1} px={2.5} size="sm">
+            <Alert 
+              status="info" 
+              borderRadius="xl" 
+              mt={2} 
+              py={1} 
+              px={2.5} 
+              size="sm"
+              bg="rgba(235, 248, 255, 0.8)"
+              borderColor="rgba(144, 205, 244, 0.4)"
+            >
             <AlertIcon boxSize="14px" />
             <AlertDescription fontSize="xs">
               Press Space to start/stop speaking
@@ -2647,12 +2499,19 @@ const TaskUI = () => {
       </Box>
 
       {!state.voiceMode && !state.instructions && !taskInProgress && (
-        <Box px={4} pb={4}>
+          <Box 
+            px={4} 
+            pb={4}
+            bg="rgba(255, 255, 255, 0.5)"
+            backdropFilter="blur(5px)"
+          >
           <RecommendedTasks runTask={runTaskWithNewInstructions} />
         </Box>
       )}
+
       {debugMode && <ActionExecutor />}
     </Box>
+    </>
   );
 };
 

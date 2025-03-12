@@ -1,6 +1,70 @@
 # Panduan Pengembangan weblify.id Extension
 
 ## Current Version
+**v1.0.1.34 (03-05-2025)**
+- Enhanced Blue Gradient Animation:
+  - Penggunaan warna biru muda yang lebih intens dan cerah di seluruh aplikasi
+  - Peningkatan animasi gradient-flow dengan pergerakan multi-directional (4 arah)
+  - Background size diperbesar menjadi 300% dan timing 18 detik untuk efek yang lebih mencolok
+  - Komposisi warna gradasi biru yang lebih saturated untuk kesan premium
+  - Peningkatan visibilitas efek blob dengan opacity yang ditingkatkan
+
+Perubahan versi sebelumnya:
+**v1.0.1.33 (03-05-2025)**
+- Seamless Blue Gradient UI:
+  - Background gradient biru muda yang konsisten di seluruh aplikasi
+  - Standardisasi warna dan gradient melalui variabel bersama di App.tsx dan TaskUI.tsx
+  - Animasi gradient flow yang halus dengan timing 15 detik untuk efek menyenangkan
+  - Efek "floating" dengan animasi blob yang bergerak perlahan di background
+  - Optimasi visual yang menjamin kontinuitas antar section tanpa perbedaan tampilan
+
+Perubahan versi sebelumnya:
+**v1.0.1.32 (03-05-2025)**
+- Portal-Based TaskProgressBar:
+  - Penggunaan Chakra UI Portal untuk merender TaskProgressBar langsung ke root DOM
+  - Memastikan TaskProgressBar selalu tampil di atas komponen lain (terlepas dari struktur DOM)
+  - Animasi masuk yang lebih halus dan menarik perhatian untuk kejelasan visual
+  - Pola desain yang konsisten dengan notifikasi toast untuk pengalaman pengguna yang lebih baik
+  - Struktur render yang dioptimalkan untuk menghindari masalah "z-index stacking context"
+
+Perubahan versi sebelumnya:
+**v1.0.1.31 (03-05-2025)**
+- Ultra-Visible TaskProgressBar:
+  - Visibilitas super tinggi dengan z-index 100000 untuk memastikan selalu tampil di atas
+  - Ukuran yang lebih besar dengan transform scale(1.05) untuk membuatnya lebih menonjol
+  - Lebar maksimal 700px memberikan area tampilan yang lebih luas dan informatif
+  - Bayangan yang lebih kuat dan melebar untuk memberikan kesan "floating"
+  - Background transparan menjamin tampilan bersih tanpa gangguan visual
+
+Perubahan versi sebelumnya:
+**v1.0.1.30 (03-05-2025)**
+- TaskProgressBar as Notification:
+  - TaskProgressBar kini muncul sebagai notifikasi yang independen dari Chat UI
+  - Selalu terlihat di layar terlepas dari komponen lain yang sedang dilihat
+  - zIndex tinggi memastikan TaskProgressBar selalu di atas semua konten
+  - Responsif dengan width yang beradaptasi sesuai layar pengguna
+  - Bayangan dan posisi yang dioptimalkan untuk menonjol tanpa mengganggu
+
+Perubahan versi sebelumnya:
+**v1.0.1.29 (03-05-2025)**
+- Fixed Position TaskProgressBar:
+  - TaskProgressBar kini selalu terlihat saat scroll ke atas atau ke bawah
+  - Posisi fixed di tengah layar untuk visibilitas maksimal saat bekerja dengan halaman panjang
+  - Tampilan yang lebih fokus dengan efek glassmorphic yang ditingkatkan
+  - Responsif terhadap berbagai ukuran layar dengan lebar yang adaptif
+  - Efek crystal visual yang memberikan kesan premium dan modern
+
+Perubahan versi sebelumnya:
+**v1.0.1.28 (03-05-2025)**
+- Modern Glassmorphic UI:
+  - Desain UI/UX baru dengan implementasi glassmorphic dan gradient biru di seluruh interface
+  - Efek frosted glass yang konsisten memberikan tampilan premium dan modern
+  - Animasi dan transisi yang halus untuk pengalaman pengguna yang lebih fluid
+  - Peningkatan tampilan pesan chat, input, dan komponen interaktif
+  - Recommended tasks dengan card bergaya glassmorphic dan ikon yang intuitif
+  - Background dengan gradient animasi untuk nuansa elegan dan dinamis
+
+Perubahan versi sebelumnya:
 **v1.0.1.27 (02-05-2025)**
 - Simplified Task Control UI:
   - Penghapusan tombol pause pada progress bar untuk UI yang lebih sederhana dan fokus
