@@ -1,6 +1,48 @@
 # Panduan Pengembangan weblify.id Extension
 
 ## Current Version
+**v1.0.1.38 (03-05-2025)**
+- AI Agent Branding Update:
+  - Perubahan ikon profil AI Agent dari "F" menjadi "W" di interface chat
+  - Konsistensi visual untuk mencerminkan identitas merek weblify.id
+  - Pembaruan tampilan avatar agent dalam percakapan
+  - Standardisasi representasi AI assistant di seluruh aplikasi
+  - Memperkuat identitas merek untuk pengalaman pengguna yang lebih kohesif
+
+Perubahan versi sebelumnya:
+**v1.0.1.37 (03-05-2025)**
+- Consistency Enhancement for Chat UI:
+  - Penyeragaman background UI chat dengan background utama App.tsx
+  - Implementasi animasi rotate (60s) pada radial gradient untuk efek dinamis
+  - Penambahan multi-layer blob animasi dengan timing yang bervariasi
+  - Standardisasi color palette dan opasitas pada seluruh animasi background
+  - Implementasi CSS global yang konsisten untuk keyframes animasi
+  - Peningkatan konsistensi visual di seluruh aplikasi
+  - Optimasi pengalaman pengguna dengan transisi yang lebih halus
+
+Perubahan versi sebelumnya:
+**v1.0.1.36 (03-05-2025)**
+- Enhanced RecommendedTasks Cards:
+  - Desain modern glassmorphic dengan efek blur(10px) dan saturate(180%) untuk visual premium
+  - Transformasi hover yang lebih dinamis dengan scale(1.01) dan translateY(-3px)
+  - Efek floating background dengan animasi yang berbeda untuk setiap task card
+  - Transisi teks dan ikon yang responsif saat hover untuk feedback visual yang lebih kaya
+  - Kompatibilitas mode gelap/terang dengan warna dan efek yang konsisten
+  - Ikon yang lebih menonjol dan detail dengan ukuran yang ditingkatkan
+  - Hierarki teks yang lebih jelas dengan kontras warna dan ukuran font
+
+Perubahan versi sebelumnya:
+**v1.0.1.35 (03-05-2025)**
+- Enhanced SidePanel UI/UX:
+  - Implementasi tampilan glassmorphic dengan gradient biru yang konsisten
+  - Background animasi dengan efek rotate dan flow yang dinamis
+  - Card design dengan frosted glass effect dan hover transitions
+  - Organizational icons (FaGlobe, FaBrain, FaRobot) untuk navigasi visual yang lebih baik
+  - Branding yang ditingkatkan dengan gradient text pada heading
+  - Dark/light mode yang konsisten melalui useColorModeValue
+  - Animasi fadeIn untuk transisi halaman yang lebih mulus
+
+Perubahan versi sebelumnya:
 **v1.0.1.34 (03-05-2025)**
 - Enhanced Blue Gradient Animation:
   - Penggunaan warna biru muda yang lebih intens dan cerah di seluruh aplikasi

@@ -1777,7 +1777,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             fontWeight="bold"
             position="relative"
             zIndex="1"
-          >F</Text>
+          >W</Text>
         </Box>
       )}
       <Box
@@ -2200,6 +2200,11 @@ const TaskUI = () => {
             50% { opacity: 0.6; }
             100% { opacity: 0.3; }
           }
+          
+          @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
         `}
       />
       
@@ -2260,20 +2265,23 @@ const TaskUI = () => {
           bg={gradientColors.light.primary}
           backgroundSize="300% 300%"
           animation="gradient-flow 18s ease-in-out infinite"
-          sx={{
-            "&:before": {
-              content: '""',
-              position: "absolute",
-              top: "0",
-              left: "0",
-              right: "0",
-              bottom: "0",
-              backdropFilter: "blur(10px)",
-              zIndex: "1"
-            }
-          }}
+          overflow="hidden"
         >
-          {/* Animated background layers - konsisten dengan App.tsx */}
+          {/* Animated background effects - persis seperti di App.tsx */}
+          <Box
+            position="absolute"
+            top="-10%"
+            left="-10%"
+            width="120%"
+            height="120%"
+            opacity="0.6"
+            animation="rotate 60s linear infinite"
+            sx={{
+              background: "radial-gradient(ellipse at center, rgba(99,179,237,0.15) 0%, rgba(99,179,237,0) 70%)"
+            }}
+          />
+          
+          {/* Subtle animated blue blobs */}
           <Box
             position="absolute"
             top="10%"
@@ -2302,6 +2310,7 @@ const TaskUI = () => {
             }}
           />
           
+          {/* Additional subtle blue blobs - persis seperti di App.tsx */}
           <Box
             position="absolute"
             top="60%"

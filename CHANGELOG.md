@@ -1,5 +1,36 @@
 # Changelog
 
+## v1.0.1.38 (03-05-2025)
+- Perubahan ikon profil AI Agent dari "F" menjadi "W" untuk konsistensi branding weblify.id
+- Penyesuaian visual pada avatar agent untuk mencerminkan identitas merek saat ini
+- Standarisasi representasi AI assistant dalam interface chat
+
+## v1.0.1.37 (03-05-2025)
+- Penyeragaman background UI chat dengan background utama di App.tsx
+- Pembaruan animasi background pada container chat dengan efek rotate dan float
+- Penambahan layer background dengan radial gradient yang identik dengan App.tsx
+- Standardisasi efek visual animasi untuk konsistensi UI di seluruh aplikasi
+- Penyempurnaan transisi dan animasi untuk pengalaman yang lebih mulus
+- Optimasi opacity dan ukuran blob animasi untuk visual yang lebih fluid
+
+## v1.0.1.36 (03-05-2025)
+- Peningkatan UI/UX komponen RecommendedTasks dengan desain glassmorphic yang lebih dinamis
+- Peningkatan tampilan card task dengan efek backdrop filter (blur dan saturate) yang lebih ekstrem
+- Implementasi animasi hover dengan transformasi skala dan translasi yang lebih responsif
+- Penambahan efek floating background dengan animasi yang berbeda per card
+- Optimasi warna dan gradient text berdasarkan mode gelap/terang
+- Peningkatan ukuran dan detail ikon serta kontainer ikon
+- Implementasi efek hover dengan gradient text untuk peningkatan feedback visual
+
+## v1.0.1.35 (03-05-2025)
+- Peningkatan UI/UX SidePanel dengan implementasi desain glassmorphic
+- Penambahan background gradient animasi dengan efek flow dan rotate
+- Implementasi card design dengan efek frosted glass dan bayangan
+- Penambahan ikon untuk setiap section (FaGlobe, FaBrain, FaRobot)
+- Peningkatan visual heading dengan gradient text untuk branding
+- Optimasi responsivitas dan animasi untuk pengalaman yang lebih fluid
+- Standardisasi warna dengan penggunaan useColorModeValue untuk dark/light mode
+
 ## v1.0.1.34 (03-05-2025)
 - Peningkatan intensitas warna biru muda pada gradient background di seluruh aplikasi
 - Penyesuaian animasi gradient-flow menjadi lebih dinamis dengan 4 keyframes
