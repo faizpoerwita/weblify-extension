@@ -17,7 +17,7 @@ import { FaDiscord, FaGlobe } from "react-icons/fa6";
 import { useState, useEffect } from "react";
 import { useAppState } from "../state/store";
 import SetAPIKey from "./settings/SetAPIKey";
-import TaskUI from "./TaskUI";
+import TaskUI from "./components/TaskUI";
 import Settings from "./Settings";
 import { Global, css } from "@emotion/react";
 
