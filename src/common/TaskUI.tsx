@@ -830,43 +830,44 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
     return "gray";
   };
 
-  // Tampilan khusus untuk status navigasi
+  // Tampilan khusus untuk status navigasi (dengan optimasi vertikal)
   if (action?.name === ACTION_NAMES.NAVIGATE && urlData) {
-    const statusColor = getStatusColorValue(status, action);
-    const isSmallDevice = useBreakpointValue({ base: true, sm: false });
-    
     return (
       <Box
         borderWidth="1px"
-        borderColor={`${statusColor}.200`}
-        bg={`${statusColor}.50`}
+        borderColor={`${getStatusColor(status, action)}.200`}
+        bg={`${getStatusColor(status, action)}.50`}
         borderRadius="lg"
         p={1.5}
         overflow="hidden"
         boxShadow="sm"
         maxWidth="100%"
-        width="100%" // Selalu 100% width untuk konsistensi
+        width="100%" // Selalu gunakan lebar penuh untuk rasio vertikal
         transition="all 0.2s"
         _hover={{ boxShadow: "md" }}
       >
-        {/* Layout stack di tampilan sempit, flex di tampilan lebar */}
-        <Flex 
-          direction={{base: "column", sm: "row"}} 
-          width="100%"
-          gap={{base: 1, sm: 2}}
-        >
-          <Flex align="center" gap={2}>
+        {/* Layout vertikal untuk status navigasi */}
+        <Flex direction={{base: "column", sm: "row"}} align="stretch" gap={1.5}>
+          {/* Header dengan status dan ikon */}
+          <Flex 
+            align="center" 
+            gap={2}
+            pb={{base: 1.5, sm: 0}}
+            borderBottomWidth={{base: "1px", sm: "0"}}
+            borderColor={`${getStatusColor(status, action)}.100`}
+            width="full"
+          >
             {/* Status icon */}
             <Flex 
               align="center" 
               justify="center"
-              minWidth="24px" // Lebih kecil pada tampilan vertikal
+              minWidth="24px" 
               height="24px" 
               borderRadius="md"
-              bg={`${statusColor}.100`}
-              color={`${statusColor}.600`}
-              boxShadow={`inset 0 0 0 1px ${statusColor}.200`}
-              flexShrink={0} // Mencegah ikon menyusut
+              bg={`${getStatusColor(status, action)}.100`}
+              color={`${getStatusColor(status, action)}.600`}
+              boxShadow={`inset 0 0 0 1px ${getStatusColor(status, action)}.200`}
+              flexShrink={0}
             >
               {status === ACTION_STATUSES.RUNNING ? (
                 <Box animation="spin 1.5s linear infinite" sx={{
@@ -882,18 +883,18 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
               )}
             </Flex>
             
-            {/* Status label - letakkan di samping ikon untuk tampilan yang lebih compact */}
+            {/* Status label */}
             <Text 
               fontSize="2xs" 
               fontWeight="semibold" 
-              color={`${statusColor}.700`}
+              color={`${getStatusColor(status, action)}.700`}
               px={1.5}
               py={0.5} 
-              bg={`${statusColor}.100`}
+              bg={`${getStatusColor(status, action)}.100`}
               borderRadius="md"
               letterSpacing="0.02em"
               whiteSpace="nowrap"
-              flexShrink={0} // Mencegah label menyusut
+              flexShrink={0}
             >
               {status === ACTION_STATUSES.RUNNING ? 'NAVIGASI' : 
                status === ACTION_STATUSES.SUCCESS ? 'SELESAI' : 
@@ -904,58 +905,81 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
           {/* Website favicon and info */}
           <Flex 
             flex="1" 
-            align="center" 
-            minWidth="0" // Penting untuk text truncation pada flex items
-            flexWrap="nowrap"
-            mt={{base: 1, sm: 0}} // Margin top di tampilan vertikal
-            borderTopWidth={{base: "1px", sm: "0"}} // Garis pemisah di tampilan vertikal
-            borderTopColor={{base: `${statusColor}.100`, sm: "transparent"}}
-            pt={{base: 1, sm: 0}} // Padding di atas di tampilan vertikal
+            minWidth="0" 
+            direction="column"
+            justify="space-between"
+            gap={1} 
+            px={{base: 1, sm: 2}}
+            py={{base: 0.5, sm: 1}}
           >
-            {/* Favicon - selalu ditampilkan, namun lebih kecil di tampilan kecil */}
-            <Image 
-              src={urlData.favicon}
-              alt={urlData.domain}
-              width={{base: "14px", sm: "16px"}}
-              height={{base: "14px", sm: "16px"}}
-              borderRadius="sm"
-              mr={2}
-              flexShrink={0} // Mencegah favicon menyusut
-              fallback={
-                <Box width={{base: "14px", sm: "16px"}} height={{base: "14px", sm: "16px"}} p={0} color="gray.400" flexShrink={0}>
-                  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="2" y1="12" x2="22" y2="12"></line>
-                    <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
-                  </svg>
-                </Box>
-              }
-            />
-            
-            {/* Title and domain - container dengan maxWidth untuk tampilan sempit */}
-            <Box minWidth="0" flex="1" maxWidth="100%"> {/* Container untuk text-overflow */}
+            {/* Website Title */}
+            <Flex align="center" width="full">
+              {/* Favicon */}
+              <Box
+                width="16px"
+                height="16px"
+                mr={2}
+                flexShrink={0}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Image 
+                  src={urlData.favicon}
+                  alt={urlData.domain}
+                  width="16px"
+                  height="16px"
+                  borderRadius="sm"
+                  fallback={
+                    <Box p={0} color="gray.400">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
+                      </svg>
+                    </Box>
+                  }
+                />
+              </Box>
+              
+              {/* Title */}
               <Text 
-                fontSize={{base: "2xs", sm: "xs"}} // Font lebih kecil di tampilan sempit
+                fontSize="xs" 
                 fontWeight="medium" 
-                color={`${statusColor}.800`}
+                color={`${getStatusColor(status, action)}.800`}
                 textOverflow="ellipsis"
                 overflow="hidden"
                 whiteSpace="nowrap"
-                title={urlData.title} // Tooltip untuk teks yang terpotong
+                width="full"
+                title={urlData.title} // Show full title on hover
               >
                 {urlData.title}
               </Text>
-              <Text 
-                fontSize="2xs" 
-                color={`${statusColor}.600`} 
+            </Flex>
+            
+            {/* URL dengan format yang lebih kompak */}
+            <Box 
+              width="full" 
+              mt={0.5}
+              fontSize="2xs" 
+              px={1.5}
+              py={1}
+              bg="white"
+              borderRadius="md"
+              borderWidth="1px"
+              borderColor="gray.200"
+              color={`${getStatusColor(status, action)}.700`}
+              fontFamily="monospace"
+            >
+              <Text
                 textOverflow="ellipsis"
                 overflow="hidden"
-                whiteSpace="nowrap"
-                fontFamily="monospace"
-                title={`${urlData.domain}${urlData.path.length ? '/' + urlData.path.join('/') : ''}`} // Tooltip untuk URL lengkap
+                whiteSpace="nowrap" 
+                title={urlData.fullUrl} // Show full URL on hover
               >
-                {isSmallDevice 
-                  ? urlData.domain // Hanya tampilkan domain di layar kecil
+                {/* Tampilkan format URL yang lebih ringkas di tampilan vertikal */}
+                {window.innerWidth < 400 || window.innerHeight > window.innerWidth * 2.5 
+                  ? urlData.domain 
                   : `${urlData.domain}${urlData.path.length ? '/' + urlData.path.join('/') : ''}`
                 }
               </Text>
@@ -966,23 +990,28 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
     );
   }
 
-  // Default status indicator display
+  // Default status indicator display with vertical optimization
   return (
     <Flex 
       align="center" 
       gap={2}
       maxWidth="100%"
       overflow="hidden"
-      flexWrap={{base: "wrap", sm: "nowrap"}}
+      p={1}
+      borderRadius="md"
+      bg={`${getStatusColor(status, action)}.50`}
+      borderWidth="1px"
+      borderColor={`${getStatusColor(status, action)}.100`}
     >
       <Flex 
         align="center" 
         justify="center"
-        minWidth="24px" 
-        height="24px" 
+        minWidth="20px" 
+        height="20px" 
         borderRadius="full"
-        bg={`${getStatusColorValue(status, action)}.100`}
-        color={`${getStatusColorValue(status, action)}.600`}
+        bg={`${getStatusColor(status, action)}.100`}
+        color={`${getStatusColor(status, action)}.600`}
+        flexShrink={0}
       >
         {status === ACTION_STATUSES.RUNNING ? (
           <Box animation="spin 1.5s linear infinite" sx={{
@@ -999,12 +1028,13 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
       </Flex>
       <Text 
         fontSize="xs" 
-        color={`${getStatusColorValue(status, action)}.700`}
+        color={`${getStatusColor(status, action)}.700`}
         fontWeight="medium"
         letterSpacing="0.02em"
         textOverflow="ellipsis"
         overflow="hidden"
         whiteSpace="nowrap"
+        flex="1"
       >
         {getStatusDisplay(status, action)}
       </Text>
@@ -2131,7 +2161,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                         <Box 
                           key={`json-${idx}`}
                           bg="white"
-                          borderRadius="2xl"
+                          borderRadius="lg"
                           overflow="hidden"
                           boxShadow="sm"
                           borderWidth="1px"
@@ -2142,252 +2172,196 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                           mb={2}
                         >
                           {/* Header Pemikiran AI */}
-                          <Box
+                          <Flex
                             bg="blue.50"
-                            px={4}
-                            py={3}
+                            px={3}
+                            py={2}
                             borderBottom="1px solid"
                             borderColor="blue.100"
+                            align="center"
                           >
-                            <HStack spacing={3}>
-                              <Box
-                                bg="white"
-                                p={2}
-                                borderRadius="lg"
-                                color="blue.500"
-                                borderWidth="1px"
-                                borderColor="blue.200"
-                              >
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                  <path d="M12 2a10 10 0 0110 10c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2m0 6v4m0 4h.01"/>
-                                </svg>
-                              </Box>
-                              <Text
-                                fontSize="sm"
-                                fontWeight="medium"
-                                color="blue.700"
-                              >
-                                Pemikiran AI
-                              </Text>
-                            </HStack>
-                          </Box>
+                            <Box
+                              bg="white"
+                              p={1.5}
+                              borderRadius="md"
+                              color="blue.500"
+                              borderWidth="1px"
+                              borderColor="blue.200"
+                              mr={2}
+                            >
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M12 2a10 10 0 0110 10c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2m0 6v4m0 4h.01"/>
+                              </svg>
+                            </Box>
+                            <Text
+                              fontSize={{base: "xs", md: "sm"}}
+                              fontWeight="medium"
+                              color="blue.700"
+                            >
+                              Pemikiran AI
+                            </Text>
+                          </Flex>
                           
-                          {/* Pemikiran */}
-                          <Box p={4}>
-                            <Text fontSize="sm" color="gray.700" lineHeight="1.6">
+                          {/* Pemikiran - optimasi untuk tampilan vertical */}
+                          <Box p={3}>
+                            <Text 
+                              fontSize={{base: "xs", md: "sm"}} 
+                              color="gray.700" 
+                              lineHeight="1.5"
+                              maxHeight={{base: "120px", md: "none"}}
+                              overflowY={{base: "auto", md: "visible"}}
+                              sx={{
+                                scrollbarWidth: "thin",
+                                scrollbarColor: "blue.200 transparent",
+                                "&::-webkit-scrollbar": {
+                                  width: "4px",
+                                },
+                                "&::-webkit-scrollbar-track": {
+                                  background: "transparent",
+                                },
+                                "&::-webkit-scrollbar-thumb": {
+                                  background: "blue.200",
+                                  borderRadius: "full",
+                                },
+                              }}
+                            >
                               {jsonData.thought}
                             </Text>
                           </Box>
                           
-                          {/* Action */}
+                          {/* Action - optimasi untuk tampilan vertical */}
                           {jsonData.action && (
                             <Box
                               borderTopWidth="1px"
                               borderColor="blue.100"
                               bg="blue.50"
-                              p={4}
+                              p={3}
                             >
-                              <HStack spacing={3} mb={2}>
+                              <Flex align="center" mb={2}>
                                 <Box
                                   bg="white"
-                                  p={2}
-                                  borderRadius="lg"
+                                  p={1.5}
+                                  borderRadius="md"
                                   color="teal.500"
                                   borderWidth="1px"
                                   borderColor="teal.200"
+                                  mr={2}
                                 >
-                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
                                   </svg>
                                 </Box>
                                 <Text
-                                  fontSize="sm"
+                                  fontSize={{base: "xs", md: "sm"}}
                                   fontWeight="medium"
                                   color="teal.700"
                                 >
                                   Tindakan
                                 </Text>
-                              </HStack>
+                              </Flex>
                               
                               {typeof jsonData.action === 'object' ? (
-                                <VStack align="stretch" spacing={3} pl={10}>
+                                <VStack 
+                                  align="stretch" 
+                                  spacing={2} 
+                                  pl={{base: 2, md: 10}}
+                                  maxHeight={{base: "150px", md: "none"}}
+                                  overflowY={{base: "auto", md: "visible"}}
+                                  sx={{
+                                    scrollbarWidth: "thin",
+                                    scrollbarColor: "teal.200 transparent",
+                                    "&::-webkit-scrollbar": {
+                                      width: "4px",
+                                    },
+                                    "&::-webkit-scrollbar-track": {
+                                      background: "transparent",
+                                    },
+                                    "&::-webkit-scrollbar-thumb": {
+                                      background: "teal.200",
+                                      borderRadius: "full",
+                                    },
+                                  }}
+                                >
                                   {/* Tampilan khusus untuk action navigate dengan website data */}
                                   {jsonData.action.name === 'navigate' && jsonData.action.args && jsonData.action.args.url && (
                                     <Box 
                                       borderWidth="1px" 
-                                      borderColor="blue.100" 
-                                      borderRadius="lg"
+                                      borderColor="teal.100" 
+                                      borderRadius="md"
                                       overflow="hidden"
                                       bg="white"
                                       boxShadow="sm"
                                       transition="all 0.2s"
-                                      _hover={{ boxShadow: "md", borderColor: "blue.200" }}
-                                      maxW={{base: "100%", sm: "500px"}} // Responsif untuk layar kecil
-                                      width="100%" // Mengisi lebar yang tersedia pada tampilan vertikal
+                                      _hover={{ boxShadow: "md", borderColor: "teal.200" }}
+                                      mb={1}
                                     >
-                                      <Flex 
-                                        p={2} // Padding lebih kecil untuk tampilan vertikal
-                                        align="center" 
-                                        borderBottomWidth="1px" 
-                                        borderColor="blue.50"
-                                      >
-                                        <Box 
-                                          mr={2} // Margin lebih kecil untuk tampilan vertikal
-                                          p={1.5} // Padding lebih kecil
-                                          borderRadius="md" 
-                                          bg="blue.50"
-                                          color="blue.500"
-                                        >
-                                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <polygon points="10 8 16 12 10 16 10 8"></polygon>
-                                          </svg>
-                                        </Box>
-                                        <Box flex="1">
-                                          <Text 
-                                            fontWeight="medium" 
-                                            color="blue.700" 
-                                            fontSize={{base: "xs", sm: "sm"}} // Font lebih kecil di tampilan sempit
-                                            noOfLines={1} // Batasi menjadi 1 baris
-                                          >
-                                            Navigasi ke Website
-                                          </Text>
-                                        </Box>
-                                      </Flex>
-                                      
-                                      <Box p={2.5} bg="gray.50"> {/* Padding lebih kecil */}
-                                        {/* Responsive Layout: Stack vertikal di tampilan sempit (rasio 19:6), horizontal di tampilan lebih lebar */}
-                                        <Flex 
-                                          mb={2} 
-                                          direction={{base: "column", sm: "row"}} // Stack vertikal di tampilan sempit
-                                          align={{base: "flex-start", sm: "center"}}
-                                          gap={2} // Gap konsisten
-                                        >
-                                          {/* Favicon preview */}
+                                      <Flex direction="column" width="full">
+                                        <Flex p={2} alignItems="center" borderBottomWidth="1px" borderColor="teal.50">
                                           <Box 
-                                            mb={{base: 2, sm: 0}} // Margin bottom hanya di tampilan vertikal
-                                            mr={{base: 0, sm: 3}} // Margin right hanya di tampilan horizontal
-                                            width="28px" // Sedikit lebih kecil
-                                            height="28px" 
-                                            borderRadius="md" 
-                                            bg="white" 
-                                            display="flex" 
-                                            alignItems="center" 
+                                            mr={2} 
+                                            p={1} 
+                                            borderRadius="sm" 
+                                            bg="teal.50"
+                                            display="flex"
+                                            alignItems="center"
                                             justifyContent="center"
-                                            borderWidth="1px"
-                                            borderColor="gray.200"
-                                            overflow="hidden"
-                                            flexShrink={0} // Mencegah favicon menyusut
                                           >
-                                            {(() => {
-                                              try {
-                                                const url = new URL(jsonData.action.args.url);
-                                                return (
-                                                  <Image 
-                                                    src={`https://www.google.com/s2/favicons?domain=${url.hostname}&sz=32`}
-                                                    alt="Website favicon"
-                                                    fallback={
-                                                      <Box p={1} color="gray.400">
-                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                          <path d="M12 2a10 10 0 100 20 10 10 0 000-20z"></path>
-                                                          <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
-                                                        </svg>
-                                                      </Box>
-                                                    }
-                                                  />
-                                                );
-                                              } catch (e) {
-                                                return (
-                                                  <Box p={1} color="gray.400">
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                      <path d="M12 2a10 10 0 100 20 10 10 0 000-20z"></path>
-                                                      <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
-                                                    </svg>
-                                                  </Box>
-                                                );
-                                              }
-                                            })()}
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                              <circle cx="12" cy="12" r="10"></circle>
+                                              <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                                            </svg>
                                           </Box>
                                           
-                                          {/* URL and Title Section */}
-                                          <Box flex="1" width="100%">
-                                            {/* Website title */}
-                                            <Text 
-                                              fontSize={{base: "xs", sm: "sm"}} // Font lebih kecil di tampilan sempit
-                                              fontWeight="medium" 
-                                              color="gray.800" 
-                                              mb={1} 
-                                              noOfLines={1} // Batasi menjadi 1 baris
-                                              title={jsonData.action.args.title || "Navigasi ke Website"} // Tooltip untuk teks yang terpotong
-                                            >
-                                              {jsonData.action.args.title || "Navigasi ke Website"}
-                                            </Text>
-                                            
-                                            {/* URL display with truncation */}
-                                            <Box
-                                              fontSize={{base: "2xs", sm: "xs"}} // Font lebih kecil di tampilan sempit
-                                              p={1.5}
-                                              bg="white"
-                                              borderRadius="md"
-                                              borderWidth="1px"
-                                              borderColor="gray.200"
-                                              fontFamily="monospace"
-                                              color="blue.600"
-                                              _hover={{ borderColor: "blue.300" }}
-                                              transition="all 0.2s"
-                                              overflow="hidden"
-                                              textOverflow="ellipsis"
-                                              whiteSpace="nowrap"
-                                              title={jsonData.action.args.url} // Tooltip untuk URL lengkap
-                                              maxW={{base: "100%", sm: "400px"}} // Lebar maksimum yang responsif
-                                            >
-                                              {(() => {
-                                                try {
-                                                  // Tampilkan URL dengan format yang lebih baik untuk tampilan sempit
-                                                  const url = new URL(jsonData.action.args.url);
-                                                  // Pada tampilan kecil, tampilkan URL yang dipersingkat
-                                                  const isMobile = window.innerWidth < 400;
-                                                  if (isMobile) {
-                                                    return `${url.hostname.replace('www.', '')}${url.pathname.length > 1 ? '/...' : ''}`;
-                                                  }
-                                                  // Pada tampilan normal, tampilkan full URL
-                                                  return jsonData.action.args.url;
-                                                } catch (e) {
-                                                  return jsonData.action.args.url;
-                                                }
-                                              })()}
-                                            </Box>
-                                          </Box>
+                                          <Text 
+                                            fontSize="xs" 
+                                            fontWeight="medium" 
+                                            color="teal.700"
+                                            flex="1"
+                                            isTruncated
+                                          >
+                                            Navigasi Website
+                                          </Text>
                                         </Flex>
                                         
-                                        {/* Additional info if available */}
-                                        {jsonData.action.args.details && jsonData.action.args.details.length > 0 && (
+                                        <Flex p={2} bg="gray.50" alignItems="center">
+                                          {/* Website info dengan URL yang lebih ringkas */}
                                           <Box 
-                                            mt={2} 
-                                            p={2} 
-                                            fontSize={{base: "2xs", sm: "xs"}} // Font lebih kecil di tampilan sempit
-                                            bg="white" 
-                                            borderRadius="md" 
-                                            borderWidth="1px" 
-                                            borderColor="gray.200"
-                                            maxH={{base: "80px", sm: "120px"}} // Batasi tinggi agar tidak terlalu panjang di tampilan vertikal
-                                            overflowY="auto" // Scroll jika kontennya terlalu panjang
+                                            width="12px" 
+                                            height="12px" 
+                                            mr={2}
+                                            flexShrink={0}
                                           >
-                                            <Text fontWeight="medium" color="gray.600" mb={1} fontSize={{base: "2xs", sm: "xs"}}>
-                                              Informasi Tambahan:
-                                            </Text>
-                                            <UnorderedList pl={2} spacing={0.5} color="gray.600"> {/* Spacing dan padding lebih kecil */}
-                                              {jsonData.action.args.details.map((detail: string, idx: number) => (
-                                                <ListItem key={idx} fontSize={{base: "2xs", sm: "xs"}}>{detail}</ListItem>
-                                              ))}
-                                            </UnorderedList>
+                                            <Image 
+                                              src={`https://www.google.com/s2/favicons?domain=${new URL(jsonData.action.args.url).hostname}&sz=16`}
+                                              alt="favicon"
+                                              width="12px"
+                                              height="12px"
+                                              fallback={<Box bg="gray.100" borderRadius="sm" width="12px" height="12px" />}
+                                            />
                                           </Box>
-                                        )}
-                                      </Box>
+                                          
+                                          <Text 
+                                            fontSize="2xs" 
+                                            color="gray.700" 
+                                            fontFamily="monospace"
+                                            textOverflow="ellipsis"
+                                            overflow="hidden"
+                                            whiteSpace="nowrap"
+                                            flex="1"
+                                            title={jsonData.action.args.url}
+                                          >
+                                            {/* Tampilkan URL dalam format yang lebih ringkas */}
+                                            {window.innerWidth < 400 || window.innerHeight > window.innerWidth * 2.5
+                                              ? new URL(jsonData.action.args.url).hostname
+                                              : jsonData.action.args.url.replace(/^(https?:\/\/)?(www\.)?/, '')
+                                            }
+                                          </Text>
+                                        </Flex>
+                                      </Flex>
                                     </Box>
                                   )}
                                   
-                                  {/* Display other type of actions */}
+                                  {/* Display other type of actions - optimasi untuk mode vertikal */}
                                   {Object.entries(jsonData.action).map(([key, value], keyIdx) => {
                                     // Skip displaying the name and args for navigate action since we have special display for it
                                     if (jsonData.action.name === 'navigate' && (key === 'name' || key === 'args')) {
@@ -2395,63 +2369,77 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                                     }
                                     
                                     return (
-                                      <Stack 
+                                      <HStack 
                                         key={keyIdx} 
-                                        direction={{base: "column", sm: "row"}} // Vertikal pada tampilan sempit, horizontal pada tampilan besar
-                                        spacing={1} 
-                                        p={2} 
+                                        spacing={2} 
+                                        p={1.5} 
                                         bg="white" 
                                         borderRadius="md" 
                                         borderWidth="1px" 
                                         borderColor="gray.200" 
                                         _hover={{ borderColor: "teal.200", bg: "gray.50" }} 
                                         transition="all 0.2s"
-                                        w="100%" // Mengisi lebar yang tersedia
                                       >
                                         <Text 
-                                          fontSize={{base: "xs", sm: "sm"}} 
+                                          fontSize="2xs" 
                                           fontWeight="medium" 
                                           color="teal.600" 
-                                          w={{base: "100%", sm: "80px"}} // Full width di mobile, fixed di desktop
+                                          width="60px"
                                           flexShrink={0}
                                         >
                                           {key}:
                                         </Text>
                                         {typeof value === 'object' ? (
                                           <Box 
-                                            borderRadius="md"
-                                            p={{base: 1.5, sm: 2}} // Padding lebih kecil di tampilan sempit
+                                            borderRadius="sm"
+                                            p={1.5}
                                             bg="white"
                                             borderWidth="1px"
                                             borderColor="teal.100"
                                             boxShadow="xs"
-                                            w="full"
-                                            ml={{base: 0, sm: 2}} // Tidak ada margin left di tampilan sempit
-                                            fontSize={{base: "xs", sm: "sm"}} // Font lebih kecil di tampilan sempit
-                                            maxH={{base: "120px", sm: "200px"}} // Batasi tinggi di tampilan vertikal
-                                            overflowY="auto" // Scroll jika terlalu panjang
+                                            width="full"
+                                            maxHeight="80px"
+                                            overflowY="auto"
+                                            sx={{
+                                              scrollbarWidth: "thin",
+                                              scrollbarColor: "teal.100 transparent",
+                                              "&::-webkit-scrollbar": {
+                                                width: "3px",
+                                              },
+                                              "&::-webkit-scrollbar-track": {
+                                                background: "transparent",
+                                              },
+                                              "&::-webkit-scrollbar-thumb": {
+                                                background: "teal.100",
+                                                borderRadius: "full",
+                                              },
+                                            }}
                                           >
                                             <JsonViewerForInvalidJson data={value} level={1} />
                                           </Box>
                                         ) : (
                                           <Text 
-                                            fontSize={{base: "xs", sm: "sm"}} 
+                                            fontSize="2xs" 
                                             color="gray.700" 
                                             fontFamily={key === 'url' ? 'monospace' : 'inherit'}
-                                            wordBreak="break-word" // Memungkinkan text wrapping untuk kata panjang
-                                            overflowWrap="break-word" // Mengatasi overflow pada kata panjang
-                                            whiteSpace="pre-wrap" // Pertahankan line breaks tapi wrap text
-                                            maxW={{base: "100%", sm: "calc(100% - 80px)"}} // Width yang responsif
+                                            isTruncated
+                                            title={String(value)}
+                                            flex="1"
                                           >
                                             {String(value)}
                                           </Text>
                                         )}
-                                      </Stack>
+                                      </HStack>
                                     );
                                   })}
                                 </VStack>
                               ) : (
-                                <Text fontSize="sm" color="gray.700" pl={10}>
+                                <Text 
+                                  fontSize="xs" 
+                                  color="gray.700" 
+                                  pl={{base: 2, md: 10}}
+                                  fontFamily="monospace"
+                                >
                                   {typeof jsonData.action === 'string' ? jsonData.action : JSON.stringify(jsonData.action)}
                                 </Text>
                               )}
@@ -2466,7 +2454,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                       <Box 
                         key={`json-${idx}`}
                         bg="white"
-                        borderRadius="2xl"
+                        borderRadius="lg"
                         overflow="hidden"
                         boxShadow="sm"
                         borderWidth="1px"

@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.0.1.57 (06-05-2025)
+- Peningkatan komprehensif UI untuk rasio vertikal 19:6 pada bagian Tindakan:
+  - Restrukturisasi layout untuk optimasi tampilan vertikal dengan pengaturan stack yang lebih efisien
+  - Penanganan teks yang lebih baik dengan text ellipsis dan tooltip untuk informasi lengkap
+  - Implementasi batasan tinggi dengan scrollable content untuk konservasi ruang vertikal
+  - Penyesuaian ukuran font dan spacing yang lebih compact untuk rasio 19:6
+  - Tampilan data JSON yang lebih efisien dengan format ringkas dan struktur yang lebih jelas
+  - Optimasi penggunaan ruang untuk favicon, judul dan URL website
+  - Penambahan deteksi otomatis rasio layar untuk mengaktifkan mode compact
+
 ## v1.0.1.56 (05-05-2025)
 - Peningkatan UI untuk rasio vertikal (19:6) pada bagian Tindakan:
   - Optimasi layout bagian navigasi website dengan susunan yang lebih compact di tampilan vertikal
