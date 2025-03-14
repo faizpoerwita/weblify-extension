@@ -2,16 +2,14 @@
 
 ## Current Version
 **v1.0.1.41 (04-05-2025)**
-- Enhanced JSON Visualization:
-  - Implementasi detector JSON yang lebih canggih dengan nested object support
-  - Redesain UI dengan modern glassmorphic card dan efek visual premium
-  - Code-style formatting dengan line number indicator dan syntax highlighting
-  - Interaktivitas yang ditingkatkan dengan animasi dan transisi fluid
-  - Type-specific styling untuk berbagai jenis data (string, number, boolean)
-  - Hierarchy yang jelas dengan indentasi dan struktur visual
-  - Error handling yang elegan untuk invalid JSON
-  - Header informatif dengan indikator tipe (object/array)
-  - Performance optimization untuk large JSON objects
+- Advanced JSON Detection & Visualization:
+  - Algoritma deteksi JSON yang lebih canggih dengan regex yang ditingkatkan
+  - Pemisahan teks dan JSON dengan segmentasi konten yang lebih akurat
+  - Visualisasi JSON dengan desain glassmorphic yang konsisten
+  - Penanganan JSON tidak valid dengan tampilan kode terformat yang elegan
+  - Dukungan untuk JSON nested dan multiple JSON dalam satu respons
+  - Konsistensi visual dengan komponen "Pemikiran AI" dan elemen UI lainnya
+  - Pengalaman pengguna yang ditingkatkan dengan animasi seamless
 
 Perubahan versi sebelumnya:
 **v1.0.1.40 (04-05-2025)**

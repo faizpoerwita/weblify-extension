@@ -18,7 +18,6 @@ import {
   Portal,
   useColorMode,
   useColorModeValue,
-  Icon,
 } from "@chakra-ui/react";
 import { debugMode } from "../constants";
 import { useAppState } from "../state/store";
@@ -30,7 +29,6 @@ import RecommendedTasks from "./RecommendedTasks";
 import AutosizeTextarea from "./AutosizeTextarea";
 import type { TaskHistoryEntry as ImportedTaskHistoryEntry } from "../state/currentTask";
 import { css, Global } from "@emotion/react";
-import { FaCode } from "react-icons/fa";
 
 // Gradient dan warna yang konsisten dengan App.tsx
 const gradientColors = {
@@ -1807,208 +1805,338 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
     );
   } catch {
     // Jika bukan JSON, kita perlu memeriksa apakah konten berisi JSON yang belum di-parse
-    // Deteksi pola JSON dengan regexp yang lebih kuat
-    const jsonPattern = /(\{[\s\S]*\}|\[[\s\S]*\])/s;
+    // Deteksi pola JSON dengan regexp yang ditingkatkan untuk menangkap lebih banyak pola JSON
+    const jsonPattern = /(\{[\s\S]*?\}|\[[\s\S]*?\])/;
     
     // Coba deteksi dan visualisasikan konten JSON yang mungkin ada di dalam teks
     if (!isUser && jsonPattern.test(content)) {
-      // Ekstrak semua kemungkinan JSON dari konten dengan regex yang lebih akurat
-      // Perbaikan regex untuk lebih baik dalam menangkap JSON nested
-      const extractJsonRegex = /(\{(?:[^{}]|(?:\{(?:[^{}]|(?:\{(?:[^{}]|(?:\{[^{}]*\}))*\}))*\}))*\}|\[(?:[^\[\]]|(?:\[(?:[^\[\]]|(?:\[(?:[^\[\]]|(?:\[[^\[\]]*\]))*\]))*\]))*\])/g;
+      // Regex yang ditingkatkan untuk ekstrak JSON, termasuk nested objects dan arrays
+      const extractJsonRegex = /(\{[\s\S]*?\}|\[[\s\S]*?\])/g;
       const possibleJsons = content.match(extractJsonRegex);
       
       if (possibleJsons && possibleJsons.length > 0) {
-        // Validasi dan filter hanya JSON yang valid
-        const validJsons = possibleJsons.filter(jsonStr => {
-          try {
-            JSON.parse(jsonStr);
-            return true;
-          } catch (e) {
-            return false;
-          }
-        });
+        // Pisahkan teks dan JSON
+        const segments = [];
+        let lastIndex = 0;
+        let match;
+        const regex = new RegExp(extractJsonRegex);
         
-        if (validJsons.length > 0) {
-          return (
-            <Box
-              bg={useColorModeValue("rgba(247, 250, 252, 0.9)", "rgba(26, 32, 44, 0.9)")}
-              p={4}
-              borderRadius="2xl"
-              borderWidth="1px"
-              borderColor={useColorModeValue("blue.100", "blue.800")}
-              boxShadow="md"
-              transition="all 0.3s"
-              _hover={{ boxShadow: "lg", borderColor: useColorModeValue("blue.200", "blue.700") }}
-              backdropFilter="blur(10px)"
-              position="relative"
-              overflow="hidden"
-            >
-              {/* Background decorative elements */}
-              <Box
-                position="absolute"
-                top="0"
-                left="0"
-                right="0"
-                bottom="0"
-                bgGradient={useColorModeValue(
-                  "linear(to-br, rgba(239, 246, 255, 0.6), rgba(236, 253, 245, 0.6))",
-                  "linear(to-br, rgba(26, 32, 44, 0.6), rgba(23, 25, 35, 0.6))"
-                )}
-                opacity="0.8"
-                zIndex="0"
-              />
-              
-              <Box
-                position="absolute"
-                top="-50%"
-                right="-10%"
-                width="60%"
-                height="200%"
-                transform="rotate(-15deg)"
-                bgGradient={useColorModeValue(
-                  "linear(to-br, blue.50, purple.50)",
-                  "linear(to-br, blue.900, purple.900)"
-                )}
-                opacity="0.2"
-                zIndex="0"
-                borderRadius="full"
-                filter="blur(40px)"
-              />
-              
-              <VStack align="stretch" spacing={4} position="relative" zIndex="1">
-                {/* Teks non-JSON */}
-                {content.split(extractJsonRegex).filter(Boolean).map((segment, idx) => {
-                  if (extractJsonRegex.test(segment)) {
-                    return null; // JSON segment akan diproses terpisah
-                  }
+        // Proses semua segmen teks dan JSON
+        while ((match = regex.exec(content)) !== null) {
+          // Tambahkan teks sebelum JSON jika ada
+          if (match.index > lastIndex) {
+            segments.push({
+              type: 'text',
+              content: content.substring(lastIndex, match.index)
+            });
+          }
+          
+          // Tambahkan JSON
+          segments.push({
+            type: 'json',
+            content: match[0]
+          });
+          
+          lastIndex = match.index + match[0].length;
+        }
+        
+        // Tambahkan teks yang tersisa setelah JSON terakhir
+        if (lastIndex < content.length) {
+          segments.push({
+            type: 'text',
+            content: content.substring(lastIndex)
+          });
+        }
+        
+        return (
+          <Box
+            bg="white"
+            p={4}
+            borderRadius="2xl"
+            borderWidth="1px"
+            borderColor="gray.200"
+            boxShadow="sm"
+            transition="all 0.2s"
+            _hover={{ boxShadow: "md" }}
+          >
+            <VStack align="stretch" spacing={4}>
+              {segments.map((segment, idx) => {
+                if (segment.type === 'text' && segment.content.trim()) {
                   return (
                     <Text
                       key={`text-${idx}`}
                       fontSize="sm"
-                      color={useColorModeValue("gray.700", "gray.200")}
+                      color="gray.700"
                       lineHeight="1.6"
                       whiteSpace="pre-wrap"
-                      p={2}
-                      bg={useColorModeValue("white", "gray.800")}
-                      borderRadius="md"
-                      borderWidth="1px"
-                      borderColor={useColorModeValue("gray.100", "gray.700")}
                     >
-                      {segment.trim()}
+                      {segment.content.trim()}
                     </Text>
                   );
-                })}
-                
-                {/* Bagian JSON */}
-                {validJsons.map((jsonStr, idx) => {
+                } else if (segment.type === 'json') {
                   try {
-                    const jsonData = JSON.parse(jsonStr);
+                    const jsonData = JSON.parse(segment.content);
                     return (
-                      <Box 
-                        key={`json-${idx}`}
-                        bg={useColorModeValue("white", "gray.800")}
-                        borderRadius="lg"
-                        borderWidth="1px"
-                        borderColor={useColorModeValue("blue.100", "blue.700")}
-                        boxShadow="sm"
-                        overflow="hidden"
-                        transition="all 0.3s"
-                        _hover={{ 
-                          boxShadow: "md", 
-                          borderColor: useColorModeValue("blue.300", "blue.600"),
-                          transform: "translateY(-2px)"
-                        }}
-                        position="relative"
-                      >
-                        {/* Header */}
-                        <Flex
-                          bg={useColorModeValue("blue.50", "blue.900")}
-                          px={4}
-                          py={2}
-                          borderBottomWidth="1px"
-                          borderBottomColor={useColorModeValue("blue.100", "blue.800")}
-                          justify="space-between"
-                          align="center"
+                      <Box key={`json-${idx}`}>
+                        <Text fontSize="xs" fontWeight="medium" color="gray.500" mb={2}>
+                          JSON Data Terdeteksi
+                        </Text>
+                        <Box
+                          bg={useColorModeValue("rgba(247, 250, 252, 0.8)", "rgba(23, 25, 35, 0.8)")}
+                          borderRadius="lg"
+                          p={3}
+                          borderWidth="1px"
+                          borderColor={useColorModeValue("gray.200", "gray.600")}
+                          boxShadow="sm"
+                          backdropFilter="blur(8px)"
+                          transition="all 0.2s"
+                          _hover={{ 
+                            boxShadow: "md", 
+                            borderColor: useColorModeValue("blue.200", "blue.500"),
+                            transform: "translateY(-2px)"
+                          }}
+                          position="relative"
+                          overflow="hidden"
+                          animation="fadeIn 0.3s ease-out forwards"
                         >
-                          <HStack>
-                            <Icon as={FaCode} color={useColorModeValue("blue.500", "blue.300")} />
-                            <Text fontSize="xs" fontWeight="bold" color={useColorModeValue("blue.700", "blue.300")}>
-                              JSON Data
-                            </Text>
-                          </HStack>
+                          {/* Decorative elements for glassmorphic effect */}
                           <Box
-                            as="span"
+                            position="absolute"
+                            top="-50%"
+                            left="-20%"
+                            width="50%"
+                            height="200%"
+                            background="linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0))"
+                            transform="rotate(25deg)"
+                            pointerEvents="none"
+                          />
+                          <Box
+                            position="absolute"
+                            top="0"
+                            right="0"
+                            width="100%"
+                            height="100%"
+                            background={useColorModeValue(
+                              "radial-gradient(circle at top right, rgba(214, 242, 255, 0.3), transparent 70%)",
+                              "radial-gradient(circle at top right, rgba(36, 99, 235, 0.1), transparent 70%)"
+                            )}
+                            pointerEvents="none"
+                          />
+                          
+                          {/* Content */}
+                          <Box position="relative" zIndex="1">
+                            <JsonViewer data={jsonData} />
+                          </Box>
+                          
+                          {/* Data type indicator */}
+                          <Box
+                            position="absolute"
+                            top="6px"
+                            right="6px"
                             borderRadius="full"
-                            bg={useColorModeValue("blue.100", "blue.700")}
-                            color={useColorModeValue("blue.700", "blue.200")}
+                            bg={useColorModeValue("blue.50", "blue.900")}
+                            color={useColorModeValue("blue.500", "blue.200")}
+                            px={2}
+                            py={0.5}
+                            fontSize="xs"
+                            fontWeight="medium"
+                            opacity="0.7"
+                            _hover={{ opacity: 1 }}
+                            transition="opacity 0.2s"
+                          >
+                            JSON
+                          </Box>
+                        </Box>
+                      </Box>
+                    );
+                  } catch (parseError) {
+                    // Jika parsing gagal, tampilkan sebagai kode biasa dengan style yang lebih baik
+                    return (
+                      <Box key={`code-${idx}`}>
+                        <Text fontSize="xs" fontWeight="medium" color="gray.500" mb={2}>
+                          JSON Format (Invalid)
+                        </Text>
+                        <Box
+                          p={3}
+                          bg={useColorModeValue("gray.50", "gray.700")}
+                          borderRadius="lg"
+                          borderWidth="1px"
+                          borderColor={useColorModeValue("gray.200", "gray.600")}
+                          position="relative"
+                          overflow="hidden"
+                        >
+                          <Box
+                            position="absolute"
+                            top="6px"
+                            right="6px"
+                            borderRadius="full"
+                            bg={useColorModeValue("orange.50", "orange.900")}
+                            color={useColorModeValue("orange.500", "orange.200")}
                             px={2}
                             py={0.5}
                             fontSize="xs"
                             fontWeight="medium"
                           >
-                            {Array.isArray(jsonData) ? 'Array' : 'Object'}
+                            CODE
                           </Box>
-                        </Flex>
-                        
-                        {/* Content with enhanced styling */}
-                        <Box 
-                          p={4}
-                          bg={useColorModeValue(
-                            "linear-gradient(to bottom, white, rgba(247, 250, 252, 0.8))",
-                            "linear-gradient(to bottom, gray.800, rgba(23, 25, 35, 0.8))"
-                          )}
-                          position="relative"
-                        >
-                          {/* Glassmorphic effect elements */}
-                          <Box
-                            position="absolute"
-                            top="0"
-                            left="0"
-                            right="0"
-                            bottom="0"
-                            backdropFilter="blur(5px) saturate(180%)"
-                            zIndex="0"
-                          />
-                          
-                          {/* Json content with enhanced JsonViewer */}
-                          <Box position="relative" zIndex="1">
-                            <JsonViewer data={jsonData} />
-                          </Box>
-                        </Box>
-                      </Box>
-                    );
-                  } catch (e) {
-                    // Jika parsing gagal, tampilkan sebagai code block biasa
-                    return (
-                      <Box key={`json-error-${idx}`}>
-                        <Text fontSize="xs" fontWeight="medium" color="orange.500" mb={2}>
-                          Data Terstruktur (Invalid JSON)
-                        </Text>
-                        <Box
-                          bg={useColorModeValue("gray.50", "gray.800")}
-                          p={3}
-                          borderRadius="md"
-                          fontFamily="mono"
-                          fontSize="sm"
-                          overflow="auto"
-                          borderWidth="1px"
-                          borderColor={useColorModeValue("orange.200", "orange.700")}
-                          whiteSpace="pre"
-                        >
-                          {jsonStr}
+                          <Text
+                            fontSize="sm"
+                            fontFamily="mono"
+                            color={useColorModeValue("gray.700", "gray.300")}
+                            whiteSpace="pre-wrap"
+                          >
+                            {segment.content}
+                          </Text>
                         </Box>
                       </Box>
                     );
                   }
-                })}
-              </VStack>
-            </Box>
-          );
-        }
+                }
+                return null;
+              })}
+            </VStack>
+          </Box>
+        );
       }
     }
     
-    // Fallback to plain text if no JSON is detected or all JSON parsing failed
+    // Jika bukan JSON dan tidak ada JSON di dalamnya, cek untuk format JSON dalam teks
+    // Coba regex yang lebih agresif untuk mencari JSON
+    const jsonRegex = /(\{|\[)[\s\S]*?(\}|\])/g;
+    const matches = content.match(jsonRegex);
+    
+    if (!isUser && matches && matches.length > 0) {
+      // Ada potensi JSON dalam teks, coba proses
+      const segments = [];
+      let lastIndex = 0;
+      
+      for (const match of matches) {
+        const index = content.indexOf(match, lastIndex);
+        
+        // Tambah teks sebelum JSON
+        if (index > lastIndex) {
+          segments.push({
+            type: 'text',
+            content: content.substring(lastIndex, index)
+          });
+        }
+        
+        // Coba parse JSON
+        try {
+          JSON.parse(match);
+          segments.push({ type: 'json', content: match });
+        } catch {
+          // Bukan JSON valid, tretap sebagai teks
+          segments.push({ type: 'text', content: match });
+        }
+        
+        lastIndex = index + match.length;
+      }
+      
+      // Tambah teks setelah JSON terakhir
+      if (lastIndex < content.length) {
+        segments.push({
+          type: 'text',
+          content: content.substring(lastIndex)
+        });
+      }
+      
+      // Jika ada JSON valid, render dengan visualisasi
+      if (segments.some(s => s.type === 'json')) {
+        return (
+          <Box
+            bg="white"
+            p={4}
+            borderRadius="2xl"
+            borderWidth="1px"
+            borderColor="gray.200"
+            boxShadow="sm"
+            transition="all 0.2s"
+            _hover={{ boxShadow: "md" }}
+          >
+            <VStack align="stretch" spacing={4}>
+              {segments.map((segment, idx) => {
+                if (segment.type === 'text') {
+                  return (
+                    <Text
+                      key={`text-${idx}`}
+                      fontSize="sm"
+                      color="gray.700"
+                      lineHeight="1.6"
+                      whiteSpace="pre-wrap"
+                    >
+                      {segment.content.trim()}
+                    </Text>
+                  );
+                } else if (segment.type === 'json') {
+                  try {
+                    const jsonData = JSON.parse(segment.content);
+                    return (
+                      <Box key={`json-${idx}`} mt={2} mb={2}>
+                        <Text fontSize="xs" fontWeight="medium" color="gray.500" mb={2}>
+                          Data JSON
+                        </Text>
+                        <Box
+                          bg={useColorModeValue("rgba(247, 250, 252, 0.8)", "rgba(23, 25, 35, 0.8)")}
+                          borderRadius="lg"
+                          p={3}
+                          borderWidth="1px"
+                          borderColor={useColorModeValue("gray.200", "gray.600")}
+                          boxShadow="sm"
+                          backdropFilter="blur(8px)"
+                          transition="all 0.2s"
+                          _hover={{ 
+                            boxShadow: "md", 
+                            borderColor: useColorModeValue("blue.200", "blue.500")
+                          }}
+                          position="relative"
+                          overflow="hidden"
+                        >
+                          <Box position="relative" zIndex="1">
+                            <JsonViewer data={jsonData} />
+                          </Box>
+                          
+                          <Box
+                            position="absolute"
+                            top="6px"
+                            right="6px"
+                            borderRadius="full"
+                            bg={useColorModeValue("blue.50", "blue.900")}
+                            color={useColorModeValue("blue.500", "blue.200")}
+                            px={2}
+                            py={0.5}
+                            fontSize="xs"
+                            fontWeight="medium"
+                          >
+                            JSON
+                          </Box>
+                        </Box>
+                      </Box>
+                    );
+                  } catch {
+                    // Render sebagai teks biasa jika parsing gagal
+                    return (
+                      <Text
+                        key={`text-${idx}`}
+                        fontSize="sm"
+                        color="gray.700"
+                        lineHeight="1.6"
+                        whiteSpace="pre-wrap"
+                      >
+                        {segment.content.trim()}
+                      </Text>
+                    );
+                  }
+                }
+                return null;
+              })}
+            </VStack>
+          </Box>
+        );
+      }
+    }
+    
+    // Jika bukan JSON dan tidak ada JSON di dalamnya, tampilkan sebagai teks biasa
     return (
       <Box
         bg={isUser ? "transparent" : "white"}
@@ -2349,65 +2477,34 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ data, level = 0, isExpanded = t
   const colorMode = useColorMode().colorMode;
   const isDark = colorMode === "dark";
 
-  // Warna berbasis mode tema dengan peningkatan kontras dan kekayaan warna
+  // Warna berbasis mode tema
   const colors = {
     string: useColorModeValue("green.600", "green.300"),
     number: useColorModeValue("blue.600", "blue.300"),
     boolean: useColorModeValue("purple.600", "purple.300"),
     null: useColorModeValue("red.500", "red.300"),
-    key: useColorModeValue("blue.700", "blue.300"),
+    key: useColorModeValue("blue.600", "blue.300"),
     bracket: useColorModeValue("gray.700", "gray.300"),
     background: useColorModeValue("gray.50", "gray.700"),
-    hoverBg: useColorModeValue("blue.50", "blue.900"),
-    border: useColorModeValue("blue.100", "blue.700"),
-    expandIcon: useColorModeValue("blue.500", "blue.300"),
-    line: useColorModeValue("gray.100", "gray.700"),
-    lineNumber: useColorModeValue("gray.400", "gray.500"),
+    hoverBg: useColorModeValue("gray.100", "gray.600"),
   };
 
   if (typeof data !== 'object' || data === null) {
-    // Visualisasi nilai primitif yang ditingkatkan
-    const valueColor = 
-      typeof data === 'string' ? colors.string :
-      typeof data === 'number' ? colors.number :
-      typeof data === 'boolean' ? colors.boolean :
-      data === null ? colors.null : 'gray.600';
-    
-    const valueBg = 
-      typeof data === 'string' ? useColorModeValue('green.50', 'rgba(72, 187, 120, 0.1)') :
-      typeof data === 'number' ? useColorModeValue('blue.50', 'rgba(66, 153, 225, 0.1)') :
-      typeof data === 'boolean' ? useColorModeValue('purple.50', 'rgba(159, 122, 234, 0.1)') :
-      'transparent';
-    
+    // Visualisasi nilai primitif
     return (
       <Text 
         as="span" 
-        color={valueColor}
+        color={
+          typeof data === 'string' ? colors.string :
+          typeof data === 'number' ? colors.number :
+          typeof data === 'boolean' ? colors.boolean :
+          data === null ? colors.null : 'gray.600'
+        }
         fontFamily="mono"
         fontSize="sm"
         borderRadius="sm"
-        px={typeof data !== 'boolean' && data !== null ? 1 : 0}
-        py={typeof data !== 'boolean' && data !== null ? 0.5 : 0}
-        bg={valueBg}
-        fontWeight={typeof data === 'boolean' || typeof data === 'number' ? "semibold" : "normal"}
-        letterSpacing="0.2px"
-        textShadow={isDark ? "0 0 1px rgba(255,255,255,0.1)" : "none"}
-        transition="all 0.2s"
-        _hover={{
-          bg: typeof data !== 'boolean' && data !== null 
-            ? (isDark 
-                ? `rgba(${typeof data === 'string' ? '72, 187, 120' : typeof data === 'number' ? '66, 153, 225' : '159, 122, 234'}, 0.2)` 
-                : useColorModeValue(
-                    typeof data === 'string' ? 'green.100' : 
-                    typeof data === 'number' ? 'blue.100' : 
-                    'purple.100', 
-                    ''
-                  )
-              ) 
-            : 'transparent',
-          transform: "translateY(-1px)",
-          boxShadow: "xs",
-        }}
+        px={typeof data === 'string' ? 1 : 0}
+        bg={typeof data === 'string' ? 'whiteAlpha.300' : 'transparent'}
       >
         {data === null ? 'null' : 
          typeof data === 'string' ? `"${data}"` : 
@@ -2421,19 +2518,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ data, level = 0, isExpanded = t
 
   if (isEmpty) {
     return (
-      <Text 
-        as="span" 
-        color={colors.bracket} 
-        fontFamily="mono" 
-        fontSize="sm"
-        bg={useColorModeValue("gray.50", "gray.800")}
-        px={2}
-        py={1}
-        borderRadius="md"
-        borderWidth="1px"
-        borderColor={colors.border}
-        opacity={0.8}
-      >
+      <Text as="span" color={colors.bracket} fontFamily="mono" fontSize="sm">
         {isArray ? '[ ]' : '{ }'}
       </Text>
     );
@@ -2442,147 +2527,76 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ data, level = 0, isExpanded = t
   const itemCount = Object.keys(data).length;
 
   return (
-    <Box pl={indent} position="relative">
-      {/* Line number decoration */}
-      {level === 0 && (
-        <Box 
-          position="absolute" 
-          left={-10} 
-          top={0} 
-          bottom={0} 
-          width="20px" 
-          borderRightWidth="1px" 
-          borderColor={colors.line}
-          opacity={0.5}
-        />
-      )}
-
+    <Box pl={indent}>
       <HStack 
         spacing={1} 
         onClick={() => setExpanded(!expanded)} 
         cursor="pointer" 
         mb={1}
         borderRadius="md"
-        px={2}
-        py={0.5}
-        transition="all 0.2s"
-        bg={expanded ? colors.hoverBg : 'transparent'}
-        opacity={expanded ? 1 : 0.9}
-        _hover={{ 
-          bg: colors.hoverBg,
-          opacity: 1,
-          transform: "translateX(2px)"
-        }}
-        display="inline-flex"
-        maxW="fit-content"
-        role="group"
+        p={1}
+        _hover={{ bg: colors.hoverBg }}
+        transition="background 0.2s"
       >
         <Box 
-          transform={expanded ? "rotate(90deg)" : "rotate(0deg)"}
+          transform={expanded ? 'rotate(90deg)' : 'rotate(0deg)'}
           transition="transform 0.2s"
-          color={colors.expandIcon}
-          _groupHover={{ color: expanded ? colors.expandIcon : useColorModeValue("blue.600", "blue.200") }}
+          color={useColorModeValue("gray.600", "gray.400")}
         >
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3.5 8.5L7 5L3.5 1.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M9 18l6-6-6-6"/>
           </svg>
         </Box>
-        <Text as="span" color={colors.bracket} fontFamily="mono" fontSize="sm">
+        <Text fontFamily="mono" color={colors.bracket} fontSize="sm">
           {isArray ? '[' : '{'}
         </Text>
         {!expanded && (
-          <>
-            <Text as="span" color={colors.bracket} fontSize="xs" opacity={0.7} fontStyle="italic">
-              {itemCount} {isArray ? 'items' : 'properties'}
-            </Text>
-            <Text as="span" color={colors.bracket} fontFamily="mono" fontSize="sm">
-              {isArray ? ']' : '}'}
-            </Text>
-          </>
+          <Text fontFamily="mono" color="gray.500" fontSize="xs" ml={1} fontStyle="italic">
+            {isArray ? `Array(${itemCount})` : `${itemCount} properti`}
+          </Text>
         )}
       </HStack>
-
+      
       {expanded && (
-        <Box
-          borderLeftWidth="1px"
-          borderColor={colors.line}
-          ml={1}
-          pl={3}
-          py={1}
-          opacity={0.97}
-          _hover={{ opacity: 1 }}
-          transition="opacity 0.2s"
+        <VStack align="stretch" spacing={1} 
+          animation="fadeIn 0.2s ease-out"
+          sx={{
+            "@keyframes fadeIn": {
+              "0%": { opacity: 0, transform: "translateY(-5px)" },
+              "100%": { opacity: 1, transform: "translateY(0)" }
+            }
+          }}
         >
-          {Object.keys(data).map((key, index) => {
-            const isLastItem = index === Object.keys(data).length - 1;
-            return (
-              <Box key={key} mb={isLastItem ? 0 : 2} position="relative">
-                {/* Line number indicator */}
-                {level === 0 && (
-                  <Text 
-                    position="absolute" 
-                    left={-30} 
-                    top={0} 
-                    fontSize="xs" 
-                    color={colors.lineNumber} 
-                    fontFamily="mono"
-                    userSelect="none"
-                  >
-                    {index + 1}
-                  </Text>
+          {Object.entries(data).map(([key, value], index) => (
+            <Box key={key} 
+              borderLeft="1px solid" 
+              borderColor="gray.200"
+              pl={2}
+              _hover={{ borderColor: "blue.200" }}
+              transition="all 0.2s"
+            >
+              <HStack spacing={2} wrap="nowrap">
+                <Text color={colors.key} fontFamily="mono" fontSize="sm" fontWeight="medium">
+                  {isArray ? 
+                    <Box as="span" px={1} fontSize="xs" bg={useColorModeValue("gray.100", "gray.600")} borderRadius="sm" mr={1}>
+                      {key}
+                    </Box> : 
+                    `"${key}":`
+                  }
+                </Text>
+                <JsonViewer data={value} level={level + 1} />
+                {index < Object.entries(data).length - 1 && !isArray && (
+                  <Text color="gray.400" fontSize="sm">,</Text>
                 )}
-                
-                <HStack spacing={2} align="flex-start" mb={1}>
-                  <Text 
-                    as="span" 
-                    color={colors.key} 
-                    fontFamily="mono" 
-                    fontSize="sm" 
-                    fontWeight="medium"
-                    bg={useColorModeValue("gray.50", "rgba(45, 55, 72, 0.3)")}
-                    px={1.5}
-                    py={0.5}
-                    borderRadius="sm"
-                    transition="all 0.2s"
-                    _hover={{
-                      bg: useColorModeValue("gray.100", "rgba(45, 55, 72, 0.5)"),
-                    }}
-                  >
-                    {isArray ? index : `"${key}"`}
-                  </Text>
-                  <Text as="span" color="gray.500" fontSize="sm">:</Text>
-                  <Box flex="1">
-                    <JsonViewer 
-                      data={data[key]} 
-                      level={level + 1} 
-                      isExpanded={level < 1} 
-                    />
-                  </Box>
-                </HStack>
-                
-                {!isLastItem && (
-                  <Text 
-                    as="span" 
-                    color="gray.400" 
-                    fontSize="sm" 
-                    position="absolute" 
-                    right={0} 
-                    bottom={-10}
-                  >
-                    ,
-                  </Text>
-                )}
-              </Box>
-            );
-          })}
-        </Box>
+              </HStack>
+            </Box>
+          ))}
+        </VStack>
       )}
-
-      {expanded && (
-        <Text as="span" color={colors.bracket} fontFamily="mono" fontSize="sm" ml={1}>
-          {isArray ? ']' : '}'}
-        </Text>
-      )}
+      
+      <Text fontFamily="mono" color={colors.bracket} fontSize="sm" pl={expanded ? indent : 0}>
+        {isArray ? ']' : '}'}
+      </Text>
     </Box>
   );
 };
