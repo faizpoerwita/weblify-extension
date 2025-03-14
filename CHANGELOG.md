@@ -1,12 +1,16 @@
 # Changelog
 
 ## v1.0.1.55 (05-05-2025)
-- Peningkatan UI pada status navigasi dengan tampilan website yang lebih informatif
-- Penambahan favicon/logo website yang lebih menonjol dan properti visual lainnya
-- Optimasi layout untuk mendukung responsivitas pada berbagai rasio layar (khususnya 19:6)
-- Penambahan media queries khusus untuk memastikan tampilan optimal pada layar ultra-wide
-- Struktur komponen yang fleksibel dengan penggunaan Flex dan Grid layout adaptif
-- Penyesuaian ukuran teks dan elemen visual berdasarkan ukuran layar
+- Peningkatan UI pada status navigasi dengan tampilan yang lebih informatif dan menarik:
+  - Implementasi kartu status khusus dengan informasi website yang komprehensif
+  - Tampilan favicon website otomatis untuk identifikasi visual yang cepat
+  - Menampilkan judul dan URL website dengan format yang rapi dan informatif
+  - Indikator status yang jelas dengan label kontekstual (NAVIGASI, SELESAI, GAGAL)
+- Optimasi responsivitas untuk berbagai ukuran screen dan rasio:
+  - Layout adaptif dengan flexbox dan breakpoint yang disesuaikan
+  - Penanganan overflow text yang lebih baik dengan ellipsis untuk URL dan judul panjang
+  - Pengaturan lebar maksimum teks yang responsif untuk berbagai ukuran layar
+  - Dukungan khusus untuk rasio 19:6 dengan layouting fleksibel
 
 ## v1.0.1.54 (05-05-2025)
 - Peningkatan UI/UX pada tampilan bagian "Tindakan" dalam chat dengan desain kartu yang lebih modern

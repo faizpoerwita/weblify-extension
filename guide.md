@@ -3,19 +3,12 @@
 ## Current Version
 
 ### **v1.0.1.55 (05-05-2025)**
-#### UI Status Navigasi yang Ditingkatkan & Responsivitas Ultra-Wide
-- **Tampilan Status Navigasi yang Komprehensif**: Peningkatan UI pada status navigasi dengan:
-  - Favicon/logo website yang lebih menonjol dengan animasi transisi yang halus
-  - URL yang diformat dengan rapi dan tampilan domain yang mudah dibaca
-  - Status navigasi yang lebih informatif dengan indikator visual yang jelas
-- **Responsivitas Ultra-Wide**: 
-  - Optimasi khusus untuk rasio layar 19:6 dan layar ultra-wide
-  - Media queries khusus untuk memastikan tampilan optimal di semua perangkat
-  - Adaptasi fluid layout yang menyesuaikan dengan proporsi layar
-- **Struktur Fleksibel**: 
-  - Penggunaan Flex dan Grid layout untuk tampilan yang fleksibel
-  - Sistem adaptif yang mengatur ulang elemen berdasarkan ruang yang tersedia
-  - Penyesuaian dinamis pada ukuran komponen sesuai viewport
+#### Peningkatan UI Status Navigasi & Responsivitas
+- **Kartu Status Website**: Desain baru dengan tampilan kartu khusus untuk navigasi yang menampilkan favicon, judul, dan URL website
+- **Identifikasi Website Visual**: Favicon otomatis untuk identifikasi visual cepat website tujuan
+- **UI yang Lebih Informatif**: Judul dan URL website dengan format rapi dan indikator status kontekstual
+- **Responsivitas Tinggi**: Optimasi untuk berbagai ukuran dan rasio layar termasuk dukungan rasio 19:6
+- **Penanganan Text Overflow**: Implementasi text ellipsis dan width control untuk menangani URL dan judul panjang
 
 Perubahan versi sebelumnya:
 ### **v1.0.1.54 (05-05-2025)**
