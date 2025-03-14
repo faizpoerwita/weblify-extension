@@ -1971,9 +1971,53 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                             </VStack>
                           ) : (
                             // Untuk nilai primitif atau array sederhana
-                            <Text fontSize="sm" color="gray.700" fontFamily="mono">
-                              {JSON.stringify(jsonData, null, 2)}
-                            </Text>
+                            <Box>
+                              {Array.isArray(jsonData) ? (
+                                <VStack align="stretch" spacing={2} p={2} bg="blue.50" borderRadius="md">
+                                  <HStack>
+                                    <Box bg="blue.100" p={1} borderRadius="md">
+                                      <Text fontSize="xs" fontWeight="bold" color="blue.700">ARRAY</Text>
+                                    </Box>
+                                    <Text fontSize="xs" color="blue.600">{jsonData.length} item</Text>
+                                  </HStack>
+                                  {jsonData.map((item: any, arrayIdx: number) => (
+                                    <Box 
+                                      key={arrayIdx} 
+                                      p={2} 
+                                      bg="white" 
+                                      borderRadius="md" 
+                                      borderWidth="1px" 
+                                      borderColor="blue.100"
+                                      _hover={{ borderColor: "blue.300", transform: "translateY(-1px)" }}
+                                      transition="all 0.2s"
+                                      boxShadow="sm"
+                                    >
+                                      {typeof item === 'object' && item !== null ? (
+                                        <JsonViewer data={item} level={1} />
+                                      ) : (
+                                        <Text 
+                                          fontSize="sm" 
+                                          color={
+                                            typeof item === 'string' ? "green.600" :
+                                            typeof item === 'number' ? "blue.600" :
+                                            typeof item === 'boolean' ? "purple.600" :
+                                            "gray.600"
+                                          }
+                                        >
+                                          {typeof item === 'string' ? item : String(item)}
+                                        </Text>
+                                      )}
+                                    </Box>
+                                  ))}
+                                </VStack>
+                              ) : (
+                                <Box p={2} bg="gray.50" borderRadius="md">
+                                  <Text fontSize="sm" color="gray.700">
+                                    {typeof jsonData === 'string' ? jsonData : String(jsonData)}
+                                  </Text>
+                                </Box>
+                              )}
+                            </Box>
                           )}
                         </Box>
                       </Box>
@@ -2196,9 +2240,53 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                             </VStack>
                           ) : (
                             // Untuk nilai primitif atau array sederhana
-                            <Text fontSize="sm" color="gray.700" fontFamily="mono">
-                              {JSON.stringify(jsonData, null, 2)}
-                            </Text>
+                            <Box>
+                              {Array.isArray(jsonData) ? (
+                                <VStack align="stretch" spacing={2} p={2} bg="blue.50" borderRadius="md">
+                                  <HStack>
+                                    <Box bg="blue.100" p={1} borderRadius="md">
+                                      <Text fontSize="xs" fontWeight="bold" color="blue.700">ARRAY</Text>
+                                    </Box>
+                                    <Text fontSize="xs" color="blue.600">{jsonData.length} item</Text>
+                                  </HStack>
+                                  {jsonData.map((item: any, arrayIdx: number) => (
+                                    <Box 
+                                      key={arrayIdx} 
+                                      p={2} 
+                                      bg="white" 
+                                      borderRadius="md" 
+                                      borderWidth="1px" 
+                                      borderColor="blue.100"
+                                      _hover={{ borderColor: "blue.300", transform: "translateY(-1px)" }}
+                                      transition="all 0.2s"
+                                      boxShadow="sm"
+                                    >
+                                      {typeof item === 'object' && item !== null ? (
+                                        <JsonViewer data={item} level={1} />
+                                      ) : (
+                                        <Text 
+                                          fontSize="sm" 
+                                          color={
+                                            typeof item === 'string' ? "green.600" :
+                                            typeof item === 'number' ? "blue.600" :
+                                            typeof item === 'boolean' ? "purple.600" :
+                                            "gray.600"
+                                          }
+                                        >
+                                          {typeof item === 'string' ? item : String(item)}
+                                        </Text>
+                                      )}
+                                    </Box>
+                                  ))}
+                                </VStack>
+                              ) : (
+                                <Box p={2} bg="gray.50" borderRadius="md">
+                                  <Text fontSize="sm" color="gray.700">
+                                    {typeof jsonData === 'string' ? jsonData : String(jsonData)}
+                                  </Text>
+                                </Box>
+                              )}
+                            </Box>
                           )}
                         </Box>
                       </Box>
@@ -2534,25 +2622,8 @@ Saya dapat membantu Anda dengan:
 Apa yang bisa saya bantu hari ini?`;
 
 interface AIJsonResponse {
-  thought?: string;
-  action?: {
-    name: ActionName;
-    args?: Record<string, any>;
-    status?: ActionStatus;
-    details?: string[];
-    metadata?: {
-      timestamp?: string;
-      duration?: number;
-      success?: boolean;
-      error?: string;
-    };
-  };
-  message?: string;
-  data?: {
-    type: 'text' | 'code' | 'list' | 'link' | 'table' | 'json';
-    content: any;
-    metadata?: Record<string, any>;
-  }[];
+  // Definisikan properti yang diperlukan
+  [key: string]: any;
 }
 
 interface JsonViewerProps {

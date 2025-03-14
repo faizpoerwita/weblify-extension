@@ -1,6 +1,17 @@
 # Panduan Pengembangan weblify.id Extension
 
 ## Current Version
+
+### **v1.0.1.43 (05-05-2025)**
+#### Peningkatan Visualisasi JSON
+- **Tampilan UI yang Lebih Menarik**: Menghilangkan tampilan JSON sebagai kode mentah dan menggantinya dengan komponen visual interaktif yang lebih user-friendly
+- **Visualisasi Array yang Ditingkatkan**: Implementasi tampilan khusus untuk array JSON dengan indikator jumlah item dan penampilan yang lebih terstruktur
+- **Interaksi Pengguna yang Lebih Baik**: Penambahan efek hover dan transisi untuk meningkatkan pengalaman interaksi pengguna
+- **Diferensiasi Tipe Data**: Pewarnaan berbeda untuk tipe data yang berbeda (string, number, boolean) untuk meningkatkan keterbacaan dan pemahaman data
+- **Konsistensi Desain**: Optimasi tampilan nilai primitif dan array sederhana dengan desain card yang konsisten dengan elemen UI lainnya
+- **Pengalaman Pengguna yang Ditingkatkan**: Visualisasi data yang lebih intuitif memudahkan pengguna memahami respons AI yang mengandung data terstruktur
+
+Perubahan versi sebelumnya:
 **v1.0.1.42 (04-05-2025)**
 - Enhanced JSON Visualization in Chat:
   - Tampilan JSON yang konsisten dengan elemen UI "Pemikiran AI" dan "Mengklik"

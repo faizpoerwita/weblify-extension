@@ -296,3 +296,11 @@
 - Implementasi penyimpanan context eksekusi saat pause untuk lanjutkan saat resume
 - Peningkatan visual feedback saat task di-pause
 - Optimasi loop eksekusi untuk mendukung pause/resume tanpa kehilangan state 
+
+## v1.0.1.43 (05-05-2025)
+- Peningkatan visualisasi JSON dengan tampilan UI yang lebih menarik
+- Menghilangkan tampilan JSON sebagai kode mentah dan menggantinya dengan komponen visual interaktif
+- Implementasi tampilan khusus untuk array JSON dengan indikator jumlah item
+- Penambahan efek hover dan transisi untuk meningkatkan interaksi pengguna
+- Pewarnaan berbeda untuk tipe data yang berbeda (string, number, boolean) untuk meningkatkan keterbacaan
+- Optimasi tampilan nilai primitif dan array sederhana dengan desain card yang konsisten 
