@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.1.60 (08-05-2025)
+- Perubahan tombol navigasi pada header aplikasi:
+  - Penggantian tombol GitHub dengan tombol untuk mengakses website resmi weblify.id
+  - Perubahan ikon dari GitHub menjadi Globe untuk konsistensi dengan identitas brand
+  - Update tautan dari repository GitHub ke website resmi weblify.id
+  - Peningkatan user experience dengan menyediakan akses langsung ke website resmi
+
 ## v1.0.1.57 (06-05-2025)
 - Peningkatan komprehensif UI untuk rasio vertikal 19:6 pada bagian Tindakan:
   - Restrukturisasi layout untuk optimasi tampilan vertikal dengan pengaturan stack yang lebih efisien

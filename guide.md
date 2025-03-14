@@ -2,6 +2,14 @@
 
 ## Current Version
 
+### **v1.0.1.60 (08-05-2025)**
+#### Peningkatan Akses ke Website Resmi weblify.id
+- **Direct Brand Access**: Penggantian tombol GitHub dengan tombol akses langsung ke website resmi weblify.id
+- **Brand Identity Consistency**: Perubahan ikon dari GitHub ke Globe untuk konsistensi dengan identitas merek
+- **Streamlined User Navigation**: Penyederhanaan navigasi pengguna dengan link langsung ke resource resmi
+- **Enhanced Brand Recognition**: Penguatan koneksi antara ekstensi dan website utama untuk pengalaman pengguna yang terintegrasi
+
+Perubahan versi sebelumnya:
 ### **v1.0.1.58 (06-05-2025)**
 #### Peningkatan Keterbacaan Teks di Rasio Vertikal Ekstrem
 - **Tipografi Optimasi Vertikal**: Peningkatan ukuran font dan ketebalan teks untuk teks penting di tampilan vertikal

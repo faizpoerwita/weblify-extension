@@ -13,7 +13,7 @@ import {
   keyframes,
 } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
-import { FaDiscord, FaGithub } from "react-icons/fa6";
+import { FaDiscord, FaGlobe } from "react-icons/fa6";
 import { useState, useEffect } from "react";
 import { useAppState } from "../state/store";
 import SetAPIKey from "./settings/SetAPIKey";
@@ -326,11 +326,11 @@ const App = () => {
                 <IconButton
                   variant="glassmorphic"
                   rounded="full"
-                  aria-label="GitHub"
-                  icon={<Icon as={FaGithub} />}
+                  aria-label="Website"
+                  icon={<Icon as={FaGlobe} />}
                   size="sm"
                   as={Link}
-                  href="https://github.com/normal-computing/fuji-web"
+                  href="https://weblify.id"
                   isExternal
                 />
                 <IconButton
