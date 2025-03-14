@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   AlertIcon,
@@ -17,9 +17,9 @@ import {
   ColorProps,
   BackgroundProps,
 } from "@chakra-ui/react";
-import { TaskHistoryEntry } from "../../types";
+import { TaskHistoryEntry } from "../state/currentTask";
 import { BsSortNumericDown, BsSortNumericUp } from "react-icons/bs";
-import useAppState from "../../state/AppState";
+import { useAppState } from "../state/store";
 import CopyButton from "./CopyButton";
 import Notes from "./CustomKnowledgeBase/Notes";
 import JsonViewer from "./JsonViewer";
@@ -69,26 +69,19 @@ type TaskHistoryItemProps = {
 const CollapsibleComponent = (props: {
   title: string;
   subtitle?: string;
-  text?: string;
+  text: string;
+  isJson?: boolean;
   jsonData?: any;
 }) => {
-  // Cek apakah teks bisa di-parse sebagai JSON atau jsonData sudah disediakan langsung
-  let isJson = !!props.jsonData;
   let jsonData = props.jsonData;
-
-  if (!isJson && props.text) {
+  
+  if (!jsonData && props.isJson) {
     try {
-      if (props.title === "Action" || props.title.includes("JSON")) {
-        jsonData = JSON.parse(props.text);
-        isJson = true;
-      }
+      jsonData = JSON.parse(props.text);
     } catch (e) {
-      // Bukan JSON, tampilkan sebagai teks biasa
+      console.error("Failed to parse JSON:", e);
     }
   }
-
-  // Text yang akan ditampilkan di text copy dan dalam panel accordion jika bukan JSON
-  const displayText = props.jsonData ? JSON.stringify(props.jsonData, null, 2) : props.text || '';
 
   return (
     <AccordionItem backgroundColor="white">
@@ -96,7 +89,7 @@ const CollapsibleComponent = (props: {
         <AccordionButton>
           <HStack flex="1">
             <Box>{props.title}</Box>
-            <CopyButton text={displayText} /> <Spacer />
+            <CopyButton text={props.text} /> <Spacer />
             {props.subtitle && (
               <Box as="span" fontSize="xs" color="gray.500" mr={4}>
                 {props.subtitle}
@@ -107,12 +100,12 @@ const CollapsibleComponent = (props: {
         </AccordionButton>
       </Heading>
       <AccordionPanel>
-        {isJson ? (
+        {(props.isJson && jsonData) ? (
           <Box p={2}>
             <JsonViewer data={jsonData} />
           </Box>
         ) : (
-          displayText.split("\n").map((line, index) => (
+          props.text.split("\n").map((line, index) => (
             <Box key={index} fontSize="xs">
               {line}
               <br />
@@ -172,7 +165,9 @@ const TaskHistoryItem = ({ index, entry }: TaskHistoryItemProps) => {
               <CollapsibleComponent
                 title="Action"
                 subtitle="JSON"
+                text={JSON.stringify(entry.action, null, 2)}
                 jsonData={entry.action}
+                isJson={true}
               />
             </>
           )}
@@ -215,8 +210,8 @@ export default function TaskHistory() {
           _hover={{ color: "gray.700" }}
           onClick={toggleSort}
         />
-        <CopyButton 
-          text={JSON.stringify(taskHistory, null, 2)} 
+        <CopyButton
+          text={JSON.stringify(taskHistory, null, 2)}
           tooltipLabel="Salin histori tugas sebagai JSON"
         />
       </HStack>

@@ -29,6 +29,7 @@ import RecommendedTasks from "./RecommendedTasks";
 import AutosizeTextarea from "./AutosizeTextarea";
 import type { TaskHistoryEntry as ImportedTaskHistoryEntry } from "../state/currentTask";
 import { css, Global } from "@emotion/react";
+import JsonViewerForInvalidJson from "./JsonViewerForInvalidJson";
 
 // Gradient dan warna yang konsisten dengan App.tsx
 const gradientColors = {
@@ -1181,7 +1182,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                             
                             {/* Content */}
                             <Box position="relative" zIndex="1">
-                              <JsonViewer data={item.content} />
+                              <JsonViewerForInvalidJson data={item.content} />
                             </Box>
                             
                             {/* Data type indicator */}
@@ -1665,7 +1666,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                       >
                         <Text color="gray.700">
                           {typeof value === 'object' ? (
-                            <JsonViewer data={value} />
+                            <JsonViewerForInvalidJson data={value} />
                           ) : (
                             String(value)
                           )}
@@ -1941,7 +1942,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                                         borderWidth="1px"
                                         borderColor="gray.200"
                                       >
-                                        <JsonViewer data={value} level={1} />
+                                        <JsonViewerForInvalidJson data={value} level={1} />
                                       </Box>
                                     </Box>
                                   );
@@ -1993,7 +1994,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                                       boxShadow="sm"
                                     >
                                       {typeof item === 'object' && item !== null ? (
-                                        <JsonViewer data={item} level={1} />
+                                        <JsonViewerForInvalidJson data={item} level={1} />
                                       ) : (
                                         <Text 
                                           fontSize="sm" 
@@ -2058,7 +2059,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                             color={useColorModeValue("gray.700", "gray.300")}
                             whiteSpace="pre-wrap"
                           >
-                            {segment.content}
+                            <JsonViewerForInvalidJson data={segment.content} />
                           </Text>
                         </Box>
                       </Box>
@@ -2210,7 +2211,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                                         borderWidth="1px"
                                         borderColor="gray.200"
                                       >
-                                        <JsonViewer data={value} level={1} />
+                                        <JsonViewerForInvalidJson data={value} level={1} />
                                       </Box>
                                     </Box>
                                   );
@@ -2262,7 +2263,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                                       boxShadow="sm"
                                     >
                                       {typeof item === 'object' && item !== null ? (
-                                        <JsonViewer data={item} level={1} />
+                                        <JsonViewerForInvalidJson data={item} level={1} />
                                       ) : (
                                         <Text 
                                           fontSize="sm" 
