@@ -14,9 +14,9 @@ const Popup = () => {
   return (
     <div className="App" style={{
       background: isDark 
-        ? "linear-gradient(165deg, rgba(15,25,40,0.95) 0%, rgba(25,35,60,0.95) 30%, rgba(35,45,80,0.95) 70%, rgba(45,55,100,0.95) 100%)"
-        : "linear-gradient(165deg, rgba(240,249,255,0.95) 0%, rgba(195,235,254,0.95) 30%, rgba(130,198,245,0.95) 70%, rgba(85,168,235,0.95) 100%)",
-      backdropFilter: "blur(15px)",
+        ? "linear-gradient(165deg, rgba(15,25,40,0.98) 0%, rgba(25,35,60,0.98) 30%, rgba(35,45,80,0.98) 65%, rgba(45,55,100,0.98) 100%)"
+        : "linear-gradient(165deg, rgba(230,245,255,0.98) 0%, rgba(179,229,252,0.98) 30%, rgba(120,190,240,0.98) 65%, rgba(80,160,230,0.98) 100%)",
+      backdropFilter: "blur(15px) saturate(180%)",
       transition: "all 0.4s ease",
       height: "100vh",
       display: "flex",
@@ -76,7 +76,7 @@ const Popup = () => {
         left: "0",
         right: "0",
         bottom: "0",
-        background: `radial-gradient(circle at 50% 50%, ${isDark ? "rgba(90,170,235,0.18)" : "rgba(90,170,235,0.25)"} 0%, transparent 70%)`,
+        background: `radial-gradient(circle at 50% 50%, ${isDark ? "rgba(80,160,230,0.15)" : "rgba(80,160,230,0.25)"} 0%, transparent 70%)`,
         opacity: "0.8",
         animation: "rotate 30s linear infinite",
         zIndex: "0",
@@ -87,11 +87,11 @@ const Popup = () => {
         position: "absolute",
         top: "15%",
         left: "10%",
-        width: "40%",
-        height: "50%",
-        opacity: "0.8",
+        width: "35%",
+        height: "45%",
+        opacity: "0.7",
         animation: "float 18s infinite ease-in-out",
-        background: `radial-gradient(circle, ${isDark ? "rgba(90,170,235,0.15)" : "rgba(90,170,235,0.18)"} 0%, transparent 70%)`,
+        background: `radial-gradient(circle, ${isDark ? "rgba(80,160,230,0.1)" : "rgba(80,160,230,0.15)"} 0%, transparent 70%)`,
         borderRadius: "50%",
         zIndex: "0",
       }}></div>
@@ -100,11 +100,11 @@ const Popup = () => {
         position: "absolute",
         bottom: "15%",
         right: "10%",
-        width: "45%",
-        height: "45%",
-        opacity: "0.7",
+        width: "40%",
+        height: "40%",
+        opacity: "0.6",
         animation: "float 22s infinite ease-in-out reverse",
-        background: `radial-gradient(circle, ${isDark ? "rgba(110,190,250,0.15)" : "rgba(110,190,250,0.18)"} 0%, transparent 70%)`,
+        background: `radial-gradient(circle, ${isDark ? "rgba(100,180,250,0.1)" : "rgba(100,180,250,0.15)"} 0%, transparent 70%)`,
         borderRadius: "50%",
         zIndex: "0",
       }}></div>
@@ -116,9 +116,9 @@ const Popup = () => {
         left: "25%",
         width: "50%",
         height: "40%",
-        opacity: "0.6",
+        opacity: "0.5",
         animation: "pulse 8s infinite ease-in-out",
-        background: "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
+        background: "radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)",
         borderRadius: "50%",
         zIndex: "0",
       }}></div>
@@ -134,12 +134,12 @@ const Popup = () => {
       }}>
         <div className="frosted-container" style={{
           background: isDark 
-            ? "rgba(26, 32, 44, 0.75)" 
-            : "rgba(255, 255, 255, 0.85)",
-          backdropFilter: "blur(15px) saturate(150%)",
+            ? "rgba(26, 32, 44, 0.7)" 
+            : "rgba(255, 255, 255, 0.7)",
+          backdropFilter: "blur(15px) saturate(180%)",
           borderRadius: "24px",
-          border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.2)" : "rgba(255, 255, 255, 0.6)"}`,
-          boxShadow: `0 15px 40px ${isDark ? "rgba(0, 0, 0, 0.3)" : "rgba(0, 100, 255, 0.18)"}`,
+          border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.2)" : "rgba(255, 255, 255, 0.7)"}`,
+          boxShadow: `0 12px 36px ${isDark ? "rgba(0, 0, 0, 0.25)" : "rgba(0, 100, 255, 0.15)"}`,
           padding: "28px",
           display: "flex",
           flexDirection: "column",
@@ -213,9 +213,9 @@ const Popup = () => {
                 ? "linear-gradient(135deg, #4299e1 0%, #63b3ed 100%)" 
                 : "linear-gradient(135deg, #3182ce 0%, #4299e1 100%)",
               color: "white",
-              backdropFilter: "blur(15px)",
+              backdropFilter: "blur(15px) saturate(180%)",
               border: "1px solid rgba(255, 255, 255, 0.3)",
-              boxShadow: `0 10px 25px ${isDark ? "rgba(0, 0, 0, 0.35)" : "rgba(66, 153, 225, 0.4)"}`,
+              boxShadow: `0 8px 20px ${isDark ? "rgba(0, 0, 0, 0.3)" : "rgba(66, 153, 225, 0.35)"}`,
               borderRadius: "30px",
               padding: "12px 28px",
               cursor: "pointer",
@@ -229,11 +229,11 @@ const Popup = () => {
             onClick={exampleThemeStorage.toggle}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = "translateY(-3px)";
-              e.currentTarget.style.boxShadow = `0 15px 30px ${isDark ? "rgba(0, 0, 0, 0.4)" : "rgba(66, 153, 225, 0.5)"}`;
+              e.currentTarget.style.boxShadow = `0 12px 28px ${isDark ? "rgba(0, 0, 0, 0.35)" : "rgba(66, 153, 225, 0.45)"}`;
             }}
             onMouseOut={(e) => {
               e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = `0 10px 25px ${isDark ? "rgba(0, 0, 0, 0.35)" : "rgba(66, 153, 225, 0.4)"}`;
+              e.currentTarget.style.boxShadow = `0 8px 20px ${isDark ? "rgba(0, 0, 0, 0.3)" : "rgba(66, 153, 225, 0.35)"}`;
             }}
           >
             {isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
@@ -251,19 +251,18 @@ const Popup = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: "100%",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.05)",
-            animation: "fadeIn 1s ease-out",
-            transition: "all 0.3s ease",
+            backdropFilter: "blur(8px) saturate(180%)",
+            animation: "fadeIn 1.2s ease-out",
+            width: "100%"
           }}>
-            <div style={{
-              color: isDark ? "#a0aec0" : "#2c5282",
+            <span style={{
               fontSize: "0.85rem",
-              fontWeight: "500",
+              color: isDark ? "#a0aec0" : "#2c5282",
               textAlign: "center",
+              fontWeight: "500"
             }}>
-              Extension ready to automate your browsing tasks
-            </div>
+              Open Sidepanel for more options
+            </span>
           </div>
         </div>
       </header>
