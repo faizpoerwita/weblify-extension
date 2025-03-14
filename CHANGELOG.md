@@ -318,4 +318,33 @@
 - Penghapusan tanda kutip pada nilai string yang masih tersisa di beberapa bagian
 - Penggantian font monospace dengan font normal pada semua tampilan kode dan nilai non-string
 - Standardisasi tampilan untuk memastikan konsistensi visual di seluruh aplikasi
-- Pemeriksaan menyeluruh untuk memastikan tidak ada JSON yang ditampilkan sebagai teks mentah 
+- Pemeriksaan menyeluruh untuk memastikan tidak ada JSON yang ditampilkan sebagai teks biasa
+
+## v1.0.1.46 (05-05-2025)
+- Penghapusan total penggunaan font monospace pada semua tampilan JSON dan kode
+- Penyesuaian tampilan URL dan blok kode untuk menggunakan font normal (inherit)
+- Pemeriksaan menyeluruh untuk memastikan tidak ada lagi JSON yang ditampilkan sebagai teks biasa
+- Standardisasi tampilan untuk memastikan konsistensi visual di seluruh aplikasi
+- Peningkatan pengalaman pengguna dengan tampilan yang lebih bersih dan profesional 
+
+## v1.0.1.47 (05-05-2025)
+- Perbaikan menyeluruh untuk menghilangkan semua font monospace pada JsonViewer
+- Pembuatan komponen JsonViewer sebagai file terpisah untuk reusability
+- Integrasi JsonViewer pada TaskHistory untuk menampilkan JSON dengan format yang konsisten
+- Perbaikan kolaborasi antar komponen untuk memastikan tidak ada JSON yang ditampilkan sebagai plain text
+- Pemeriksaan komprehensif untuk menjamin konsistensi tampilan JSON di seluruh aplikasi
+
+## v1.0.1.48 (05-05-2025)
+- Peningkatan visualisasi JSON dengan tampilan UI yang lebih menarik
+- Menghilangkan tampilan JSON sebagai kode mentah dan menggantinya dengan komponen visual interaktif
+- Implementasi tampilan khusus untuk array JSON dengan indikator jumlah item
+- Penambahan efek hover dan transisi untuk meningkatkan interaksi pengguna
+- Pewarnaan berbeda untuk tipe data yang berbeda (string, number, boolean) untuk meningkatkan keterbacaan
+- Optimasi tampilan nilai primitif dan array sederhana dengan desain card yang konsisten 
+
+## v1.0.1.49 (05-05-2025)
+- Pemeriksaan komprehensif dan eliminasi total penggunaan JSON.stringify di seluruh aplikasi
+- Peningkatan integrasi JsonViewer pada komponen TaskHistory untuk menampilkan data tanpa konversi ke string
+- Perbaikan CollapsibleComponent untuk menerima data JSON langsung tanpa perlu parsing
+- Pemeriksaan menyeluruh pada seluruh alur visualisasi JSON di aplikasi
+- Standardisasi metode tampilan JSON di semua komponen untuk konsistensi visual

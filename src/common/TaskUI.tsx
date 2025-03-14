@@ -1578,7 +1578,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                               </Box>
                               <Text
                                 fontSize="xs"
-                                fontFamily="mono"
+                                fontFamily="inherit"
                                 color="gray.600"
                                 flex={1}
                                 noOfLines={1}
@@ -1753,7 +1753,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                       >
                         <Text
                           fontSize="sm"
-                          fontFamily="mono"
+                          fontFamily="inherit"
                           color="gray.700"
                           whiteSpace="pre-wrap"
                         >
@@ -2661,7 +2661,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ data, level = 0, isExpanded = t
           typeof data === 'boolean' ? colors.boolean :
           data === null ? colors.null : 'gray.600'
         }
-        fontFamily={typeof data === 'string' ? "inherit" : "mono"}
+        fontFamily="inherit"
         fontSize="sm"
         borderRadius="sm"
         px={typeof data === 'string' ? 1 : 0}
@@ -2737,7 +2737,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ data, level = 0, isExpanded = t
               transition="all 0.2s"
             >
               <HStack spacing={2} wrap="nowrap">
-                <Text color={colors.key} fontFamily={isArray ? "mono" : "inherit"} fontSize="sm" fontWeight="medium">
+                <Text color={colors.key} fontFamily="inherit" fontSize="sm" fontWeight="medium">
                   {isArray ? 
                     <Box as="span" px={1} fontSize="xs" bg={useColorModeValue("gray.100", "gray.600")} borderRadius="sm" mr={1}>
                       {key}
