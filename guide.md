@@ -2,15 +2,14 @@
 
 ## Current Version
 
-### **v1.0.1.61 (15-03-2025)**
-#### Refactoring Komprehensif Komponen TaskUI
-- **Modular Architecture**: Pemisahan komponen menjadi modul-modul yang lebih kecil dan terorganisir
-- **Type Safety Enhancement**: Ekstraksi konstanta dan tipe data ke file terpisah untuk meningkatkan maintainability
-- **Component Isolation**: Pembuatan komponen terpisah untuk ChatMessage, StatusIndicator, TaskProgressBar, dll
-- **Utility Abstraction**: Implementasi utilitas terpisah untuk fungsi-fungsi helper yang sering digunakan
-- **Code Structure Improvement**: Peningkatan struktur kode dengan pendekatan yang lebih modular dan terorganisir
-- **Enhanced Documentation**: Dokumentasi yang lebih baik dengan README.md untuk menjelaskan struktur komponen
-- **UI/UX Preservation**: Tidak ada perubahan pada tampilan atau pengalaman pengguna, hanya peningkatan kualitas kode
+### **v1.0.1.61 (08-05-2025)**
+#### Refactoring Kode untuk Meningkatkan Maintainability
+- **Modular Architecture**: Pemisahan utilitas ke dalam file-file terpisah (actionUtils.ts, urlUtils.ts, uiUtils.ts)
+- **Component Isolation**: Pemindahan komponen StatusIndicator dan MessageContent ke folder components
+- **Custom Hooks**: Pembuatan useTaskFunctions untuk mengelola fungsi-fungsi terkait task
+- **DRY Principle**: Penghapusan duplikasi kode dan konstanta di seluruh aplikasi
+- **Type Safety**: Peningkatan tipe data dan interface untuk memperkuat keamanan tipe
+- **Future-Proof Structure**: Optimasi struktur kode untuk memudahkan pengembangan di masa depan
 
 Perubahan versi sebelumnya:
 ### **v1.0.1.60 (08-05-2025)**

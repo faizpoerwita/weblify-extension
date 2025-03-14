@@ -1,14 +1,13 @@
 # Changelog
 
-## v1.0.1.61 (15-03-2025)
-- Refactoring komprehensif pada komponen TaskUI:
-  - Pemisahan komponen menjadi modul-modul yang lebih kecil dan terorganisir
-  - Ekstraksi konstanta dan tipe data ke file terpisah untuk meningkatkan maintainability
-  - Pembuatan komponen terpisah untuk ChatMessage, StatusIndicator, TaskProgressBar, dll
-  - Implementasi utilitas terpisah untuk fungsi-fungsi helper
-  - Peningkatan struktur kode dengan pendekatan yang lebih modular
-  - Dokumentasi yang lebih baik dengan README.md untuk menjelaskan struktur komponen
-  - Tidak ada perubahan pada UI/UX, hanya peningkatan kualitas kode
+## v1.0.1.60 (08-05-2025)
+- Refactoring kode untuk meningkatkan maintainability dan struktur:
+  - Pemisahan utilitas ke dalam file-file terpisah (actionUtils.ts, urlUtils.ts, uiUtils.ts)
+  - Pemindahan komponen StatusIndicator dan MessageContent ke folder components
+  - Pembuatan custom hook useTaskFunctions untuk mengelola fungsi-fungsi terkait task
+  - Penghapusan duplikasi kode dan konstanta
+  - Peningkatan tipe data dan interface untuk memperkuat type safety
+  - Optimasi struktur kode untuk memudahkan pengembangan di masa depan
 
 ## v1.0.1.60 (08-05-2025)
 - Perubahan tombol navigasi pada header aplikasi:
