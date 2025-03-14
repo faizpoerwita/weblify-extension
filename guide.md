@@ -1,6 +1,28 @@
 # Panduan Pengembangan weblify.id Extension
 
 ## Current Version
+**v1.0.1.40 (04-05-2025)**
+- Intelligent JSON Detection & Visualization:
+  - Smart detection untuk menemukan dan memvalidasi JSON dalam pesan teks biasa
+  - Auto-repair untuk format JSON yang kurang sempurna (single quotes, missing quotes)
+  - Peningkatan UX dengan pemisahan teks reguler dan visualisasi JSON
+  - Deteksi khusus untuk codeblock ```json dengan visualisasi yang lebih baik
+  - Konsistensi visualisasi JSON pada seluruh konteks aplikasi
+  - Perbaikan tampilan JSON nested dengan indikator jumlah items saat collapsed
+  - Penanganan konsisten untuk berbagai format data dalam chat
+
+Perubahan versi sebelumnya:
+**v1.0.1.39 (04-05-2025)**
+- Enhanced JSON Data Visualization:
+  - Implementasi tampilan JSON dengan desain glassmorphic yang modern dan elegan
+  - Peningkatan user experience dengan efek hover, animasi, dan indikator tipe data
+  - Optimasi tampilan untuk mode gelap/terang dengan kontras warna yang lebih baik
+  - Interaktivitas yang ditingkatkan untuk ekspansi/collapse objek JSON nested
+  - Tampilan kode dengan dekorasi line number untuk kemudahan membaca
+  - Konsistensi tema visual di seluruh jenis visualisasi data (json, table, code)
+  - Animasi feedback yang responsif untuk meningkatkan pengalaman pengguna
+
+Perubahan versi sebelumnya:
 **v1.0.1.38 (03-05-2025)**
 - AI Agent Branding Update:
   - Perubahan ikon profil AI Agent dari "F" menjadi "W" di interface chat

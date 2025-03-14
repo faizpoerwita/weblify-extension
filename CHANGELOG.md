@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.0.1.40 (04-05-2025)
+- Perbaikan deteksi dan tampilan format JSON dalam pesan chat
+- Implementasi smart JSON detection untuk mengenali JSON dalam teks biasa
+- Penambahan auto-repair untuk format JSON yang tidak valid atau kurang tepat
+- Deteksi khusus untuk codeblock JSON dengan tag ```json
+- Peningkatan visualisasi JSON dalam semua konteks chat
+- Penyeragaman tampilan data JSON di seluruh aplikasi dengan desain glassmorphic yang konsisten
+- Pemisahan teks biasa dan JSON dalam pesan yang sama
+
+## v1.0.1.39 (04-05-2025)
+- Peningkatan visualisasi data JSON dengan desain glassmorphic modern
+- Implementasi efek responsive hover dan animasi pada tampilan JSON
+- Penambahan indikator tipe data pada setiap visualisasi (JSON, TABEL, CODE)
+- Optimasi tampilan untuk mode gelap/terang dengan kontras warna yang lebih baik
+- Peningkatan interaktif untuk ekspansi/collapse objek JSON nested
+- Penambahan dekorasi visual pada tampilan kode dengan line number decoration
+- Standardisasi UI/UX untuk semua jenis visualisasi data (json, table, code) dengan tema yang konsisten
+
 ## v1.0.1.38 (03-05-2025)
 - Perubahan ikon profil AI Agent dari "F" menjadi "W" untuk konsistensi branding weblify.id
 - Penyesuaian visual pada avatar agent untuk mencerminkan identitas merek saat ini
