@@ -63,13 +63,18 @@ const TaskUI = () => {
     runTask,
     clearHistory,
   } = useAppState((state) => ({
-    taskHistory: state.taskHistory.entries,
-    isRunningTask: state.currentTask.isRunning,
-    currentTask: state.currentTask.description,
-    currentAction: state.currentTask.currentAction,
-    stopTask: state.currentTask.actions.stop,
-    runTask: state.currentTask.actions.run,
-    clearHistory: state.taskHistory.actions.clear,
+    taskHistory: state.currentTask.history || [],
+    isRunningTask: state.currentTask.status === "running",
+    currentTask: state.ui.instructions || "",
+    currentAction: state.currentTask.actionStatus,
+    stopTask: () => state.currentTask.actions.interrupt(),
+    runTask: (onError = (error: string) => console.error(error)) => state.currentTask.actions.runTask(onError),
+    clearHistory: () => {
+      useAppState.setState((state) => {
+        state.currentTask.history = [];
+        return state;
+      });
+    },
   }));
 
   // State lokal
