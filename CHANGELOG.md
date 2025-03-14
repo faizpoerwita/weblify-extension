@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.0.1.41 (04-05-2025)
+- Perbaikan mendalam JSON visualization dengan implementasi detector yang lebih canggih
+- Optimasi regex untuk lebih baik mendeteksi nested JSON objects dalam teks
+- Peningkatan validasi JSON dengan filter untuk memastikan hanya JSON valid yang diproses
+- Redesain UI untuk JSON viewer dengan tampilan card modern dan glassmorphic
+- Penambahan line number indicator dan code-like formatting
+- Implementasi highlight warna yang lebih kaya untuk berbagai tipe data
+- Peningkatan interaktivitas dengan animasi hover dan expand/collapse
+- Standardisasi tampilan untuk objek dan array JSON dengan header yang informatif
+- Penambahan visual feedback untuk JSON parsing errors
+- Optimasi handling JSON bertingkat dengan visual hierarchy yang lebih jelas
+
 ## v1.0.1.40 (04-05-2025)
 - Perbaikan visualisasi JSON pada semua konten chat AI Agent
 - Implementasi deteksi otomatis format JSON dalam teks untuk visualisasi yang optimal

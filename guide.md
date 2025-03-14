@@ -1,6 +1,19 @@
 # Panduan Pengembangan weblify.id Extension
 
 ## Current Version
+**v1.0.1.41 (04-05-2025)**
+- Enhanced JSON Visualization:
+  - Implementasi detector JSON yang lebih canggih dengan nested object support
+  - Redesain UI dengan modern glassmorphic card dan efek visual premium
+  - Code-style formatting dengan line number indicator dan syntax highlighting
+  - Interaktivitas yang ditingkatkan dengan animasi dan transisi fluid
+  - Type-specific styling untuk berbagai jenis data (string, number, boolean)
+  - Hierarchy yang jelas dengan indentasi dan struktur visual
+  - Error handling yang elegan untuk invalid JSON
+  - Header informatif dengan indikator tipe (object/array)
+  - Performance optimization untuk large JSON objects
+
+Perubahan versi sebelumnya:
 **v1.0.1.40 (04-05-2025)**
 - Smart JSON Visualization:
   - Deteksi dan visualisasi otomatis semua format JSON dalam chat AI Agent
