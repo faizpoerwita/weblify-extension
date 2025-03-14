@@ -37,13 +37,13 @@ const SidePanel: React.FC = () => {
 
   // Variabel warna dan gradient bergantung pada mode - diperbarui untuk lebih sleek dan elegant
   const gradientBg = useColorModeValue(
-    "linear-gradient(165deg, rgba(230,245,255,1) 0%, rgba(179,229,252,1) 30%, rgba(120,190,240,1) 65%, rgba(80,160,230,1) 100%)",
+    "linear-gradient(165deg, rgba(240,249,255,1) 0%, rgba(195,235,254,1) 30%, rgba(130,198,245,1) 65%, rgba(85,168,235,1) 100%)",
     "linear-gradient(165deg, rgba(15,25,40,0.95) 0%, rgba(25,35,60,0.95) 40%, rgba(35,45,80,0.95) 70%, rgba(45,55,100,0.95) 100%)"
   );
   
   const cardBg = useColorModeValue(
-    "rgba(255, 255, 255, 0.8)",
-    "rgba(26, 32, 44, 0.8)"
+    "rgba(255, 255, 255, 0.85)",
+    "rgba(26, 32, 44, 0.85)"
   );
   
   const textColor = useColorModeValue("blue.800", "blue.100");
@@ -104,7 +104,7 @@ const SidePanel: React.FC = () => {
           opacity="0.7"
           animation="rotate 60s linear infinite"
           sx={{
-            background: `radial-gradient(ellipse at center, ${isDark ? "rgba(99,179,237,0.1)" : "rgba(99,179,237,0.15)"} 0%, transparent 70%)`,
+            background: `radial-gradient(ellipse at center, ${isDark ? "rgba(99,179,237,0.12)" : "rgba(99,179,237,0.18)"} 0%, transparent 70%)`,
             "@keyframes rotate": {
               "from": { transform: "rotate(0deg)" },
               "to": { transform: "rotate(360deg)" }
@@ -117,12 +117,12 @@ const SidePanel: React.FC = () => {
           position="absolute"
           top="10%"
           left="5%"
-          width="40%"
-          height="30%"
-          opacity={isDark ? "0.5" : "0.6"}
+          width="45%"
+          height="35%"
+          opacity={isDark ? "0.6" : "0.7"}
           animation="float 18s infinite ease-in-out"
           sx={{
-            background: `radial-gradient(circle, ${isDark ? "rgba(99,179,237,0.1)" : "rgba(99,179,237,0.15)"} 0%, transparent 70%)`,
+            background: `radial-gradient(circle, ${isDark ? "rgba(99,179,237,0.12)" : "rgba(99,179,237,0.18)"} 0%, transparent 70%)`,
             borderRadius: "50%",
             "@keyframes float": {
               "0%": { transform: "translate(0, 0)" },
@@ -136,12 +136,12 @@ const SidePanel: React.FC = () => {
           position="absolute"
           bottom="20%"
           right="10%"
-          width="35%"
-          height="25%"
-          opacity={isDark ? "0.5" : "0.6"}
+          width="40%"
+          height="30%"
+          opacity={isDark ? "0.6" : "0.7"}
           animation="float 15s infinite ease-in-out reverse"
           sx={{
-            background: `radial-gradient(circle, ${isDark ? "rgba(66,153,225,0.1)" : "rgba(66,153,225,0.15)"} 0%, transparent 70%)`,
+            background: `radial-gradient(circle, ${isDark ? "rgba(66,153,225,0.12)" : "rgba(66,153,225,0.18)"} 0%, transparent 70%)`,
             borderRadius: "50%"
           }}
         />
@@ -153,10 +153,10 @@ const SidePanel: React.FC = () => {
           left="25%"
           width="50%"
           height="40%"
-          opacity="0.5"
+          opacity="0.6"
           animation="pulse 8s infinite ease-in-out"
           sx={{
-            background: "radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
             borderRadius: "50%"
           }}
         />
@@ -193,12 +193,12 @@ const SidePanel: React.FC = () => {
             p={5}
             borderRadius="xl"
             bg={cardBg}
-            backdropFilter="blur(15px)"
+            backdropFilter="blur(15px) saturate(150%)"
             border="1px solid"
             borderColor={borderColor}
-            boxShadow="0 10px 30px rgba(0, 100, 255, 0.1)"
+            boxShadow="0 12px 36px rgba(0, 100, 255, 0.15)"
             transition="all 0.3s ease"
-            _hover={{ transform: "translateY(-2px)", boxShadow: "0 15px 35px rgba(0, 100, 255, 0.15)" }}
+            _hover={{ transform: "translateY(-2px)", boxShadow: "0 15px 40px rgba(0, 100, 255, 0.18)" }}
             animation="fadeIn 0.8s ease-out"
           >
             <HStack spacing={3} mb={3}>
@@ -219,12 +219,12 @@ const SidePanel: React.FC = () => {
             p={5}
             borderRadius="xl"
             bg={cardBg}
-            backdropFilter="blur(15px)"
+            backdropFilter="blur(15px) saturate(150%)"
             border="1px solid"
             borderColor={borderColor}
-            boxShadow="0 10px 30px rgba(0, 100, 255, 0.1)"
+            boxShadow="0 12px 36px rgba(0, 100, 255, 0.15)"
             transition="all 0.3s ease"
-            _hover={{ transform: "translateY(-2px)", boxShadow: "0 15px 35px rgba(0, 100, 255, 0.15)" }}
+            _hover={{ transform: "translateY(-2px)", boxShadow: "0 15px 40px rgba(0, 100, 255, 0.18)" }}
             animation="fadeIn 1s ease-out"
           >
             <HStack spacing={3} mb={3}>

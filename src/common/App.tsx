@@ -17,7 +17,7 @@ import { FaDiscord, FaGlobe } from "react-icons/fa6";
 import { useState, useEffect } from "react";
 import { useAppState } from "../state/store";
 import SetAPIKey from "./settings/SetAPIKey";
-import TaskUI from "./components/TaskUI";
+import TaskUI from "./TaskUI";
 import Settings from "./Settings";
 import { Global, css } from "@emotion/react";
 
@@ -42,11 +42,11 @@ const floatKeyframes = keyframes`
 // Buat variabel CSS custom untuk gradient yang lebih sleek dan elegant
 const gradientColors = {
   light: {
-    primary: "linear-gradient(165deg, rgba(230,245,255,1) 0%, rgba(179,229,252,1) 30%, rgba(120,190,240,1) 65%, rgba(80,160,230,1) 100%)", 
-    secondary: "linear-gradient(135deg, rgba(220,240,255,1) 0%, rgba(180,225,250,1) 50%, rgba(140,205,245,1) 100%)",
-    accent: "radial-gradient(circle, rgba(80,160,230,0.3) 0%, transparent 70%)",
-    accentAlt: "radial-gradient(circle, rgba(60,140,220,0.3) 0%, transparent 70%)",
-    card: "linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(240,250,255,0.85) 100%)"
+    primary: "linear-gradient(165deg, rgba(240,249,255,1) 0%, rgba(195,235,254,1) 30%, rgba(130,198,245,1) 65%, rgba(85,168,235,1) 100%)", 
+    secondary: "linear-gradient(135deg, rgba(230,245,255,1) 0%, rgba(190,230,252,1) 50%, rgba(150,210,245,1) 100%)",
+    accent: "radial-gradient(circle, rgba(90,170,235,0.35) 0%, transparent 70%)",
+    accentAlt: "radial-gradient(circle, rgba(70,150,225,0.35) 0%, transparent 70%)",
+    card: "linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(245,252,255,0.9) 100%)"
   }
 };
 
@@ -83,30 +83,32 @@ const theme = extendTheme({
       },
       variants: {
         glassmorphic: {
-          bg: "rgba(255, 255, 255, 0.25)",
-          backdropFilter: "blur(12px)",
+          bg: "rgba(255, 255, 255, 0.3)",
+          backdropFilter: "blur(15px)",
           color: "blue.700",
-          border: "1px solid rgba(255, 255, 255, 0.5)",
-          boxShadow: "0 4px 12px rgba(0,100,255,0.1)",
+          border: "1px solid rgba(255, 255, 255, 0.6)",
+          boxShadow: "0 5px 15px rgba(0,100,255,0.15)",
           _hover: {
-            bg: "rgba(255, 255, 255, 0.35)",
-            boxShadow: "0 8px 20px rgba(0,100,255,0.15)",
+            bg: "rgba(255, 255, 255, 0.4)",
+            boxShadow: "0 8px 20px rgba(0,100,255,0.2)",
+            transform: "translateY(-2px)",
           },
+          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
         },
       },
     },
     IconButton: {
       variants: {
         glassmorphic: {
-          bg: "rgba(255, 255, 255, 0.25)",
-          backdropFilter: "blur(12px)",
+          bg: "rgba(255, 255, 255, 0.3)",
+          backdropFilter: "blur(15px)",
           color: "blue.700",
-          border: "1px solid rgba(255, 255, 255, 0.5)",
-          boxShadow: "0 4px 12px rgba(0,100,255,0.1)",
+          border: "1px solid rgba(255, 255, 255, 0.6)",
+          boxShadow: "0 5px 15px rgba(0,100,255,0.15)",
           _hover: {
-            bg: "rgba(255, 255, 255, 0.35)",
+            bg: "rgba(255, 255, 255, 0.4)",
             transform: "translateY(-2px)",
-            boxShadow: "0 8px 20px rgba(0,100,255,0.15)",
+            boxShadow: "0 8px 20px rgba(0,100,255,0.2)",
           },
           _active: {
             transform: "translateY(0)",
@@ -129,11 +131,11 @@ const theme = extendTheme({
     Box: {
       variants: {
         glass: {
-          bg: "rgba(255, 255, 255, 0.25)",
-          backdropFilter: "blur(12px)",
+          bg: "rgba(255, 255, 255, 0.3)",
+          backdropFilter: "blur(15px)",
           borderRadius: "xl",
-          border: "1px solid rgba(255, 255, 255, 0.5)",
-          boxShadow: "0 8px 32px rgba(0,100,255,0.1)",
+          border: "1px solid rgba(255, 255, 255, 0.6)",
+          boxShadow: "0 10px 30px rgba(0,100,255,0.15)",
           transition: "all 0.3s ease",
         }
       }
@@ -152,8 +154,8 @@ const App = () => {
   }, []);
 
   const glassBackground = useColorModeValue(
-    "rgba(255, 255, 255, 0.8)",
-    "rgba(10, 15, 30, 0.7)"
+    "rgba(255, 255, 255, 0.85)",
+    "rgba(10, 15, 30, 0.75)"
   );
 
   return (
@@ -221,10 +223,10 @@ const App = () => {
           left="-10%"
           width="120%"
           height="120%"
-          opacity="0.6"
+          opacity="0.7"
           animation="rotate 60s linear infinite"
           sx={{
-            background: "radial-gradient(ellipse at center, rgba(80,160,230,0.15) 0%, rgba(80,160,230,0) 70%)"
+            background: "radial-gradient(ellipse at center, rgba(90,170,235,0.18) 0%, rgba(90,170,235,0) 70%)"
           }}
         />
         
@@ -233,12 +235,12 @@ const App = () => {
           position="absolute"
           top="10%"
           left="5%"
-          width="30%"
-          height="40%"
-          opacity="0.6"
+          width="35%"
+          height="45%"
+          opacity="0.7"
           animation="float 18s infinite ease-in-out"
           sx={{
-            background: "radial-gradient(circle, rgba(80,160,230,0.12) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(90,170,235,0.15) 0%, transparent 70%)",
             borderRadius: "50%"
           }}
         />
@@ -247,12 +249,12 @@ const App = () => {
           position="absolute"
           bottom="10%"
           right="5%"
-          width="35%"
-          height="35%"
-          opacity="0.5"
+          width="40%"
+          height="40%"
+          opacity="0.6"
           animation="float 22s infinite ease-in-out reverse"
           sx={{
-            background: "radial-gradient(circle, rgba(100,180,250,0.12) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(110,190,250,0.15) 0%, transparent 70%)",
             borderRadius: "50%"
           }}
         />
@@ -261,12 +263,12 @@ const App = () => {
           position="absolute"
           top="40%"
           right="15%"
-          width="20%"
-          height="20%"
-          opacity="0.7"
+          width="25%"
+          height="25%"
+          opacity="0.8"
           animation="float 15s infinite ease-in-out"
           sx={{
-            background: "radial-gradient(circle, rgba(60,140,220,0.12) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(70,150,225,0.15) 0%, transparent 70%)",
             borderRadius: "50%"
           }}
         />
@@ -278,10 +280,10 @@ const App = () => {
           left="25%"
           width="50%"
           height="40%"
-          opacity="0.4"
+          opacity="0.5"
           animation="pulse 8s infinite ease-in-out"
           sx={{
-            background: "radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
             borderRadius: "50%"
           }}
         />
@@ -313,7 +315,7 @@ const App = () => {
               <HStack spacing={4}>
                 <Heading 
                   size="md" 
-                  bgGradient="linear(to-r, blue.500, blue.700)"
+                  bgGradient="linear(to-r, blue.500, blue.600)"
                   bgClip="text"
                   fontWeight="bold"
                   letterSpacing="-0.02em"
@@ -346,16 +348,16 @@ const App = () => {
             
             <Box
               bg={glassBackground}
-              backdropFilter="blur(12px)"
+              backdropFilter="blur(15px) saturate(150%)"
               borderRadius="xl"
               p={{ base: 4, md: 6 }}
-              boxShadow="0 8px 32px rgba(0,100,255,0.1)"
-              border="1px solid rgba(255, 255, 255, 0.5)"
+              boxShadow="0 12px 36px rgba(0,100,255,0.15)"
+              border="1px solid rgba(255, 255, 255, 0.6)"
               height="calc(100% - 60px)"
               overflow="hidden"
               transition="all 0.3s ease"
               _hover={{
-                boxShadow: "0 12px 36px rgba(0,100,255,0.15)",
+                boxShadow: "0 15px 40px rgba(0,100,255,0.18)",
               }}
               transform="translateZ(0)"
             >
