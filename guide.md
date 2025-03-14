@@ -2,6 +2,17 @@
 
 ## Current Version
 
+### **v1.0.1.59 (06-05-2025)**
+#### Peningkatan Tampilan Visual pada Section Tindakan
+- **Visual Enhancement Icon**: Ikon tindakan dengan efek hover dan animasi transisi untuk umpan balik visual
+- **Gradient Title**: Penggunaan gradient color pada judul tindakan untuk tampilan yang lebih atraktif dan modern
+- **Interactive Elevation**: Efek hover yang meninggikan kartu pada interaksi untuk pengalaman yang lebih interaktif
+- **Context-Based Colors**: Skema warna yang disesuaikan dengan tipe aksi untuk mempermudah identifikasi visual
+- **Optimized Typography**: Tipografi yang lebih elegan dengan letter spacing dan weight yang diperbaiki
+- **Improved Spacing**: Padding dan margin yang dioptimalkan untuk konsistensi visual pada semua ukuran layar
+- **Enhanced Visual Hierarchy**: Peningkatan hirarki elemen visual untuk membedakan tipe tindakan dengan lebih jelas
+
+Perubahan versi sebelumnya:
 ### **v1.0.1.58 (06-05-2025)**
 #### Peningkatan Keterbacaan Teks di Rasio Vertikal Ekstrem
 - **Tipografi Optimasi Vertikal**: Peningkatan ukuran font dan ketebalan teks untuk teks penting di tampilan vertikal

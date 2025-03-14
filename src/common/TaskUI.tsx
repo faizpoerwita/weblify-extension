@@ -23,6 +23,7 @@ import {
   ListItem,
   Stack,
   useBreakpointValue,
+  Badge,
 } from "@chakra-ui/react";
 import { debugMode } from "../constants";
 import { useAppState } from "../state/store";
@@ -350,9 +351,12 @@ const actionTitles: Record<ActionName, string> = {
   [ACTION_NAMES.FILL]: 'Isi'
 };
 
-const formatActionDisplay = (action: ActionType): { title: string; description: string } => {
+// Peningkatan formatActionDisplay dengan rendering yang lebih kaya visual
+const formatActionDisplay = (action: ActionType): { title: string; description: string; color: string; icon: JSX.Element } => {
   let title = "Tindakan";
   let description = "";
+  let color = "blue"; // Default color
+  let icon: JSX.Element;
 
   const { name, args } = action;
 
@@ -367,8 +371,17 @@ const formatActionDisplay = (action: ActionType): { title: string; description: 
 
   title = actionTitles[name] || name;
 
+  // Assign appropriate color and icon per action type
   switch (name) {
     case "navigate":
+      color = "blue";
+      icon = (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polygon points="10 8 16 12 10 16 10 8"></polygon>
+        </svg>
+      );
+      
       if (args?.url) {
         // Jika ada title yang disimpan di args, gunakan itu
         description = args.title ? 
@@ -376,32 +389,89 @@ const formatActionDisplay = (action: ActionType): { title: string; description: 
           args.url;
       }
       break;
+      
     case "click":
+      color = "orange";
+      icon = (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9 9v-6l5 9h-4l4 9-9-9h5z"></path>
+        </svg>
+      );
+      
       if (args?.selector) {
         description = `pada elemen ${args.selector}`;
       }
       break;
+      
     case ACTION_NAMES.EXTRACT:
+      color = "purple";
+      icon = (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4"></path>
+          <path d="M17 9l-5 5-5-5"></path>
+          <path d="M12 12V3"></path>
+        </svg>
+      );
+      
       if (args?.selector) {
         description = `informasi dari ${args.selector}`;
       }
       break;
+      
     case "scroll":
+      color = "teal";
+      icon = (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 5v14"></path>
+          {args?.direction === "up" ? 
+            <path d="M7 10l5-5 5 5"></path> : 
+            <path d="M7 14l5 5 5-5"></path>}
+        </svg>
+      );
+      
       if (args?.direction) {
         description = `${args.direction === "up" ? "ke atas" : "ke bawah"}`;
       }
       break;
+      
     case "wait":
+      color = "cyan";
+      icon = (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+      );
+      
       if (args?.duration) {
         description = `selama ${args.duration} detik`;
       }
       break;
+      
     case ACTION_NAMES.FILL:
+      color = "green";
+      icon = (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+      );
+      
       if (args?.selector && args?.text) {
         description = `${args.selector} dengan '${args.text}'`;
       }
       break;
+      
     default:
+      color = "gray";
+      icon = (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      );
+      
       // Jika ada args yang diberikan tetapi tidak termasuk dalam case di atas
       if (args) {
         description = Object.entries(args)
@@ -411,7 +481,7 @@ const formatActionDisplay = (action: ActionType): { title: string; description: 
       }
   }
 
-  return { title, description };
+  return { title, description, color, icon };
 };
 
 const formatActionName = (name: string): string => {
@@ -832,7 +902,7 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
 
   // Tampilan khusus untuk status navigasi (dengan optimasi vertikal)
   if (action?.name === ACTION_NAMES.NAVIGATE && urlData) {
-    return (
+  return (
       <Box
         borderWidth="1px"
         borderColor={`${getStatusColor(status, action)}.200`}
@@ -871,10 +941,10 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
             >
               {status === ACTION_STATUSES.RUNNING ? (
                 <Box animation="spin 1.5s linear infinite" sx={{
-                  "@keyframes spin": {
-                    "0%": { transform: "rotate(0deg)" },
-                    "100%": { transform: "rotate(360deg)" }
-                  }
+          "@keyframes spin": {
+            "0%": { transform: "rotate(0deg)" },
+            "100%": { transform: "rotate(360deg)" }
+          }
                 }}>
                   {getStatusIcon()}
                 </Box>
@@ -1038,8 +1108,8 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
               "100%": { transform: "rotate(360deg)" }
             }
           }}>
-            {getStatusIcon()}
-          </Box>
+        {getStatusIcon()}
+      </Box>
         ) : (
           getStatusIcon()
         )}
@@ -2278,1405 +2348,213 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                                 </Text>
                               </Flex>
                               
-                              {typeof jsonData.action === 'object' ? (
-                                <VStack 
-                                  align="stretch" 
-                                  spacing={2} 
-                                  pl={{base: 2, md: 10}}
-                                  maxHeight={{base: "150px", md: "none"}}
-                                  overflowY={{base: "auto", md: "visible"}}
-                                  sx={{
-                                    scrollbarWidth: "thin",
-                                    scrollbarColor: "teal.200 transparent",
-                                    "&::-webkit-scrollbar": {
-                                      width: "4px",
-                                    },
-                                    "&::-webkit-scrollbar-track": {
-                                      background: "transparent",
-                                    },
-                                    "&::-webkit-scrollbar-thumb": {
-                                      background: "teal.200",
-                                      borderRadius: "full",
-                                    },
-                                  }}
-                                >
-                                  {/* Tampilan khusus untuk action navigate dengan website data */}
-                                  {jsonData.action.name === 'navigate' && jsonData.action.args && jsonData.action.args.url && (
-                                    <Box 
-                                      borderWidth="1px" 
-                                      borderColor="teal.100" 
-                                      borderRadius="md"
-                                      overflow="hidden"
-                                      bg="white"
-                                      boxShadow="sm"
-                                      transition="all 0.2s"
-                                      _hover={{ boxShadow: "md", borderColor: "teal.200" }}
-                                      mb={1}
-                                    >
-                                      <Flex direction="column" width="full">
-                                        <Flex p={2} alignItems="center" borderBottomWidth="1px" borderColor="teal.50">
-                                          <Box 
-                                            mr={2} 
-                                            p={1} 
-                                            borderRadius="sm" 
-                                            bg="teal.50"
-                                            display="flex"
-                                            alignItems="center"
-                                            justifyContent="center"
-                                          >
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                              <circle cx="12" cy="12" r="10"></circle>
-                                              <polygon points="10 8 16 12 10 16 10 8"></polygon>
-                                            </svg>
-                                          </Box>
-                                          
-                                          <Text 
-                                            fontSize="xs" 
-                                            fontWeight="medium" 
-                                            color="teal.700"
-                                            flex="1"
-                                            isTruncated
-                                          >
-                                            Navigasi Website
-                                          </Text>
-                                        </Flex>
-                                        
-                                        <Flex p={2} bg="gray.50" alignItems="center">
-                                          {/* Website info dengan URL yang lebih ringkas */}
-                                          <Box 
-                                            width="12px" 
-                                            height="12px" 
-                                            mr={2}
-                                            flexShrink={0}
-                                          >
-                                            <Image 
-                                              src={`https://www.google.com/s2/favicons?domain=${new URL(jsonData.action.args.url).hostname}&sz=16`}
-                                              alt="favicon"
-                                              width="12px"
-                                              height="12px"
-                                              fallback={<Box bg="gray.100" borderRadius="sm" width="12px" height="12px" />}
-                                            />
-                                          </Box>
-                                          
-                                          <Text 
-                                            fontSize="2xs" 
-                                            color="gray.700" 
-                                            fontFamily="monospace"
-                                            textOverflow="ellipsis"
-                                            overflow="hidden"
-                                            whiteSpace="nowrap"
-                                            flex="1"
-                                            title={jsonData.action.args.url}
-                                          >
-                                            {/* Tampilkan URL dalam format yang lebih ringkas */}
-                                            {window.innerWidth < 400 || window.innerHeight > window.innerWidth * 2.5
-                                              ? new URL(jsonData.action.args.url).hostname
-                                              : jsonData.action.args.url.replace(/^(https?:\/\/)?(www\.)?/, '')
-                                            }
-                                          </Text>
-                                        </Flex>
-                                      </Flex>
-                                    </Box>
-                                  )}
-                                  
-                                  {/* Display other type of actions - optimasi untuk mode vertikal */}
-                                  {Object.entries(jsonData.action).map(([key, value], keyIdx) => {
-                                    // Skip displaying the name and args for navigate action since we have special display for it
-                                    if (jsonData.action.name === 'navigate' && (key === 'name' || key === 'args')) {
-                                      return null;
-                                    }
+                              {/* Render tindakan menggunakan hasil formatActionDisplay dengan UI yang lebih menarik */}
+                              {typeof jsonData.action === 'object' && (
+                                <Box px={{base: 0, md: 2}}>
+                                  {(() => {
+                                    // Gunakan action dari jsonData
+                                    const action = jsonData.action;
+                                    // Dapatkan informasi display yang diperkaya
+                                    const { title, description, color, icon } = formatActionDisplay(action);
+                                    const { name, args, status } = action;
+                                    
+                                    // Identifikasi apakah aksi ini memiliki URL (untuk navigasi)
+                                    const hasUrl = name === 'navigate' && args?.url;
+                                    
+                                    // Deteksi rasio vertikal
+                                    const isExtremeVertical = window.innerHeight > window.innerWidth * 2.5;
                                     
                                     return (
-                                      <HStack 
-                                        key={keyIdx} 
-                                        spacing={2} 
-                                        p={1.5} 
-                                        bg="white" 
-                                        borderRadius="md" 
-                                        borderWidth="1px" 
-                                        borderColor="gray.200" 
-                                        _hover={{ borderColor: "teal.200", bg: "gray.50" }} 
-                                        transition="all 0.2s"
-                                      >
-                                        <Text 
-                                          fontSize="2xs" 
-                                          fontWeight="medium" 
-                                          color="teal.600" 
-                                          width="60px"
-                                          flexShrink={0}
-                                        >
-                                          {key}:
-                                        </Text>
-                                        {typeof value === 'object' ? (
-                                          <Box 
-                                            borderRadius="sm"
-                                            p={1.5}
-                                            bg="white"
-                                            borderWidth="1px"
-                                            borderColor="teal.100"
-                                            boxShadow="xs"
-                                            width="full"
-                                            maxHeight="80px"
-                                            overflowY="auto"
-                                            sx={{
-                                              scrollbarWidth: "thin",
-                                              scrollbarColor: "teal.100 transparent",
-                                              "&::-webkit-scrollbar": {
-                                                width: "3px",
-                                              },
-                                              "&::-webkit-scrollbar-track": {
-                                                background: "transparent",
-                                              },
-                                              "&::-webkit-scrollbar-thumb": {
-                                                background: "teal.100",
-                                                borderRadius: "full",
-                                              },
-                                            }}
-                                          >
-                                            <JsonViewerForInvalidJson data={value} level={1} />
-                                          </Box>
-                                        ) : (
-                                          <Text 
-                                            fontSize="2xs" 
-                                            color="gray.700" 
-                                            fontFamily={key === 'url' ? 'monospace' : 'inherit'}
-                                            isTruncated
-                                            title={String(value)}
-                                            flex="1"
-                                          >
-                                            {String(value)}
-                                          </Text>
-                                        )}
-                                      </HStack>
-                                    );
-                                  })}
-                                </VStack>
-                              ) : (
-                                <Text 
-                                  fontSize="xs" 
-                                  color="gray.700" 
-                                  pl={{base: 2, md: 10}}
-                                  fontFamily="monospace"
-                                >
-                                  {typeof jsonData.action === 'string' ? jsonData.action : JSON.stringify(jsonData.action)}
-                                </Text>
-                              )}
-                            </Box>
-                          )}
-                        </Box>
-                      );
-                    }
-                    
-                    // Format visual default untuk JSON lainnya
-                    return (
-                      <Box 
-                        key={`json-${idx}`}
-                        bg="white"
-                        borderRadius="lg"
-                        overflow="hidden"
-                        boxShadow="sm"
-                        borderWidth="1px"
-                        borderColor="teal.100"
-                        transition="all 0.2s"
-                        _hover={{ boxShadow: "md" }}
-                        mt={2}
-                        mb={2}
-                      >
-                        
-                        {/* Lanjutkan dengan kode yang ada */}
-                      </Box>
-                    );
-                  } catch (parseError) {
-                    // Jika parsing gagal, tampilkan sebagai kode biasa dengan style yang lebih baik
-                    return (
-                      <Box key={`code-${idx}`}>
-                        <Text fontSize="xs" fontWeight="medium" color="gray.500" mb={2}>
-                          Format Kode
-                        </Text>
-                        <Box
-                          p={3}
-                          bg={useColorModeValue("gray.50", "gray.700")}
-                          borderRadius="lg"
-                          borderWidth="1px"
-                          borderColor={useColorModeValue("gray.200", "gray.600")}
-                          position="relative"
-                          overflow="hidden"
-                        >
-                          <Box
-                            position="absolute"
-                            top="6px"
-                            right="6px"
-                            borderRadius="full"
-                            bg={useColorModeValue("orange.50", "orange.900")}
-                            color={useColorModeValue("orange.500", "orange.200")}
-                            px={2}
-                            py={0.5}
-                            fontSize="xs"
-                            fontWeight="medium"
-                          >
-                            CODE
-                          </Box>
-                          <Text
-                            fontSize="sm"
-                            fontFamily="inherit"
-                            color={useColorModeValue("gray.700", "gray.300")}
-                            whiteSpace="pre-wrap"
-                          >
-                            <JsonViewerForInvalidJson data={segment.content} />
-                          </Text>
-                        </Box>
-                      </Box>
-                    );
-                  }
-                }
-                return null;
-              })}
-            </VStack>
-          </Box>
-        );
-      }
-    }
-    
-    // Jika bukan JSON dan tidak ada JSON di dalamnya, cek untuk format JSON dalam teks
-    // Coba regex yang lebih agresif untuk mencari JSON
-    const jsonRegex = /(\{|\[)[\s\S]*?(\}|\])/g;
-    const matches = content.match(jsonRegex);
-    
-    if (!isUser && matches && matches.length > 0) {
-      // Ada potensi JSON dalam teks, coba proses
-      const segments = [];
-      let lastIndex = 0;
-      
-      for (const match of matches) {
-        const index = content.indexOf(match, lastIndex);
-        
-        // Tambah teks sebelum JSON
-        if (index > lastIndex) {
-          segments.push({
-            type: 'text',
-            content: content.substring(lastIndex, index)
-          });
-        }
-        
-        // Coba parse JSON
-        try {
-          JSON.parse(match);
-          segments.push({ type: 'json', content: match });
-        } catch {
-          // Bukan JSON valid, tretap sebagai teks
-          segments.push({ type: 'text', content: match });
-        }
-        
-        lastIndex = index + match.length;
-      }
-      
-      // Tambah teks setelah JSON terakhir
-      if (lastIndex < content.length) {
-        segments.push({
-          type: 'text',
-          content: content.substring(lastIndex)
-        });
-      }
-      
-      // Jika ada JSON valid, render dengan visualisasi
-      if (segments.some(s => s.type === 'json')) {
-        return (
-          <Box
-            bg="white"
-            p={4}
-            borderRadius="2xl"
-            borderWidth="1px"
-            borderColor="gray.200"
-            boxShadow="sm"
-            transition="all 0.2s"
-            _hover={{ boxShadow: "md" }}
-          >
-            <VStack align="stretch" spacing={4}>
-              {segments.map((segment, idx) => {
-                if (segment.type === 'text') {
-                  return (
-                    <Text
-                      key={`text-${idx}`}
-                      fontSize="sm"
-                      color="gray.700"
-                      lineHeight="1.6"
-                      whiteSpace="pre-wrap"
-                    >
-                      {segment.content.trim()}
-                    </Text>
-                  );
-                } else if (segment.type === 'json') {
-                  try {
-                    const jsonData = JSON.parse(segment.content);
-                    
-                    // Tampilkan JSON dengan format yang lebih menarik seperti "Pemikiran AI"
-                    return (
-                      <Box 
-                        key={`json-${idx}`}
-                        bg="white"
-                        borderRadius="2xl"
-                        overflow="hidden"
-                        boxShadow="sm"
-                        borderWidth="1px"
-                        borderColor="blue.100"
-                        transition="all 0.2s"
-                        _hover={{ boxShadow: "md" }}
-                        mt={2}
-                        mb={2}
-                      >
-                        <Box
-                          bg="blue.50"
-                          px={4}
-                          py={3}
-                          borderBottom="1px solid"
-                          borderColor="blue.100"
-                        >
-                          <HStack spacing={3}>
-                            <Box
-                              bg="white"
-                              p={2}
-                              borderRadius="lg"
-                              color="blue.500"
-                              borderWidth="1px"
-                              borderColor="blue.200"
-                            >
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M20 6H4a2 2 0 00-2 2v8a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2z"/>
-                                <path d="M12 6v12M6 10v4M18 10v4"/>
-                              </svg>
-                            </Box>
-                            <Text
-                              fontSize="sm"
-                              fontWeight="medium"
-                              color="blue.700"
-                            >
-                              Data JSON
-                            </Text>
-                          </HStack>
-                        </Box>
-                        <Box p={4}>
-                          {/* Visualisasi data berdasarkan tipe */}
-                          {typeof jsonData === 'object' && jsonData !== null ? (
-                            // Jika objek, tampilkan sebagai tabel properti
-                            <VStack align="stretch" spacing={2}>
-                              {Object.entries(jsonData).map(([key, value], keyIdx) => {
-                                // Jika nilai adalah objek kompleks, gunakan JsonViewer
-                                if (typeof value === 'object' && value !== null) {
-                                  return (
-                                    <Box key={keyIdx} mb={2}>
-                                      <Text fontSize="xs" fontWeight="semibold" color="gray.500" mb={1}>
-                                        {key}:
-                                      </Text>
-                                      <Box 
-                                        p={2} 
-                                        bg="gray.50" 
-                                        borderRadius="md" 
+                                      <Box
                                         borderWidth="1px"
-                                        borderColor="gray.200"
+                                        borderColor={`${color}.200`}
+                                        borderRadius="lg"
+                                        overflow="hidden"
+                                        bg="white"
+                                        boxShadow="sm"
+                                        transition="all 0.2s"
+                                        _hover={{ 
+                                          boxShadow: "md", 
+                                          borderColor: `${color}.300`,
+                                          transform: "translateY(-2px)"
+                                        }}
+                                        mb={2}
+                                        position="relative"
                                       >
-                                        <JsonViewerForInvalidJson data={value} level={1} />
-                                      </Box>
-                                    </Box>
-                                  );
-                                }
-                                
-                                // Untuk nilai primitif, tampilkan sebagai baris
-                                return (
-                                  <HStack key={keyIdx} justify="space-between" p={2} borderRadius="md" _hover={{ bg: "gray.50" }}>
-                                    <Text fontSize="sm" fontWeight="medium" color="gray.600">
-                                      {key}
-                                    </Text>
-                                    <Text 
-                                      fontSize="sm" 
-                                      color={
-                                        typeof value === 'string' ? "green.600" :
-                                        typeof value === 'number' ? "blue.600" :
-                                        typeof value === 'boolean' ? "purple.600" :
-                                        "gray.600"
-                                      }
-                                      fontFamily="inherit"
-                                    >
-                                      {typeof value === 'string' ? value : String(value)}
-                                    </Text>
-                                  </HStack>
-                                );
-                              })}
-                            </VStack>
-                          ) : (
-                            // Untuk nilai primitif atau array sederhana
-                            <Box>
-                              {Array.isArray(jsonData) ? (
-                                <VStack align="stretch" spacing={2} p={2} bg="blue.50" borderRadius="md">
-                                  <HStack>
-                                    <Box bg="blue.100" p={1} borderRadius="md">
-                                      <Text fontSize="xs" fontWeight="bold" color="blue.700">ARRAY</Text>
-                                    </Box>
-                                    <Text fontSize="xs" color="blue.600">{jsonData.length} item</Text>
-                                  </HStack>
-                                  {jsonData.map((item: any, arrayIdx: number) => (
-                                    <Box 
-                                      key={arrayIdx} 
-                                      p={2} 
-                                      bg="white" 
-                                      borderRadius="md" 
-                                      borderWidth="1px" 
-                                      borderColor="blue.100"
-                                      _hover={{ borderColor: "blue.300", transform: "translateY(-1px)" }}
-                                      transition="all 0.2s"
-                                      boxShadow="sm"
-                                    >
-                                      {typeof item === 'object' && item !== null ? (
-                                        <JsonViewerForInvalidJson data={item} level={1} />
-                                      ) : (
-                                        <Text 
-                                          fontSize="sm" 
-                                          color={
-                                            typeof item === 'string' ? "green.600" :
-                                            typeof item === 'number' ? "blue.600" :
-                                            typeof item === 'boolean' ? "purple.600" :
-                                            "gray.600"
-                                          }
+                                        {/* Header aksi */}
+                                        <Flex 
+                                          bg={`${color}.50`} 
+                                          p={{base: 2.5, md: 2}} 
+                                          borderBottomWidth="1px" 
+                                          borderColor={`${color}.100`}
+                                          align="center"
+                                          justify="space-between"
+                                          position="relative"
                                         >
-                                          {typeof item === 'string' ? item : String(item)}
-                                        </Text>
-                                      )}
-                                    </Box>
-                                  ))}
-                                </VStack>
-                              ) : (
-                                <Box p={2} bg="gray.50" borderRadius="md">
-                                  <Text fontSize="sm" color="gray.700">
-                                    {typeof jsonData === 'string' ? jsonData : String(jsonData)}
-                                  </Text>
-                                </Box>
-                              )}
-                            </Box>
-                          )}
-                        </Box>
-                      </Box>
-                    );
-                  } catch {
-                    // Render sebagai teks biasa jika parsing gagal
-                    return (
-                      <Text
-                        key={`text-${idx}`}
-                        fontSize="sm"
-                        color="gray.700"
-                        lineHeight="1.6"
-                        whiteSpace="pre-wrap"
-                      >
-                        {segment.content.trim()}
-                      </Text>
-                    );
-                  }
-                }
-                return null;
-              })}
-            </VStack>
-          </Box>
-        );
-      }
-    }
-    
-    // Jika bukan JSON dan tidak ada JSON di dalamnya, tampilkan sebagai teks biasa
-    return (
-      <Box
-        bg={isUser ? "transparent" : "white"}
-        p={4}
-        borderRadius="2xl"
-        borderWidth={isUser ? "0" : "1px"}
-        borderColor="gray.200"
-        boxShadow={isUser ? "none" : "sm"}
-        transition="all 0.2s"
-        _hover={{ boxShadow: isUser ? "none" : "md" }}
-      >
-        <VStack align="stretch" spacing={3}>
-          {content.split('\n').map((line, idx) => {
-            if (line.trim().startsWith('•')) {
-              return (
-                <HStack key={idx} spacing={3} align="start">
-                  <Box
-                    w="2px"
-                    h="2px"
-                    borderRadius="full"
-                    bg={isUser ? "white" : "gray.400"}
-                    mt={2.5}
-                  />
-                  <Text
-                    fontSize="sm"
-                    color={isUser ? "white" : "gray.700"}
-                    flex={1}
-                    lineHeight="1.6"
-                  >
-                    {line.trim().replace('•', '')}
-                  </Text>
-                </HStack>
-              );
-            }
-
-            if (line.includes('```')) {
-              const code = line.replace(/```[a-z]*|```/g, '').trim();
-              return (
-                <Box
-                  key={idx}
-                  p={3}
-                  bg={isUser ? "whiteAlpha.200" : "gray.50"}
-                  borderRadius="lg"
-                  borderWidth="1px"
-                  borderColor={isUser ? "whiteAlpha.300" : "gray.200"}
-                >
-                  <Text
-                    fontSize="sm"
-                    fontFamily="inherit"
-                    color={isUser ? "white" : "gray.700"}
-                    whiteSpace="pre-wrap"
-                  >
-                    {code}
-                  </Text>
-                </Box>
-              );
-            }
-
-            return (
-              <Text
-                key={idx}
-                fontSize="sm"
-                color={isUser ? "white" : "gray.700"}
-                lineHeight="1.6"
-                whiteSpace="pre-wrap"
-              >
-                {line}
-              </Text>
-            );
-          })}
-        </VStack>
-      </Box>
-    );
-  }
-};
-
-const ChatMessage: React.FC<ChatMessageProps> = ({ 
-  isUser, 
-  content, 
-  status = ACTION_STATUSES.IDLE, 
-  metadata 
-}) => {
-  // Definisikan action secara benar untuk mencegah error tipe
-  const actionName = metadata?.action?.name;
-  const action = actionName ? {
-    name: actionName,
-    args: metadata?.action?.args || {}
-  } as ActionType : undefined;
-  
-  const isProcessing = status === ACTION_STATUSES.RUNNING;
-
-  return (
-    <Flex 
-      justify={isUser ? "flex-end" : "flex-start"} 
-      mb={4}
-      opacity={0}
-      animation="fadeIn 0.3s ease-in-out forwards"
-      sx={{
-        "@keyframes fadeIn": {
-          "0%": { opacity: 0, transform: "translateY(10px)" },
-          "100%": { opacity: 1, transform: "translateY(0)" }
-        }
-      }}
-    >
-      {!isUser && (
-        <Box
-          w="34px"
-          h="34px"
-          mr={2}
-          borderRadius="xl"
-          bg="blue.50"
-          border="1px solid"
-          borderColor="blue.200"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          flexShrink={0}
-          boxShadow="0 2px 8px rgba(0, 0, 0, 0.05)"
-          _hover={{ transform: "scale(1.05)" }}
-          transition="transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-          position="relative"
-          overflow="hidden"
-        >
-          {/* Latar belakang dekoratif untuk avatar */}
-          <Box
-            position="absolute"
-            top="0"
-            left="0"
-            right="0"
-            bottom="0"
-            bg="linear-gradient(135deg, rgba(214, 238, 255, 0.6) 0%, rgba(227, 246, 255, 0.4) 100%)"
-            opacity="0.8"
-          />
-          <Text 
-            color="blue.500" 
-            fontSize="sm" 
-            fontWeight="bold"
-            position="relative"
-            zIndex="1"
-          >W</Text>
-        </Box>
-      )}
-      <Box
-        maxW={isUser ? "80%" : "85%"}
-        bg={isUser 
-          ? "linear-gradient(135deg, #3182ce 0%, #4299e1 100%)" 
-          : "rgba(255, 255, 255, 0.85)"}
-        color={isUser ? "white" : "gray.700"}
-        borderRadius={isUser ? "2xl 2xl 0 2xl" : "0 2xl 2xl 2xl"}
-        boxShadow={isUser 
-          ? "0 4px 12px rgba(66, 153, 225, 0.24)" 
-          : "0 4px 12px rgba(0, 0, 0, 0.06)"}
-        border="1px solid"
-        borderColor={isUser ? "blue.500" : "rgba(226, 232, 240, 0.6)"}
-        overflow="hidden"
-        transition="all 0.2s ease"
-        _hover={{
-          transform: "translateY(-2px)",
-          boxShadow: isUser 
-            ? "0 6px 16px rgba(66, 153, 225, 0.3)" 
-            : "0 6px 16px rgba(0, 0, 0, 0.08)"
-        }}
-        backdropFilter={isUser ? "none" : "blur(10px)"}
-        position="relative"
-      >
-        {/* Latar belakang dekoratif untuk pesan */}
-        {!isUser && (
-          <Box
-            position="absolute"
-            top="0"
-            left="0"
-            width="100%"
-            height="100%"
-            opacity="0.05"
-            background="radial-gradient(circle at 30% 30%, rgba(99,179,237,0.4) 0%, transparent 70%)"
-            zIndex="0"
-            pointerEvents="none"
-          />
-        )}
-        
-        <Box p={4} position="relative" zIndex="1">
-          <MessageContent content={content} isUser={isUser} />
-        </Box>
-
-        {!isUser && status && (
-          <Box 
-            borderTop="1px solid"
-            borderColor="rgba(226, 232, 240, 0.6)"
-            bg={`${getStatusColor(status, action)}.50`}
-            px={{base: 4, sm: 4}}
-            py={{base: 4, sm: 3}} // Padding Y lebih besar di vertikal
-            position="relative"
-            zIndex="1"
-          >
-            <StatusIndicator status={status} action={action} />
-          </Box>
-        )}
-      </Box>
-    </Flex>
-  );
-};
-
-const transformTaskHistory = (history: BaseTaskHistoryEntry[]): DisplayTaskHistoryEntry[] => {
-  let lastUserMessage = '';
-  let lastAssistantMessage = '';
-  let isProcessing = false;
-  
-  return history.reduce<DisplayTaskHistoryEntry[]>((entries, entry, index) => {
-    // Cek status processing di awal
-    if (entry.action?.operation.name === OPERATION_NAMES.PROCESSING) {
-      isProcessing = true;
-    }
-
-    // Format pesan user
-    if (entry.prompt) {
-      const normalizedPrompt = formatUserMessage(entry.prompt).trim();
-      
-      // Hanya tambahkan jika berbeda dari pesan terakhir
-      if (normalizedPrompt && normalizedPrompt !== lastUserMessage) {
-        lastUserMessage = normalizedPrompt;
-        
-        entries.push({
-          type: "user",
-          message: normalizedPrompt,
-          status: ACTION_STATUSES.IDLE,
-          metadata: {
-            timestamp: new Date().toISOString()
-          },
-          isNewGroup: true,
-          isLastInGroup: true
-        });
-      }
-    }
-
-    // Format respons AI
-    if (entry.response) {
-      const normalizedResponse = entry.response.trim();
-      
-      // Hanya tambahkan jika ada respons dan berbeda dari respons terakhir
-      if (normalizedResponse && normalizedResponse !== lastAssistantMessage) {
-        lastAssistantMessage = normalizedResponse;
-        
-        entries.push({
-          type: "assistant",
-          message: normalizedResponse,
-          status: entry.action?.operation.name === OPERATION_NAMES.PROCESSING 
-            ? ACTION_STATUSES.RUNNING 
-            : ACTION_STATUSES.IDLE,
-          metadata: {
-            timestamp: new Date().toISOString(),
-            action: mapOperationToAction(entry.action?.operation)
-          },
-          isNewGroup: true,
-          isLastInGroup: true
-        });
-      }
-    }
-
-    // Tambahkan status processing hanya di akhir jika sedang memproses
-    if (index === history.length - 1 && isProcessing && 
-        !entries.some(e => e.status === ACTION_STATUSES.RUNNING)) {
-      entries.push({
-        type: "assistant",
-        message: "Sedang memproses permintaan Anda...",
-        status: ACTION_STATUSES.RUNNING,
-        metadata: {
-          timestamp: new Date().toISOString()
-        },
-        isNewGroup: true,
-        isLastInGroup: true
-      });
-    }
-
-    return entries;
-  }, []);
-};
-
-const mapOperationToAction = (operation?: ActionOperation): ActionName | undefined => {
-  if (!operation) return undefined;
-
-  const nameMap: Record<OperationName | 'finish', ActionName> = {
-    [OPERATION_NAMES.CLICK]: ACTION_NAMES.CLICK,
-    [OPERATION_NAMES.SET_VALUE]: ACTION_NAMES.TYPE,
-    [OPERATION_NAMES.SET_VALUE_AND_ENTER]: ACTION_NAMES.TYPE,
-    [OPERATION_NAMES.NAVIGATE]: ACTION_NAMES.NAVIGATE,
-    [OPERATION_NAMES.SCROLL]: ACTION_NAMES.SCROLL,
-    [OPERATION_NAMES.WAIT]: ACTION_NAMES.WAIT,
-    [OPERATION_NAMES.FAIL]: ACTION_NAMES.FINISH,
-    [OPERATION_NAMES.PROCESSING]: ACTION_NAMES.WAIT,
-    'finish': ACTION_NAMES.FINISH
-  };
-
-  return nameMap[operation.name];
-};
-
-const WELCOME_MESSAGE = `Selamat datang! Saya weblify.id, asisten browser Anda.
-
-Saya dapat membantu Anda dengan:
-• Membuka situs web
-• Mencari informasi
-• Mengklik elemen
-• Mengisi formulir
-• Menggulir halaman
-
-Apa yang bisa saya bantu hari ini?`;
-
-interface AIJsonResponse {
-  // Definisikan properti yang diperlukan
-  [key: string]: any;
-}
-
-interface JsonViewerProps {
-  data: any;
-  level?: number;
-  isExpanded?: boolean;
-}
-
-const JsonViewer: React.FC<JsonViewerProps> = ({ data, level = 0, isExpanded = true }) => {
-  const [expanded, setExpanded] = React.useState(isExpanded);
-  const indent = React.useMemo(() => level * 20, [level]);
-  const colorMode = useColorMode().colorMode;
-  const isDark = colorMode === "dark";
-
-  // Warna berbasis mode tema
-  const colors = {
-    string: useColorModeValue("green.600", "green.300"),
-    number: useColorModeValue("blue.600", "blue.300"),
-    boolean: useColorModeValue("purple.600", "purple.300"),
-    null: useColorModeValue("red.500", "red.300"),
-    key: useColorModeValue("blue.600", "blue.300"),
-    bracket: useColorModeValue("gray.700", "gray.300"),
-    background: useColorModeValue("gray.50", "gray.700"),
-    hoverBg: useColorModeValue("gray.100", "gray.600"),
-  };
-
-  if (typeof data !== 'object' || data === null) {
-    // Visualisasi nilai primitif
-    return (
-      <Text 
-        as="span" 
-        color={
-          typeof data === 'string' ? colors.string :
-          typeof data === 'number' ? colors.number :
-          typeof data === 'boolean' ? colors.boolean :
-          data === null ? colors.null : 'gray.600'
-        }
-        fontFamily="inherit"
-        fontSize="sm"
-        borderRadius="sm"
-        px={typeof data === 'string' ? 1 : 0}
-        bg={typeof data === 'string' ? 'whiteAlpha.300' : 'transparent'}
-      >
-        {data === null ? 'null' : 
-         typeof data === 'string' ? data : 
-         String(data)}
-      </Text>
-    );
-  }
-
-  const isArray = Array.isArray(data);
-  const isEmpty = Object.keys(data).length === 0;
-
-  if (isEmpty) {
-    return (
-      <Text as="span" color={colors.bracket} fontFamily="inherit" fontSize="sm">
-        {isArray ? '[ ]' : '{ }'}
-      </Text>
-    );
-  }
-
-  const itemCount = Object.keys(data).length;
-
-  return (
-    <Box pl={indent}>
-      <HStack 
-        spacing={1} 
-        onClick={() => setExpanded(!expanded)} 
-        cursor="pointer" 
-        mb={1}
-        borderRadius="md"
-        p={1}
-        _hover={{ bg: colors.hoverBg }}
-        transition="background 0.2s"
-      >
-        <Box 
-          transform={expanded ? 'rotate(90deg)' : 'rotate(0deg)'}
-          transition="transform 0.2s"
-          color={useColorModeValue("gray.600", "gray.400")}
-        >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M9 18l6-6-6-6"/>
-          </svg>
-        </Box>
-        <Text fontFamily="inherit" color={colors.bracket} fontSize="sm">
-          {isArray ? '[' : '{'}
-        </Text>
-        {!expanded && (
-          <Text fontFamily="inherit" color="gray.500" fontSize="xs" ml={1} fontStyle="italic">
-            {isArray ? `Array(${itemCount})` : `${itemCount} properti`}
-          </Text>
-        )}
-      </HStack>
-      
-      {expanded && (
-        <VStack align="stretch" spacing={1} 
-          animation="fadeIn 0.2s ease-out"
-          sx={{
-            "@keyframes fadeIn": {
-              "0%": { opacity: 0, transform: "translateY(-5px)" },
-              "100%": { opacity: 1, transform: "translateY(0)" }
-            }
-          }}
-        >
-          {Object.entries(data).map(([key, value], index) => (
-            <Box key={key} 
-              borderLeft="1px solid" 
-              borderColor="gray.200"
-              pl={2}
-              _hover={{ borderColor: "blue.200" }}
-              transition="all 0.2s"
-            >
-              <HStack spacing={2} wrap="nowrap">
-                <Text color={colors.key} fontFamily="inherit" fontSize="sm" fontWeight="medium">
-                  {isArray ? 
-                    <Box as="span" px={1} fontSize="xs" bg={useColorModeValue("gray.100", "gray.600")} borderRadius="sm" mr={1}>
-                      {key}
-                    </Box> : 
-                    key
-                  }
-                </Text>
-                <JsonViewer data={value} level={level + 1} />
-                {index < Object.entries(data).length - 1 && !isArray && (
-                  <Text color="gray.400" fontSize="sm">,</Text>
-                )}
-              </HStack>
-            </Box>
-          ))}
-        </VStack>
-      )}
-      
-      <Text fontFamily="inherit" color={colors.bracket} fontSize="sm" pl={expanded ? indent : 0}>
-        {isArray ? ']' : '}'}
-      </Text>
-    </Box>
-  );
-};
-
-const TaskUI = () => {
-  const state = useAppState((state) => ({
-    taskHistory: state.currentTask.history,
-    taskStatus: state.currentTask.status,
-    runTask: state.currentTask.actions.runTask,
-    interruptTask: state.currentTask.actions.interrupt,
-    instructions: state.ui.instructions,
-    setInstructions: state.ui.actions.setInstructions,
-    voiceMode: state.settings.voiceMode,
-    isListening: state.currentTask.isListening,
-  }));
-  const taskInProgress = state.taskStatus === "running";
-  const chatContainerRef = useRef<HTMLDivElement>(null);
-  const toast = useToast();
-
-  // State untuk tracking scroll direction
-  const [isScrollingDown, setIsScrollingDown] = useState(false);
-  const [lastScrollTop, setLastScrollTop] = useState(0);
-  
-  // Track scroll direction - tidak digunakan untuk TaskProgressBar karena selalu terlihat
-  useEffect(() => {
-    const handleScroll = () => {
-      if (chatContainerRef.current) {
-        const st = chatContainerRef.current.scrollTop;
-        if (st > lastScrollTop && st > 50) {
-          // Scrolling down & past the threshold
-          setIsScrollingDown(true);
-        } else {
-          // Scrolling up
-          setIsScrollingDown(false);
-        }
-        setLastScrollTop(st);
-      }
-    };
-
-    const container = chatContainerRef.current;
-    if (container) {
-      container.addEventListener('scroll', handleScroll);
-      return () => {
-        container.removeEventListener('scroll', handleScroll);
-      };
-    }
-  }, [lastScrollTop]);
-
-  const toastError = useCallback(
-    (message: string) => {
-      toast({
-        title: "Error",
-        description: message,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    },
-    [toast],
-  );
-
-  const runTask = useCallback(() => {
-    state.instructions && state.runTask(toastError);
-  }, [state, toastError]);
-
-  const runTaskWithNewInstructions = (newInstructions: string = "") => {
-    if (!newInstructions) {
-      return;
-    }
-    state.setInstructions(newInstructions);
-    state.runTask(toastError);
-  };
-
-  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter") {
-      if (!e.shiftKey) {
-        e.preventDefault();
-        if (state.instructions?.trim()) {
-          runTask();
-        }
-      }
-    }
-  };
-
-  // Tambahkan state untuk task execution
-  const [taskExecution, setTaskExecution] = useState<{
-    isPaused: boolean;
-    currentStep: number;
-    remainingSteps: any[];
-  }>({
-    isPaused: false,
-    currentStep: 0,
-    remainingSteps: []
-  });
-
-  // Fungsi untuk menangani stop task
-  const handleStopTask = useCallback(() => {
-    if (state.taskStatus === "running") {
-      state.interruptTask();
-      console.log('Task stopped via interrupt');
-      toast({
-        title: "Task dihentikan",
-        description: "Task telah berhasil dihentikan",
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-        position: "top"
-      });
-    }
-  }, [state.taskStatus, state.interruptTask, toast]);
-
-  // Update task execution state saat ada perubahan
-  useEffect(() => {
-    if (state.taskStatus === "running" && !taskExecution.isPaused) {
-      // Update progress
-      setTaskExecution(prev => ({
-        ...prev,
-        currentStep: prev.currentStep + 1
-      }));
-    }
-  }, [state.taskStatus, taskExecution.isPaused]);
-
-  const displayHistory = transformTaskHistory(state.taskHistory);
-
-  const getCurrentTaskTitle = useCallback((instructions: string) => {
-    if (!instructions) return "Running task...";
-    if (instructions.length > 50) {
-      return `${instructions.substring(0, 50)}...`;
-    }
-    return instructions;
-  }, []);
-
-  // Determine current action for display
-  const currentAction = useMemo(() => {
-    const lastHistoryEntry = state.taskHistory[state.taskHistory.length - 1];
-    return lastHistoryEntry?.action?.operation?.name;
-  }, [state.taskHistory]);
-
-  return (
-    <>
-      {/* Global styles untuk animasi */}
-      <Global 
-        styles={css`
-          @keyframes float {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(5px, 10px); }
-            100% { transform: translate(0, 0); }
-          }
-          
-          @keyframes gradient-flow {
-            0% { background-position: 0% 25%; }
-            25% { background-position: 50% 50%; }
-            50% { background-position: 100% 75%; }
-            75% { background-position: 50% 50%; }
-            100% { background-position: 0% 25%; }
-          }
-          
-          @keyframes pulse-subtle {
-            0% { opacity: 0.3; }
-            50% { opacity: 0.6; }
-            100% { opacity: 0.3; }
-          }
-          
-          @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-          }
-        `}
-      />
-      
-      {/* TaskProgressBar yang independen, muncul sebagai notifikasi menggunakan Portal */}
-      {taskInProgress && (
-        <Portal>
-          <Box
-            position="fixed"
-            top="16px"
-            left="50%"
-            transform="translateX(-50%) scale(1.05)"
-            width={["calc(100% - 32px)", "90%", "80%", "600px"]}
-            maxWidth="700px"
-            zIndex="100000" // Super tinggi zIndex
-            borderRadius="xl"
-            boxShadow="0 12px 40px rgba(0, 0, 0, 0.25)"
-            transition="all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-            className="task-progress-notification"
-            bg="transparent"
-            animation="task-notification-appear 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-            sx={{
-              "@keyframes task-notification-appear": {
-                "0%": { opacity: 0, transform: "translateX(-50%) translateY(-20px) scale(1.05)" },
-                "100%": { opacity: 1, transform: "translateX(-50%) translateY(0) scale(1.05)" }
-              }
-            }}
-          >
-        <TaskProgressBar
-          isRunning={taskInProgress}
-          onStop={handleStopTask}
-          currentTask={getCurrentTaskTitle(state.instructions || "")}
-              isScrollingDown={false}
-              currentAction={currentAction as ActionName}
-            />
-          </Box>
-        </Portal>
-      )}
-
-      <Box 
-        h="100%" 
-        display="flex" 
-        flexDirection="column" 
-        position="relative"
-        background="transparent"
-        borderRadius="xl"
-        overflow="hidden"
-        boxShadow="0 8px 32px rgba(0, 0, 0, 0.08)"
-      >
-        {/* Background animasi gradient yang seamless dengan App.tsx */}
-        <Box
-          position="absolute"
-          top="0"
-          left="0"
-          right="0"
-          bottom="0"
-          zIndex="0"
-          pointerEvents="none"
-          bg={gradientColors.light.primary}
-          backgroundSize="300% 300%"
-          animation="gradient-flow 18s ease-in-out infinite"
-          overflow="hidden"
-        >
-          {/* Animated background effects - persis seperti di App.tsx */}
-          <Box
-            position="absolute"
-            top="-10%"
-            left="-10%"
-            width="120%"
-            height="120%"
-            opacity="0.6"
-            animation="rotate 60s linear infinite"
-            sx={{
-              background: "radial-gradient(ellipse at center, rgba(99,179,237,0.15) 0%, rgba(99,179,237,0) 70%)"
-            }}
-          />
-          
-          {/* Subtle animated blue blobs */}
-          <Box
-            position="absolute"
-            top="10%"
-            left="5%"
-            width="30%"
-            height="40%"
-            opacity="0.6"
-            animation="float 18s infinite ease-in-out"
-            sx={{
-              background: "radial-gradient(circle, rgba(99,179,237,0.12) 0%, transparent 70%)",
-              borderRadius: "50%"
-            }}
-          />
-          
-          <Box
-            position="absolute"
-            bottom="20%"
-            right="10%"
-            width="25%"
-            height="30%"
-            opacity="0.6"
-            animation="float 15s infinite ease-in-out reverse"
-            sx={{
-              background: "radial-gradient(circle, rgba(66,153,225,0.12) 0%, transparent 70%)",
-              borderRadius: "50%"
-            }}
-          />
-          
-          {/* Additional subtle blue blobs - persis seperti di App.tsx */}
-          <Box
-            position="absolute"
-            top="60%"
-            left="25%"
-            width="20%"
-            height="25%"
-            opacity="0.5"
-            animation="float 20s infinite ease-in-out 2s"
-            sx={{
-              background: "radial-gradient(circle, rgba(144,205,244,0.1) 0%, transparent 70%)",
-              borderRadius: "50%"
-            }}
-          />
-          
-          <Box
-            position="absolute"
-            top="30%"
-            right="15%"
-            width="35%"
-            height="20%"
-            opacity="0.5" 
-            animation="float 25s infinite ease-in-out 1s"
-            sx={{
-              background: "radial-gradient(circle, rgba(129,198,246,0.1) 0%, transparent 70%)",
-              borderRadius: "50%"
-            }}
-          />
-        </Box>
-
-        {/* Konten utama */}
-      <Box 
-        flex="1" 
-        overflowY="auto" 
-        px={4} 
-        pt={4}
-        ref={chatContainerRef}
-          position="relative"
-          zIndex="1"
-          sx={{
-          "&::-webkit-scrollbar": {
-            width: "6px",
-          },
-          "&::-webkit-scrollbar-track": {
-              background: "rgba(237, 242, 247, 0.3)",
-              borderRadius: "3px",
-          },
-          "&::-webkit-scrollbar-thumb": {
-              background: "rgba(160, 174, 192, 0.5)",
-            borderRadius: "3px",
-              "&:hover": {
-                background: "rgba(160, 174, 192, 0.7)",
-              }
-          },
-        }}
-      >
-        {/* Welcome Message */}
-        {displayHistory.length === 0 && (
-          <ChatMessage
-            isUser={false}
-            content={WELCOME_MESSAGE}
-            status={ACTION_STATUSES.IDLE}
-          />
-        )}
-        
-        {displayHistory.map((entry, index) => (
-          <ChatMessage
-            key={index}
-            isUser={entry.type === "user"}
-            content={entry.message}
-            status={entry.type === "assistant" ? entry.status : ACTION_STATUSES.IDLE}
-          />
-        ))}
-        {taskInProgress && (
-          <ChatMessage
-            isUser={false}
-            content="Sedang memproses permintaan Anda..."
-            status={ACTION_STATUSES.RUNNING}
-          />
-        )}
-      </Box>
-
-      <Box 
-        p={3}
-        borderTop="1px solid" 
-          borderColor="rgba(226, 232, 240, 0.8)"
-          bg="rgba(255, 255, 255, 0.7)"
-          backdropFilter="blur(10px)"
-          position="relative"
-          zIndex="2"
-          transition="all 0.3s ease"
-          boxShadow="0 -2px 10px rgba(0, 0, 0, 0.03)"
-      >
-        <Flex gap={2} align="flex-end">
-            <Box flex="1" position="relative">
-            <AutosizeTextarea
-              autoFocus
-              placeholder="Tell weblify.id what to do..."
-              value={state.instructions || ""}
-              onChange={(e) => state.setInstructions(e.target.value)}
-              onKeyDown={onKeyDown}
-              style={{
-                opacity: taskInProgress || state.isListening ? 0.4 : 1,
-                cursor: taskInProgress || state.isListening ? "not-allowed" : "text",
-                  backgroundColor: taskInProgress || state.isListening ? "rgba(247, 250, 252, 0.8)" : "rgba(255, 255, 255, 0.8)",
-                  border: "1px solid rgba(226, 232, 240, 0.8)",
-                borderRadius: "1.25rem",
-                  padding: "0.75rem 1.25rem",
-                resize: "none",
-                  minHeight: "44px",
-                maxHeight: "120px",
-                fontSize: "0.875rem",
-                  lineHeight: "1.5",
-                outline: "none",
-                transition: "all 0.2s ease",
-                  overflowY: "auto",
-                  backdropFilter: "blur(5px)",
-                  boxShadow: "0 2px 6px rgba(0, 0, 0, 0.04)"
-              }}
-              _focus={{
-                  borderColor: "var(--chakra-colors-blue-400)",
-                  boxShadow: "0 0 0 2px rgba(66, 153, 225, 0.3)"
-                }}
-              />
-              {/* Decorative accent for textarea */}
-              <Box
-                position="absolute"
-                bottom="6px"
-                left="16px"
-                width="30%"
-                height="2px"
-                background="linear-gradient(90deg, rgba(99,179,237,0.3) 0%, rgba(99,179,237,0) 100%)"
-                borderRadius="full"
-                opacity="0.7"
-                pointerEvents="none"
-              />
-          </Box>
-          <Button
-            onClick={runTask}
-            isDisabled={taskInProgress || state.isListening || !state.instructions?.trim()}
-            size="sm"
-            borderRadius="full"
-              h="42px"
-              w="42px"
-              minW="42px"
-            p={0}
-              bg="blue.500"
-              color="white"
-              _hover={{
-                bg: "blue.600",
-                transform: "translateY(-2px)",
-                boxShadow: "0 4px 12px rgba(66, 153, 225, 0.4)"
-              }}
-              _active={{
-                bg: "blue.700",
-                transform: "translateY(0)",
-                boxShadow: "0 2px 4px rgba(66, 153, 225, 0.3)"
-              }}
-              transition="all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-            _disabled={{
-              opacity: 0.4,
-              cursor: "not-allowed",
-                boxShadow: "none",
-                transform: "none"
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </Button>
-          {state.voiceMode && (
-            <VoiceButton
-              taskInProgress={taskInProgress}
-              onStopSpeaking={runTask}
-            />
-          )}
-        </Flex>
-
-        {state.voiceMode && (
-            <Alert 
-              status="info" 
-              borderRadius="xl" 
-              mt={2} 
+                                          <Flex align="center">
+                                            {/* Ikon aksi dengan animasi subtle */}
+                                            <Box
+                                              p={1.5}
+                                              borderRadius="md"
+                                              bg={`${color}.100`}
+                                              color={`${color}.700`}
+                                              mr={2}
+                                              transition="all 0.3s"
+                                              _groupHover={{
+                                                bg: `${color}.200`,
+                                                transform: "scale(1.05)",
+                                              }}
+                                            >
+                                              {icon}
+                                            </Box>
+                                            
+                                            {/* Judul aksi */}
+                                            <Text
+                                              fontSize={{base: "sm", md: "sm"}}
+                                              fontWeight="bold"
+                                              color={`${color}.800`}
+                                              bgGradient={`linear(to-r, ${color}.600, ${color}.400)`}
+                                              bgClip="text"
+                                              letterSpacing="tight"
+                                            >
+                                              {title}
+                                            </Text>
+                                          </Flex>
+                                        </Flex>
+                                        
+                                        {/* Konten aksi */}
+                                        <Box p={{base: 3, md: 2.5}}>
+                                          {/* Tampilan khusus untuk navigasi website */}
+                                          {hasUrl && args?.url ? (
+                                            <Flex direction={{base: "column", md: "row"}} gap={{base: 2, md: 3}}>
+                                              {/* Favicon website */}
+                                              <Box 
+                                                borderWidth="1px"
+                                                borderColor="gray.200"
+                                                borderRadius="md"
+                                                overflow="hidden"
+                                                width={{base: "40px", md: "36px"}}
+                                                height={{base: "40px", md: "36px"}}
+                                                bg="white"
+                                                display="flex"
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                flexShrink={0}
+                                              >
+                                                <Image 
+                                                  src={`https://www.google.com/s2/favicons?domain=${new URL(args.url).hostname}&sz=48`}
+                                                  alt="Website favicon"
+                                                  width="24px"
+                                                  height="24px"
+                                                  fallback={
+                                                    <Box p={1} color="gray.400">
+                                                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                        <circle cx="12" cy="12" r="10"></circle>
+                                                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                                                        <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
+                                                      </svg>
+                                                    </Box>
+                                                  }
+                                                />
+                                              </Box>
+                                              
+                                              {/* URL dan info website */}
+                                              <Box flex="1">
+                                                {/* Judul Website jika tersedia */}
+                                                {args.title && (
+                                                  <Text 
+                                                    fontSize={{base: "sm", md: "sm"}}
+                                                    fontWeight="semibold"
+                                                    color="gray.800"
+                                                    mb={1}
+                                                    noOfLines={1}
+                                                    title={args.title}
+                                                  >
+                                                    {args.title}
+                                                  </Text>
+                                                )}
+                                                
+                                                {/* URL dengan format elegan */}
+                                                <Box 
+                                                  bg="gray.50"
+                                                  p={2}
+                                                  borderRadius="md"
+                                                  borderWidth="1px"
+                                                  borderColor="gray.200"
+                                                  fontSize={{base: "xs", md: "xs"}}
+                                                  fontFamily="monospace"
+                                                  color="gray.700"
+                                                  _hover={{
+                                                    borderColor: `${color}.300`,
+                                                    bg: "gray.100"
+                                                  }}
+                                                  transition="all 0.2s"
+                                                >
+                                                  <Text 
+                                                    noOfLines={1}
+                                                    title={args.url}
+                                                  >
+                                                    {/* Format URL berdasarkan rasio layar */}
+                                                    {(() => {
+                                                      try {
+                                                        const url = new URL(args.url);
+                                                        
+                                                        if (isExtremeVertical) {
+                                                          // Format super ringkas untuk rasio vertikal ekstrem
+                                                          return url.hostname.replace('www.', '');
+                                                        } else if (window.innerWidth < 400) {
+                                                          // Format ringkas untuk layar kecil
+                                                          const path = url.pathname !== '/' ? '/...' : '';
+                                                          return `${url.hostname.replace('www.', '')}${path}`;
+                                                        } else {
+                                                          // Format lengkap
+                                                          return args.url.replace(/^(https?:\/\/)?(www\.)?/, '');
+                                                        }
+                                                      } catch(e) {
+                                                        return args.url;
+                                                      }
+                                                    })()}
+                                                  </Text>
+                                                </Box>
+                                              </Box>
+                                            </Flex>
+                                          ) : (
+                                            // Tampilan untuk aksi non-navigasi
+                                            <Text 
+                                              fontSize={{base: "sm", md: "sm"}}
+                                              color="gray.700"
+                                              fontWeight="medium"
+                                            >
+                                              {description}
+                                            </Text>
+                                          )}
+                                          
+                                          {/* Tampilkan detail tambahan jika tersedia */}
+                                          {args?.details && args.details.length > 0 && (
+                                            <Box mt={2} bg="gray.50" p={2} borderRadius="md" borderWidth="1px" borderColor="gray.200">
+                                              <Text fontSize="xs" fontWeight="semibold" color="gray.600" mb={1}>Detail Tambahan:</Text>
+                                              <UnorderedList pl={4} spacing={1} fontSize="xs" color="gray.600">
+                                                {args.details.map((detail, idx) => (
+                                                  <ListItem key={idx}>{detail}</ListItem>
+                                                ))}
+                                              </UnorderedList>
+                                            </Box>
+                                          )}
+                                          
+                                          {/* Tampilkan pesan error jika ada */}
+                                          {args?.error && (
+                                            <Box 
+                                              mt={2} 
+                                              bg="red.50" 
+                                              p={2} 
+                                              borderRadius="md" 
+                                              borderWidth="1px" 
+                                              borderColor="red.200"
+                                              color="red.700"
+                                              fontSize="xs"
+                                            >
+                                              <Flex align="center" mb={1}>
+                                                <Box mr={1} color="red.500">
               py={1} 
               px={2.5} 
               size="sm"
