@@ -2,6 +2,17 @@
 
 ## Current Version
 
+### **v1.0.1.61 (15-03-2025)**
+#### Refactoring Komprehensif Komponen TaskUI
+- **Modular Architecture**: Pemisahan komponen menjadi modul-modul yang lebih kecil dan terorganisir
+- **Type Safety Enhancement**: Ekstraksi konstanta dan tipe data ke file terpisah untuk meningkatkan maintainability
+- **Component Isolation**: Pembuatan komponen terpisah untuk ChatMessage, StatusIndicator, TaskProgressBar, dll
+- **Utility Abstraction**: Implementasi utilitas terpisah untuk fungsi-fungsi helper yang sering digunakan
+- **Code Structure Improvement**: Peningkatan struktur kode dengan pendekatan yang lebih modular dan terorganisir
+- **Enhanced Documentation**: Dokumentasi yang lebih baik dengan README.md untuk menjelaskan struktur komponen
+- **UI/UX Preservation**: Tidak ada perubahan pada tampilan atau pengalaman pengguna, hanya peningkatan kualitas kode
+
+Perubahan versi sebelumnya:
 ### **v1.0.1.60 (08-05-2025)**
 #### Peningkatan Akses ke Website Resmi weblify.id
 - **Direct Brand Access**: Penggantian tombol GitHub dengan tombol akses langsung ke website resmi weblify.id

@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.0.1.61 (15-03-2025)
+- Refactoring komprehensif pada komponen TaskUI:
+  - Pemisahan komponen menjadi modul-modul yang lebih kecil dan terorganisir
+  - Ekstraksi konstanta dan tipe data ke file terpisah untuk meningkatkan maintainability
+  - Pembuatan komponen terpisah untuk ChatMessage, StatusIndicator, TaskProgressBar, dll
+  - Implementasi utilitas terpisah untuk fungsi-fungsi helper
+  - Peningkatan struktur kode dengan pendekatan yang lebih modular
+  - Dokumentasi yang lebih baik dengan README.md untuk menjelaskan struktur komponen
+  - Tidak ada perubahan pada UI/UX, hanya peningkatan kualitas kode
+
 ## v1.0.1.60 (08-05-2025)
 - Perubahan tombol navigasi pada header aplikasi:
   - Penggantian tombol GitHub dengan tombol untuk mengakses website resmi weblify.id
