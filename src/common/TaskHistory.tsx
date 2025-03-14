@@ -69,27 +69,21 @@ type TaskHistoryItemProps = {
 const CollapsibleComponent = (props: {
   title: string;
   subtitle?: string;
-  text: string;
-  isJson?: boolean;
+  text?: string;
   jsonData?: any;
+  isJson?: boolean;
 }) => {
-  let jsonData = props.jsonData;
+  const jsonDataToUse = props.jsonData;
   
-  if (!jsonData && props.isJson) {
-    try {
-      jsonData = JSON.parse(props.text);
-    } catch (e) {
-      console.error("Failed to parse JSON:", e);
-    }
-  }
-
   return (
     <AccordionItem backgroundColor="white">
       <Heading as="h4" size="xs">
         <AccordionButton>
           <HStack flex="1">
             <Box>{props.title}</Box>
-            <CopyButton text={props.text} /> <Spacer />
+            {props.text && <CopyButton text={props.text} />}
+            {!props.text && props.jsonData && <CopyButton text={JSON.stringify(props.jsonData, null, 2)} />}
+            <Spacer />
             {props.subtitle && (
               <Box as="span" fontSize="xs" color="gray.500" mr={4}>
                 {props.subtitle}
@@ -100,12 +94,12 @@ const CollapsibleComponent = (props: {
         </AccordionButton>
       </Heading>
       <AccordionPanel>
-        {(props.isJson && jsonData) ? (
+        {props.isJson && jsonDataToUse ? (
           <Box p={2}>
-            <JsonViewer data={jsonData} />
+            <JsonViewer data={jsonDataToUse} />
           </Box>
         ) : (
-          props.text.split("\n").map((line, index) => (
+          props.text && props.text.split("\n").map((line, index) => (
             <Box key={index} fontSize="xs">
               {line}
               <br />
@@ -165,7 +159,6 @@ const TaskHistoryItem = ({ index, entry }: TaskHistoryItemProps) => {
               <CollapsibleComponent
                 title="Action"
                 subtitle="JSON"
-                text={JSON.stringify(entry.action, null, 2)}
                 jsonData={entry.action}
                 isJson={true}
               />

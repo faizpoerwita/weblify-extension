@@ -332,14 +332,4 @@
   - Reformatasi URL menjadi 3 tingkat keringkasan berdasarkan rasio layar
   - Penambahan background kontras pada panel informasi website
   - Pembesaran ikon dan elemen visual untuk UX yang lebih baik di layar vertikal
-  - Peningkatan scrollable area untuk konten dengan tinggi maksimum yang lebih besar
-
-## v1.0.1.59 (06-05-2025)
-- Peningkatan UI pada tampilan section Tindakan:
-  - Penambahan efek visual pada ikon tindakan dengan animasi hover dan transisi
-  - Penggunaan warna gradient untuk judul tindakan untuk tampilan yang lebih atraktif
-  - Penambahan efek hover yang menaikkan kartu tindakan pada saat interaksi
-  - Penyempurnaan tampilan kontras warna berdasarkan tipe aksi
-  - Optimasi visual untuk kartu tindakan pada berbagai ukuran layar
-  - Peningkatan estetika keseluruhan dengan padding dan margin yang dioptimalkan
-  - Penerapan tipografi yang lebih elegan pada bagian judul tindakan 
+  - Peningkatan scrollable area untuk konten dengan tinggi maksimum yang lebih besar 

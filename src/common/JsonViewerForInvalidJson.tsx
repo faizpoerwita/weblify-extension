@@ -17,8 +17,43 @@ interface JsonViewerForInvalidJsonProps {
  * dan konsisten dengan JsonViewer
  */
 const JsonViewerForInvalidJson: React.FC<JsonViewerForInvalidJsonProps> = ({ data, level = 0, isExpanded = true }) => {
-  // Convert data to string if it's not already a string
-  const content = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+  // Mengkonversi data menjadi format yang bisa ditampilkan
+  const stringifyData = (data: any): string => {
+    if (typeof data === 'string') {
+      return data;
+    }
+    
+    try {
+      // Gunakan format yang mempertahankan struktur tapi mudah dibaca
+      let formattedData = '';
+      
+      if (Array.isArray(data)) {
+        formattedData = '[\n';
+        data.forEach((item, index) => {
+          formattedData += `  ${typeof item === 'object' && item !== null ? stringifyData(item) : String(item)}`;
+          if (index < data.length - 1) formattedData += ',\n';
+        });
+        formattedData += '\n]';
+      } else if (typeof data === 'object' && data !== null) {
+        formattedData = '{\n';
+        const keys = Object.keys(data);
+        keys.forEach((key, index) => {
+          formattedData += `  ${key}: ${typeof data[key] === 'object' && data[key] !== null ? stringifyData(data[key]) : String(data[key])}`;
+          if (index < keys.length - 1) formattedData += ',\n';
+        });
+        formattedData += '\n}';
+      } else {
+        formattedData = String(data);
+      }
+      
+      return formattedData;
+    } catch (e) {
+      console.error("Error formatting JSON data:", e);
+      return typeof data === 'string' ? data : String(data);
+    }
+  };
+  
+  const content = stringifyData(data);
   
   return (
     <Box>
