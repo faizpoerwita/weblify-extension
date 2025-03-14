@@ -1,6 +1,17 @@
 # Panduan Pengembangan weblify.id Extension
 
 ## Current Version
+**v1.0.1.42 (04-05-2025)**
+- Enhanced JSON Visualization in Chat:
+  - Tampilan JSON yang konsisten dengan elemen UI "Pemikiran AI" dan "Mengklik"
+  - Format card dengan header yang jelas dan ikon yang intuitif
+  - Visualisasi data dalam bentuk tabel properti yang lebih mudah dibaca
+  - Penerapan warna berbeda untuk tipe data (string, number, boolean)
+  - Penanganan objek nested dengan struktur visual yang lebih jelas
+  - Peningkatan UX dengan hover effects dan transisi yang halus
+  - Konsistensi visual dengan elemen chat lainnya untuk pengalaman yang menyatu
+
+Perubahan versi sebelumnya:
 **v1.0.1.41 (04-05-2025)**
 - Advanced JSON Detection & Visualization:
   - Algoritma deteksi JSON yang lebih canggih dengan regex yang ditingkatkan

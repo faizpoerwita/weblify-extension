@@ -1136,7 +1136,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                       return (
                         <Box key={index}>
                           <Text fontSize="xs" fontWeight="medium" color="gray.500" mb={2}>
-                            JSON Data
+                            Data Terstruktur
                           </Text>
                           <Box
                             bg={useColorModeValue("rgba(247, 250, 252, 0.8)", "rgba(23, 25, 35, 0.8)")}
@@ -1181,7 +1181,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                             
                             {/* Content */}
                             <Box position="relative" zIndex="1">
-                            <JsonViewer data={item.content} />
+                              <JsonViewer data={item.content} />
                             </Box>
                             
                             {/* Data type indicator */}
@@ -1876,76 +1876,105 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                 } else if (segment.type === 'json') {
                   try {
                     const jsonData = JSON.parse(segment.content);
+                    
+                    // Tampilkan JSON dengan format yang lebih menarik seperti "Pemikiran AI"
                     return (
-                      <Box key={`json-${idx}`}>
-                        <Text fontSize="xs" fontWeight="medium" color="gray.500" mb={2}>
-                          JSON Data Terdeteksi
-                        </Text>
+                      <Box 
+                        key={`json-${idx}`}
+                        bg="white"
+                        borderRadius="2xl"
+                        overflow="hidden"
+                        boxShadow="sm"
+                        borderWidth="1px"
+                        borderColor="teal.100"
+                        transition="all 0.2s"
+                        _hover={{ boxShadow: "md" }}
+                        mt={2}
+                        mb={2}
+                      >
                         <Box
-                          bg={useColorModeValue("rgba(247, 250, 252, 0.8)", "rgba(23, 25, 35, 0.8)")}
-                          borderRadius="lg"
-                          p={3}
-                          borderWidth="1px"
-                          borderColor={useColorModeValue("gray.200", "gray.600")}
-                          boxShadow="sm"
-                          backdropFilter="blur(8px)"
-                          transition="all 0.2s"
-                          _hover={{ 
-                            boxShadow: "md", 
-                            borderColor: useColorModeValue("blue.200", "blue.500"),
-                            transform: "translateY(-2px)"
-                          }}
-                          position="relative"
-                          overflow="hidden"
-                          animation="fadeIn 0.3s ease-out forwards"
+                          bg="teal.50"
+                          px={4}
+                          py={3}
+                          borderBottom="1px solid"
+                          borderColor="teal.100"
                         >
-                          {/* Decorative elements for glassmorphic effect */}
-                          <Box
-                            position="absolute"
-                            top="-50%"
-                            left="-20%"
-                            width="50%"
-                            height="200%"
-                            background="linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0))"
-                            transform="rotate(25deg)"
-                            pointerEvents="none"
-                          />
-                          <Box
-                            position="absolute"
-                            top="0"
-                            right="0"
-                            width="100%"
-                            height="100%"
-                            background={useColorModeValue(
-                              "radial-gradient(circle at top right, rgba(214, 242, 255, 0.3), transparent 70%)",
-                              "radial-gradient(circle at top right, rgba(36, 99, 235, 0.1), transparent 70%)"
-                            )}
-                            pointerEvents="none"
-                          />
-                          
-                          {/* Content */}
-                          <Box position="relative" zIndex="1">
-                            <JsonViewer data={jsonData} />
-                          </Box>
-                          
-                          {/* Data type indicator */}
-                          <Box
-                            position="absolute"
-                            top="6px"
-                            right="6px"
-                            borderRadius="full"
-                            bg={useColorModeValue("blue.50", "blue.900")}
-                            color={useColorModeValue("blue.500", "blue.200")}
-                            px={2}
-                            py={0.5}
-                            fontSize="xs"
-                            fontWeight="medium"
-                            opacity="0.7"
-                            _hover={{ opacity: 1 }}
-                            transition="opacity 0.2s"
-                          >
-                            JSON
-                          </Box>
+                          <HStack spacing={3}>
+                            <Box
+                              bg="white"
+                              p={2}
+                              borderRadius="lg"
+                              color="teal.500"
+                              borderWidth="1px"
+                              borderColor="teal.200"
+                            >
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M12 6v6l4 2m4-2a10 10 0 11-20 0 10 10 0 0120 0z"/>
+                              </svg>
+                            </Box>
+                            <Text
+                              fontSize="sm"
+                              fontWeight="medium"
+                              color="teal.700"
+                            >
+                              Data Terstruktur
+                            </Text>
+                          </HStack>
+                        </Box>
+                        <Box p={4}>
+                          {/* Visualisasi data berdasarkan tipe */}
+                          {typeof jsonData === 'object' && jsonData !== null ? (
+                            // Jika objek, tampilkan sebagai tabel properti
+                            <VStack align="stretch" spacing={2}>
+                              {Object.entries(jsonData).map(([key, value], keyIdx) => {
+                                // Jika nilai adalah objek kompleks, gunakan JsonViewer
+                                if (typeof value === 'object' && value !== null) {
+                                  return (
+                                    <Box key={keyIdx} mb={2}>
+                                      <Text fontSize="xs" fontWeight="semibold" color="gray.500" mb={1}>
+                                        {key}:
+                                      </Text>
+                                      <Box 
+                                        p={2} 
+                                        bg="gray.50" 
+                                        borderRadius="md" 
+                                        borderWidth="1px"
+                                        borderColor="gray.200"
+                                      >
+                                        <JsonViewer data={value} level={1} />
+                                      </Box>
+                                    </Box>
+                                  );
+                                }
+                                
+                                // Untuk nilai primitif, tampilkan sebagai baris
+                                return (
+                                  <HStack key={keyIdx} justify="space-between" p={2} borderRadius="md" _hover={{ bg: "gray.50" }}>
+                                    <Text fontSize="sm" fontWeight="medium" color="gray.600">
+                                      {key}
+                                    </Text>
+                                    <Text 
+                                      fontSize="sm" 
+                                      color={
+                                        typeof value === 'string' ? "green.600" :
+                                        typeof value === 'number' ? "blue.600" :
+                                        typeof value === 'boolean' ? "purple.600" :
+                                        "gray.600"
+                                      }
+                                      fontFamily={typeof value === 'string' ? "inherit" : "mono"}
+                                    >
+                                      {typeof value === 'string' ? `"${value}"` : String(value)}
+                                    </Text>
+                                  </HStack>
+                                );
+                              })}
+                            </VStack>
+                          ) : (
+                            // Untuk nilai primitif atau array sederhana
+                            <Text fontSize="sm" color="gray.700" fontFamily="mono">
+                              {JSON.stringify(jsonData, null, 2)}
+                            </Text>
+                          )}
                         </Box>
                       </Box>
                     );
@@ -1954,7 +1983,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                     return (
                       <Box key={`code-${idx}`}>
                         <Text fontSize="xs" fontWeight="medium" color="gray.500" mb={2}>
-                          JSON Format (Invalid)
+                          Format Kode
                         </Text>
                         <Box
                           p={3}
@@ -2071,45 +2100,106 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                 } else if (segment.type === 'json') {
                   try {
                     const jsonData = JSON.parse(segment.content);
+                    
+                    // Tampilkan JSON dengan format yang lebih menarik seperti "Pemikiran AI"
                     return (
-                      <Box key={`json-${idx}`} mt={2} mb={2}>
-                        <Text fontSize="xs" fontWeight="medium" color="gray.500" mb={2}>
-                          Data JSON
-                        </Text>
+                      <Box 
+                        key={`json-${idx}`}
+                        bg="white"
+                        borderRadius="2xl"
+                        overflow="hidden"
+                        boxShadow="sm"
+                        borderWidth="1px"
+                        borderColor="blue.100"
+                        transition="all 0.2s"
+                        _hover={{ boxShadow: "md" }}
+                        mt={2}
+                        mb={2}
+                      >
                         <Box
-                          bg={useColorModeValue("rgba(247, 250, 252, 0.8)", "rgba(23, 25, 35, 0.8)")}
-                          borderRadius="lg"
-                          p={3}
-                          borderWidth="1px"
-                          borderColor={useColorModeValue("gray.200", "gray.600")}
-                          boxShadow="sm"
-                          backdropFilter="blur(8px)"
-                          transition="all 0.2s"
-                          _hover={{ 
-                            boxShadow: "md", 
-                            borderColor: useColorModeValue("blue.200", "blue.500")
-                          }}
-                          position="relative"
-                          overflow="hidden"
+                          bg="blue.50"
+                          px={4}
+                          py={3}
+                          borderBottom="1px solid"
+                          borderColor="blue.100"
                         >
-                          <Box position="relative" zIndex="1">
-                            <JsonViewer data={jsonData} />
-                          </Box>
-                          
-                          <Box
-                            position="absolute"
-                            top="6px"
-                            right="6px"
-                            borderRadius="full"
-                            bg={useColorModeValue("blue.50", "blue.900")}
-                            color={useColorModeValue("blue.500", "blue.200")}
-                            px={2}
-                            py={0.5}
-                            fontSize="xs"
-                            fontWeight="medium"
-                          >
-                            JSON
-                          </Box>
+                          <HStack spacing={3}>
+                            <Box
+                              bg="white"
+                              p={2}
+                              borderRadius="lg"
+                              color="blue.500"
+                              borderWidth="1px"
+                              borderColor="blue.200"
+                            >
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M20 6H4a2 2 0 00-2 2v8a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2z"/>
+                                <path d="M12 6v12M6 10v4M18 10v4"/>
+                              </svg>
+                            </Box>
+                            <Text
+                              fontSize="sm"
+                              fontWeight="medium"
+                              color="blue.700"
+                            >
+                              Data JSON
+                            </Text>
+                          </HStack>
+                        </Box>
+                        <Box p={4}>
+                          {/* Visualisasi data berdasarkan tipe */}
+                          {typeof jsonData === 'object' && jsonData !== null ? (
+                            // Jika objek, tampilkan sebagai tabel properti
+                            <VStack align="stretch" spacing={2}>
+                              {Object.entries(jsonData).map(([key, value], keyIdx) => {
+                                // Jika nilai adalah objek kompleks, gunakan JsonViewer
+                                if (typeof value === 'object' && value !== null) {
+                                  return (
+                                    <Box key={keyIdx} mb={2}>
+                                      <Text fontSize="xs" fontWeight="semibold" color="gray.500" mb={1}>
+                                        {key}:
+                                      </Text>
+                                      <Box 
+                                        p={2} 
+                                        bg="gray.50" 
+                                        borderRadius="md" 
+                                        borderWidth="1px"
+                                        borderColor="gray.200"
+                                      >
+                                        <JsonViewer data={value} level={1} />
+                                      </Box>
+                                    </Box>
+                                  );
+                                }
+                                
+                                // Untuk nilai primitif, tampilkan sebagai baris
+                                return (
+                                  <HStack key={keyIdx} justify="space-between" p={2} borderRadius="md" _hover={{ bg: "gray.50" }}>
+                                    <Text fontSize="sm" fontWeight="medium" color="gray.600">
+                                      {key}
+                                    </Text>
+                                    <Text 
+                                      fontSize="sm" 
+                                      color={
+                                        typeof value === 'string' ? "green.600" :
+                                        typeof value === 'number' ? "blue.600" :
+                                        typeof value === 'boolean' ? "purple.600" :
+                                        "gray.600"
+                                      }
+                                      fontFamily={typeof value === 'string' ? "inherit" : "mono"}
+                                    >
+                                      {typeof value === 'string' ? `"${value}"` : String(value)}
+                                    </Text>
+                                  </HStack>
+                                );
+                              })}
+                            </VStack>
+                          ) : (
+                            // Untuk nilai primitif atau array sederhana
+                            <Text fontSize="sm" color="gray.700" fontFamily="mono">
+                              {JSON.stringify(jsonData, null, 2)}
+                            </Text>
+                          )}
                         </Box>
                       </Box>
                     );

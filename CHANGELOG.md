@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.0.1.42 (04-05-2025)
+- Peningkatan visualisasi JSON dalam chat dengan tampilan yang lebih menarik dan konsisten
+- Implementasi format card yang sama dengan "Pemikiran AI" untuk data JSON
+- Penambahan tampilan tabel properti untuk objek JSON dengan format yang lebih mudah dibaca
+- Penggunaan warna yang berbeda untuk tipe data yang berbeda (string, number, boolean)
+- Peningkatan tampilan header dengan ikon yang lebih jelas dan label yang lebih deskriptif
+- Optimasi tampilan untuk objek nested dengan visualisasi yang lebih terstruktur
+- Penyesuaian UI untuk memastikan konsistensi visual dengan elemen chat lainnya
+
 ## v1.0.1.41 (04-05-2025)
 - Peningkatan deteksi dan visualisasi JSON dalam chat AI Agent dengan algoritma yang lebih canggih
 - Implementasi regex yang lebih kuat untuk ekstrak JSON dari berbagai format respons
