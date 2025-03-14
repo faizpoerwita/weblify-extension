@@ -323,3 +323,23 @@ Perubahan terbaru:
 - `/src/pages/sidepanel`: Panel samping yang dapat dibuka dari toolbar browser
 - `/src/state`: State management dan konfigurasi
 - `/src/helpers`: Utilitas dan helper functions 
+
+### v1.0.1.62 (15-03-2025)
+**Fokus Update: Refactoring Lanjutan**
+
+Melanjutkan proses refactoring kode untuk memudahkan pemeliharaan:
+
+- **Pemisahan Komponen dari TaskUI.tsx**: 
+  - TaskProgressBar: Komponen untuk menampilkan progress task
+  - ChatMessage: Komponen untuk menampilkan pesan chat
+  - JsonViewer: Komponen untuk menampilkan data JSON secara interaktif
+
+- **Reorganisasi Struktur File**:
+  - Komponen-komponen dipisahkan ke dalam folder components
+  - Utilitas dipisahkan ke dalam folder utils
+
+- **Menghapus Duplikasi Kode**:
+  - Fungsi mapOperationToAction dipindahkan ke actionUtils.ts
+  - Fungsi-fungsi serupa dipindahkan ke file yang sesuai
+
+**Catatan Developer**: Refactoring ini tidak mengubah fungsionalitas atau UI/UX, tetapi membuat kode lebih mudah dipahami dan dipelihara. 

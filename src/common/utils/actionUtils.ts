@@ -288,4 +288,27 @@ export const getStatusDisplay = (status: ActionStatus, action?: ActionType): str
     default:
       return 'IDLE';
   }
+};
+
+/**
+ * Maps an operation name to its corresponding action name
+ * @param operation The operation to map
+ * @returns The corresponding action name or undefined if not found
+ */
+export const mapOperationToAction = (operation?: ActionOperation): ActionName | undefined => {
+  if (!operation) return undefined;
+
+  const nameMap: Record<OperationName | 'finish', ActionName> = {
+    [OPERATION_NAMES.CLICK]: ACTION_NAMES.CLICK,
+    [OPERATION_NAMES.SET_VALUE]: ACTION_NAMES.TYPE,
+    [OPERATION_NAMES.SET_VALUE_AND_ENTER]: ACTION_NAMES.TYPE,
+    [OPERATION_NAMES.NAVIGATE]: ACTION_NAMES.NAVIGATE,
+    [OPERATION_NAMES.SCROLL]: ACTION_NAMES.SCROLL,
+    [OPERATION_NAMES.WAIT]: ACTION_NAMES.WAIT,
+    [OPERATION_NAMES.FAIL]: ACTION_NAMES.FINISH,
+    [OPERATION_NAMES.PROCESSING]: ACTION_NAMES.WAIT,
+    'finish': ACTION_NAMES.FINISH
+  };
+
+  return nameMap[operation.name];
 }; 

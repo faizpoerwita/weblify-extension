@@ -349,3 +349,20 @@
   - Penambahan background kontras pada panel informasi website
   - Pembesaran ikon dan elemen visual untuk UX yang lebih baik di layar vertikal
   - Peningkatan scrollable area untuk konten dengan tinggi maksimum yang lebih besar 
+
+## v1.0.1.61 (08-05-2025)
+- Refactoring kode untuk meningkatkan maintainability dan struktur
+- Pemisahan utilitas ke file terpisah (actionUtils.ts, urlUtils.ts, uiUtils.ts)
+- Pemisahan komponen StatusIndicator dan MessageContent ke folder components
+- Pembuatan custom hook useTaskFunctions untuk fungsi-fungsi terkait task
+- Penghapusan kode duplikat dan konstanta 
+- Peningkatan data types dan interfaces untuk type safety yang lebih baik
+- Optimasi struktur kode untuk pengembangan masa depan
+
+## v1.0.1.62 (15-03-2025)
+- Melanjutkan refactoring dengan memisahkan komponen dalam TaskUI.tsx
+- Membuat komponen terpisah untuk TaskProgressBar
+- Membuat komponen terpisah untuk ChatMessage
+- Membuat komponen terpisah untuk JsonViewer
+- Menyelesaikan pemindahan fungsi utilitas ke file-file yang sesuai
+- Menambahkan fungsi mapOperationToAction ke actionUtils.ts 
