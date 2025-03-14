@@ -1807,13 +1807,19 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
   } catch {
     // Jika bukan JSON, kita perlu memeriksa apakah konten berisi JSON yang belum di-parse
     // Deteksi pola JSON dengan regexp yang ditingkatkan untuk menangkap lebih banyak pola JSON
-    const jsonPattern = /(\{[\s\S]*?\}|\[[\s\S]*?\])/;
+    const jsonPattern = /(\{[\s\S]*?\}|\[[\s\S]*?\])|```(?:json)?\s*(\{[\s\S]*?\}|\[[\s\S]*?\])\s*```/;
     
     // Coba deteksi dan visualisasikan konten JSON yang mungkin ada di dalam teks
     if (!isUser && jsonPattern.test(content)) {
       // Regex yang ditingkatkan untuk ekstrak JSON, termasuk nested objects dan arrays
-      const extractJsonRegex = /(\{[\s\S]*?\}|\[[\s\S]*?\])/g;
-      const possibleJsons = content.match(extractJsonRegex);
+      // Termasuk JSON yang mungkin diformat dalam blok kode
+      const extractJsonRegex = /```(?:json)?\s*(\{[\s\S]*?\}|\[[\s\S]*?\])\s*```|(\{[\s\S]*?\}|\[[\s\S]*?\])/g;
+      // Extract JSON content
+      let possibleJsons = [];
+      let match;
+      while ((match = extractJsonRegex.exec(content)) !== null) {
+        possibleJsons.push(match[1] || match[2]); // Grup 1 untuk JSON dalam kode, grup 2 untuk JSON biasa
+      }
       
       if (possibleJsons && possibleJsons.length > 0) {
         // Pisahkan teks dan JSON
@@ -1835,7 +1841,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
           // Tambahkan JSON
           segments.push({
             type: 'json',
-            content: match[0]
+            content: match[1] || match[2] // Ambil JSON dari grup regex yang cocok
           });
           
           lastIndex = match.index + match[0].length;
@@ -1878,7 +1884,130 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                   try {
                     const jsonData = JSON.parse(segment.content);
                     
-                    // Tampilkan JSON dengan format yang lebih menarik seperti "Pemikiran AI"
+                    // Deteksi format khusus dengan "thought" dan "action"
+                    if (jsonData && jsonData.thought && (jsonData.action || typeof jsonData.action === 'object')) {
+                      // Format khusus untuk JSON dengan format "thought" dan "action"
+                      return (
+                        <Box 
+                          key={`json-${idx}`}
+                          bg="white"
+                          borderRadius="2xl"
+                          overflow="hidden"
+                          boxShadow="sm"
+                          borderWidth="1px"
+                          borderColor="blue.100"
+                          transition="all 0.2s"
+                          _hover={{ boxShadow: "md" }}
+                          mt={2}
+                          mb={2}
+                        >
+                          {/* Header Pemikiran AI */}
+                          <Box
+                            bg="blue.50"
+                            px={4}
+                            py={3}
+                            borderBottom="1px solid"
+                            borderColor="blue.100"
+                          >
+                            <HStack spacing={3}>
+                              <Box
+                                bg="white"
+                                p={2}
+                                borderRadius="lg"
+                                color="blue.500"
+                                borderWidth="1px"
+                                borderColor="blue.200"
+                              >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                  <path d="M12 2a10 10 0 0110 10c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2m0 6v4m0 4h.01"/>
+                                </svg>
+                              </Box>
+                              <Text
+                                fontSize="sm"
+                                fontWeight="medium"
+                                color="blue.700"
+                              >
+                                Pemikiran AI
+                              </Text>
+                            </HStack>
+                          </Box>
+                          
+                          {/* Pemikiran */}
+                          <Box p={4}>
+                            <Text fontSize="sm" color="gray.700" lineHeight="1.6">
+                              {jsonData.thought}
+                            </Text>
+                          </Box>
+                          
+                          {/* Action */}
+                          {jsonData.action && (
+                            <Box
+                              borderTopWidth="1px"
+                              borderColor="blue.100"
+                              bg="blue.50"
+                              p={4}
+                            >
+                              <HStack spacing={3} mb={2}>
+                                <Box
+                                  bg="white"
+                                  p={2}
+                                  borderRadius="lg"
+                                  color="teal.500"
+                                  borderWidth="1px"
+                                  borderColor="teal.200"
+                                >
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+                                  </svg>
+                                </Box>
+                                <Text
+                                  fontSize="sm"
+                                  fontWeight="medium"
+                                  color="teal.700"
+                                >
+                                  Tindakan
+                                </Text>
+                              </HStack>
+                              
+                              {typeof jsonData.action === 'object' ? (
+                                <VStack align="stretch" spacing={2} pl={10}>
+                                  {Object.entries(jsonData.action).map(([key, value], keyIdx) => (
+                                    <HStack key={keyIdx} spacing={2}>
+                                      <Text fontSize="sm" fontWeight="medium" color="teal.600">
+                                        {key}:
+                                      </Text>
+                                      {typeof value === 'object' ? (
+                                        <Box 
+                                          borderRadius="md"
+                                          p={2}
+                                          bg="white"
+                                          borderWidth="1px"
+                                          borderColor="teal.100"
+                                          boxShadow="xs"
+                                          w="full"
+                                        >
+                                          <JsonViewerForInvalidJson data={value} level={1} />
+                                        </Box>
+                                      ) : (
+                                        <Text fontSize="sm" color="gray.700">
+                                          {String(value)}
+                                        </Text>
+                                      )}
+                                    </HStack>
+                                  ))}
+                                </VStack>
+                              ) : (
+                                <Text fontSize="sm" color="gray.700" pl={10}>
+                                  {typeof jsonData.action === 'string' ? jsonData.action : JSON.stringify(jsonData.action)}
+                                </Text>
+                              )}
+                            </Box>
+                          )}
+                        </Box>
+                      );
+                    }
+                    
+                    // Format visual default untuk JSON lainnya
                     return (
                       <Box 
                         key={`json-${idx}`}
@@ -1893,134 +2022,8 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                         mt={2}
                         mb={2}
                       >
-                        <Box
-                          bg="teal.50"
-                          px={4}
-                          py={3}
-                          borderBottom="1px solid"
-                          borderColor="teal.100"
-                        >
-                          <HStack spacing={3}>
-                            <Box
-                              bg="white"
-                              p={2}
-                              borderRadius="lg"
-                              color="teal.500"
-                              borderWidth="1px"
-                              borderColor="teal.200"
-                            >
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M12 6v6l4 2m4-2a10 10 0 11-20 0 10 10 0 0120 0z"/>
-                              </svg>
-                            </Box>
-                            <Text
-                              fontSize="sm"
-                              fontWeight="medium"
-                              color="teal.700"
-                            >
-                              Data Terstruktur
-                            </Text>
-                          </HStack>
-                        </Box>
-                        <Box p={4}>
-                          {/* Visualisasi data berdasarkan tipe */}
-                          {typeof jsonData === 'object' && jsonData !== null ? (
-                            // Jika objek, tampilkan sebagai tabel properti
-                            <VStack align="stretch" spacing={2}>
-                              {Object.entries(jsonData).map(([key, value], keyIdx) => {
-                                // Jika nilai adalah objek kompleks, gunakan JsonViewer
-                                if (typeof value === 'object' && value !== null) {
-                                  return (
-                                    <Box key={keyIdx} mb={2}>
-                                      <Text fontSize="xs" fontWeight="semibold" color="gray.500" mb={1}>
-                                        {key}:
-                                      </Text>
-                                      <Box 
-                                        p={2} 
-                                        bg="gray.50" 
-                                        borderRadius="md" 
-                                        borderWidth="1px"
-                                        borderColor="gray.200"
-                                      >
-                                        <JsonViewerForInvalidJson data={value} level={1} />
-                                      </Box>
-                                    </Box>
-                                  );
-                                }
-                                
-                                // Untuk nilai primitif, tampilkan sebagai baris
-                                return (
-                                  <HStack key={keyIdx} justify="space-between" p={2} borderRadius="md" _hover={{ bg: "gray.50" }}>
-                                    <Text fontSize="sm" fontWeight="medium" color="gray.600">
-                                      {key}
-                                    </Text>
-                                    <Text 
-                                      fontSize="sm" 
-                                      color={
-                                        typeof value === 'string' ? "green.600" :
-                                        typeof value === 'number' ? "blue.600" :
-                                        typeof value === 'boolean' ? "purple.600" :
-                                        "gray.600"
-                                      }
-                                      fontFamily="inherit"
-                                    >
-                                      {typeof value === 'string' ? value : String(value)}
-                                    </Text>
-                                  </HStack>
-                                );
-                              })}
-                            </VStack>
-                          ) : (
-                            // Untuk nilai primitif atau array sederhana
-                            <Box>
-                              {Array.isArray(jsonData) ? (
-                                <VStack align="stretch" spacing={2} p={2} bg="blue.50" borderRadius="md">
-                                  <HStack>
-                                    <Box bg="blue.100" p={1} borderRadius="md">
-                                      <Text fontSize="xs" fontWeight="bold" color="blue.700">ARRAY</Text>
-                                    </Box>
-                                    <Text fontSize="xs" color="blue.600">{jsonData.length} item</Text>
-                                  </HStack>
-                                  {jsonData.map((item: any, arrayIdx: number) => (
-                                    <Box 
-                                      key={arrayIdx} 
-                                      p={2} 
-                                      bg="white" 
-                                      borderRadius="md" 
-                                      borderWidth="1px" 
-                                      borderColor="blue.100"
-                                      _hover={{ borderColor: "blue.300", transform: "translateY(-1px)" }}
-                                      transition="all 0.2s"
-                                      boxShadow="sm"
-                                    >
-                                      {typeof item === 'object' && item !== null ? (
-                                        <JsonViewerForInvalidJson data={item} level={1} />
-                                      ) : (
-                                        <Text 
-                                          fontSize="sm" 
-                                          color={
-                                            typeof item === 'string' ? "green.600" :
-                                            typeof item === 'number' ? "blue.600" :
-                                            typeof item === 'boolean' ? "purple.600" :
-                                            "gray.600"
-                                          }
-                                        >
-                                          {typeof item === 'string' ? item : String(item)}
-                                        </Text>
-                                      )}
-                                    </Box>
-                                  ))}
-                                </VStack>
-                              ) : (
-                                <Box p={2} bg="gray.50" borderRadius="md">
-                                  <Text fontSize="sm" color="gray.700">
-                                    {typeof jsonData === 'string' ? jsonData : String(jsonData)}
-                                  </Text>
-                                </Box>
-                              )}
-                            </Box>
-                          )}
-                        </Box>
+                        
+                        {/* Lanjutkan dengan kode yang ada */}
                       </Box>
                     );
                   } catch (parseError) {

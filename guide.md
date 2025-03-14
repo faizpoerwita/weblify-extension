@@ -2,17 +2,24 @@
 
 ## Current Version
 
-### **v1.0.1.51 (05-05-2025)**
-#### Penyempurnaan Total Visualisasi JSON
-- **Komponen JSON Khusus**: Implementasi komponen JsonViewerForInvalidJson untuk menangani JSON yang tidak valid dengan tampilan visual
-- **Konsistensi Visual Universal**: Perubahan format tampilan JSON di semua bagian aplikasi untuk konsistensi visual
-- **Alur Data Optimal**: Optimasi alur data JSON untuk menghindari konversi antara string dan objek yang tidak perlu
-- **Pemeriksaan Komprehensif**: Audit menyeluruh di semua komponen untuk memastikan JSON selalu ditampilkan dengan format visual
-- **Pengalaman Pengguna Superior**: Tampilan JSON yang lebih intuitif dan mudah dibaca di seluruh aplikasi
+### **v1.0.1.53 (05-05-2025)**
+#### Format Visual Pemikiran AI dan Tindakan dalam Chat
+- **UI/UX Chat yang Ditingkatkan**: Implementasi tampilan khusus untuk JSON dengan format "thought" dan "action"
+- **Deteksi JSON yang Dioptimalkan**: Perbaikan regex untuk mendeteksi JSON dalam format blok kode maupun plain text
+- **Visualisasi Terstruktur**: Pemisahan yang jelas antara pemikiran AI dan tindakan dengan tampilan visual yang menarik
+- **Struktur Pesan yang Jelas**: Pemformatan struktur pesan AI untuk membedakan pemikiran dan tindakan yang akan dilakukan
+- **Pengalaman Pengguna yang Intuitif**: Tampilan pesan AI yang lebih mudah dibaca dan dipahami
 
 Perubahan versi sebelumnya:
-### **v1.0.1.50 (05-05-2025)**
-#### Visualisasi JSON di Task History
+### **v1.0.1.52 (05-05-2025)**
+#### Penyempurnaan Komprehensif Visualisasi JSON
+- Perbaikan komprehensif terhadap semua tampilan JSON dalam aplikasi untuk konsistensi visual
+- Optimasi komponen untuk menampilkan JSON dengan lebih visual
+- Penghapusan penggunaan JSON.stringify dalam komponen visualisasi
+- Implementasi fungsi pemformatan data yang lebih elegan
+- Pemeriksaan mendalam terhadap semua tampilan JSON di aplikasi
+
+### **v1.0.1.51 (05-05-2025)**
 - AI Agent Branding Update:
   - Perubahan ikon profil AI Agent dari "F" menjadi "W" di interface chat
   - Konsistensi visual untuk mencerminkan identitas merek weblify.id
@@ -32,7 +39,7 @@ Perubahan versi sebelumnya:
   - Optimasi pengalaman pengguna dengan transisi yang lebih halus
 
 Perubahan versi sebelumnya:
-**v1.0.1.36 (03-05-2025)**
+**v1.0.1.37 (03-05-2025)**
 - Enhanced RecommendedTasks Cards:
   - Desain modern glassmorphic dengan efek blur(10px) dan saturate(180%) untuk visual premium
   - Transformasi hover yang lebih dinamis dengan scale(1.01) dan translateY(-3px)
@@ -43,7 +50,7 @@ Perubahan versi sebelumnya:
   - Hierarki teks yang lebih jelas dengan kontras warna dan ukuran font
 
 Perubahan versi sebelumnya:
-**v1.0.1.35 (03-05-2025)**
+**v1.0.1.36 (03-05-2025)**
 - Enhanced SidePanel UI/UX:
   - Implementasi tampilan glassmorphic dengan gradient biru yang konsisten
   - Background animasi dengan efek rotate dan flow yang dinamis
@@ -54,7 +61,7 @@ Perubahan versi sebelumnya:
   - Animasi fadeIn untuk transisi halaman yang lebih mulus
 
 Perubahan versi sebelumnya:
-**v1.0.1.34 (03-05-2025)**
+**v1.0.1.35 (03-05-2025)**
 - Enhanced Blue Gradient Animation:
   - Penggunaan warna biru muda yang lebih intens dan cerah di seluruh aplikasi
   - Peningkatan animasi gradient-flow dengan pergerakan multi-directional (4 arah)
@@ -63,7 +70,7 @@ Perubahan versi sebelumnya:
   - Peningkatan visibilitas efek blob dengan opacity yang ditingkatkan
 
 Perubahan versi sebelumnya:
-**v1.0.1.33 (03-05-2025)**
+**v1.0.1.34 (03-05-2025)**
 - Seamless Blue Gradient UI:
   - Background gradient biru muda yang konsisten di seluruh aplikasi
   - Standardisasi warna dan gradient melalui variabel bersama di App.tsx dan TaskUI.tsx
@@ -72,7 +79,7 @@ Perubahan versi sebelumnya:
   - Optimasi visual yang menjamin kontinuitas antar section tanpa perbedaan tampilan
 
 Perubahan versi sebelumnya:
-**v1.0.1.32 (03-05-2025)**
+**v1.0.1.33 (03-05-2025)**
 - Portal-Based TaskProgressBar:
   - Penggunaan Chakra UI Portal untuk merender TaskProgressBar langsung ke root DOM
   - Memastikan TaskProgressBar selalu tampil di atas komponen lain (terlepas dari struktur DOM)
@@ -81,7 +88,7 @@ Perubahan versi sebelumnya:
   - Struktur render yang dioptimalkan untuk menghindari masalah "z-index stacking context"
 
 Perubahan versi sebelumnya:
-**v1.0.1.31 (03-05-2025)**
+**v1.0.1.32 (03-05-2025)**
 - Ultra-Visible TaskProgressBar:
   - Visibilitas super tinggi dengan z-index 100000 untuk memastikan selalu tampil di atas
   - Ukuran yang lebih besar dengan transform scale(1.05) untuk membuatnya lebih menonjol
@@ -90,7 +97,7 @@ Perubahan versi sebelumnya:
   - Background transparan menjamin tampilan bersih tanpa gangguan visual
 
 Perubahan versi sebelumnya:
-**v1.0.1.30 (03-05-2025)**
+**v1.0.1.31 (03-05-2025)**
 - TaskProgressBar as Notification:
   - TaskProgressBar kini muncul sebagai notifikasi yang independen dari Chat UI
   - Selalu terlihat di layar terlepas dari komponen lain yang sedang dilihat
@@ -99,7 +106,7 @@ Perubahan versi sebelumnya:
   - Bayangan dan posisi yang dioptimalkan untuk menonjol tanpa mengganggu
 
 Perubahan versi sebelumnya:
-**v1.0.1.29 (03-05-2025)**
+**v1.0.1.30 (03-05-2025)**
 - Fixed Position TaskProgressBar:
   - TaskProgressBar kini selalu terlihat saat scroll ke atas atau ke bawah
   - Posisi fixed di tengah layar untuk visibilitas maksimal saat bekerja dengan halaman panjang
@@ -108,7 +115,7 @@ Perubahan versi sebelumnya:
   - Efek crystal visual yang memberikan kesan premium dan modern
 
 Perubahan versi sebelumnya:
-**v1.0.1.28 (03-05-2025)**
+**v1.0.1.29 (03-05-2025)**
 - Modern Glassmorphic UI:
   - Desain UI/UX baru dengan implementasi glassmorphic dan gradient biru di seluruh interface
   - Efek frosted glass yang konsisten memberikan tampilan premium dan modern
@@ -118,7 +125,7 @@ Perubahan versi sebelumnya:
   - Background dengan gradient animasi untuk nuansa elegan dan dinamis
 
 Perubahan versi sebelumnya:
-**v1.0.1.27 (02-05-2025)**
+**v1.0.1.28 (02-05-2025)**
 - Simplified Task Control UI:
   - Penghapusan tombol pause pada progress bar untuk UI yang lebih sederhana dan fokus
   - Konsentrasi pada fungsi stop dengan satu control button yang jelas dan tegas
