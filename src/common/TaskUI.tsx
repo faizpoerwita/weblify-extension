@@ -21,6 +21,8 @@ import {
   Image,
   UnorderedList,
   ListItem,
+  Stack,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { debugMode } from "../constants";
 import { useAppState } from "../state/store";
@@ -814,122 +816,150 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
   };
 
   const urlData = getUrlData();
+  
+  // Fungsi untuk mendapatkan warna berdasarkan status
+  const getStatusColorValue = (stat: ActionStatus, act?: ActionType): string => {
+    // Logika penentuan warna berdasarkan status dan action type
+    if (stat === ACTION_STATUSES.RUNNING) return "blue";
+    if (stat === ACTION_STATUSES.SUCCESS) return "green";
+    if (stat === ACTION_STATUSES.ERROR) return "red";
+    if (stat === ACTION_STATUSES.WARNING) return "orange";
+    
+    // Default untuk idle dan status lainnya
+    if (act?.name === ACTION_NAMES.NAVIGATE) return "blue"; 
+    return "gray";
+  };
 
   // Tampilan khusus untuk status navigasi
   if (action?.name === ACTION_NAMES.NAVIGATE && urlData) {
+    const statusColor = getStatusColorValue(status, action);
+    const isSmallDevice = useBreakpointValue({ base: true, sm: false });
+    
     return (
       <Box
         borderWidth="1px"
-        borderColor={`${getStatusColor(status, action)}.200`}
-        bg={`${getStatusColor(status, action)}.50`}
+        borderColor={`${statusColor}.200`}
+        bg={`${statusColor}.50`}
         borderRadius="lg"
         p={1.5}
         overflow="hidden"
         boxShadow="sm"
         maxWidth="100%"
-        width={{base: "100%", sm: "auto"}}
+        width="100%" // Selalu 100% width untuk konsistensi
         transition="all 0.2s"
         _hover={{ boxShadow: "md" }}
       >
-        <Flex align="center" gap={2}>
-          {/* Status icon */}
-          <Flex 
-            align="center" 
-            justify="center"
-            minWidth="28px" 
-            height="28px" 
-            borderRadius="md"
-            bg={`${getStatusColor(status, action)}.100`}
-            color={`${getStatusColor(status, action)}.600`}
-            boxShadow={`inset 0 0 0 1px ${getStatusColor(status, action)}.200`}
-          >
-            {status === ACTION_STATUSES.RUNNING ? (
-              <Box animation="spin 1.5s linear infinite" sx={{
-                "@keyframes spin": {
-                  "0%": { transform: "rotate(0deg)" },
-                  "100%": { transform: "rotate(360deg)" }
-                }
-              }}>
-                {getStatusIcon()}
-              </Box>
-            ) : (
-              getStatusIcon()
-            )}
+        {/* Layout stack di tampilan sempit, flex di tampilan lebar */}
+        <Flex 
+          direction={{base: "column", sm: "row"}} 
+          width="100%"
+          gap={{base: 1, sm: 2}}
+        >
+          <Flex align="center" gap={2}>
+            {/* Status icon */}
+            <Flex 
+              align="center" 
+              justify="center"
+              minWidth="24px" // Lebih kecil pada tampilan vertikal
+              height="24px" 
+              borderRadius="md"
+              bg={`${statusColor}.100`}
+              color={`${statusColor}.600`}
+              boxShadow={`inset 0 0 0 1px ${statusColor}.200`}
+              flexShrink={0} // Mencegah ikon menyusut
+            >
+              {status === ACTION_STATUSES.RUNNING ? (
+                <Box animation="spin 1.5s linear infinite" sx={{
+                  "@keyframes spin": {
+                    "0%": { transform: "rotate(0deg)" },
+                    "100%": { transform: "rotate(360deg)" }
+                  }
+                }}>
+                  {getStatusIcon()}
+                </Box>
+              ) : (
+                getStatusIcon()
+              )}
+            </Flex>
+            
+            {/* Status label - letakkan di samping ikon untuk tampilan yang lebih compact */}
+            <Text 
+              fontSize="2xs" 
+              fontWeight="semibold" 
+              color={`${statusColor}.700`}
+              px={1.5}
+              py={0.5} 
+              bg={`${statusColor}.100`}
+              borderRadius="md"
+              letterSpacing="0.02em"
+              whiteSpace="nowrap"
+              flexShrink={0} // Mencegah label menyusut
+            >
+              {status === ACTION_STATUSES.RUNNING ? 'NAVIGASI' : 
+               status === ACTION_STATUSES.SUCCESS ? 'SELESAI' : 
+               status === ACTION_STATUSES.ERROR ? 'GAGAL' : 'NAVIGASI'}
+            </Text>
           </Flex>
           
           {/* Website favicon and info */}
           <Flex 
             flex="1" 
             align="center" 
-            justify="space-between" 
-            gap={2} 
             minWidth="0" // Penting untuk text truncation pada flex items
-            flexWrap={{base: "wrap", md: "nowrap"}}
+            flexWrap="nowrap"
+            mt={{base: 1, sm: 0}} // Margin top di tampilan vertikal
+            borderTopWidth={{base: "1px", sm: "0"}} // Garis pemisah di tampilan vertikal
+            borderTopColor={{base: `${statusColor}.100`, sm: "transparent"}}
+            pt={{base: 1, sm: 0}} // Padding di atas di tampilan vertikal
           >
-            <Flex align="center" minWidth="0" flex="1">
-              {/* Favicon */}
-              <Image 
-                src={urlData.favicon}
-                alt={urlData.domain}
-                width="16px"
-                height="16px"
-                borderRadius="sm"
-                mr={2}
-                display={{base: "none", sm: "block"}}
-                fallback={
-                  <Box width="16px" height="16px" p={0} color="gray.400">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <line x1="2" y1="12" x2="22" y2="12"></line>
-                      <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
-                    </svg>
-                  </Box>
-                }
-              />
-              
-              {/* Title and domain */}
-              <Box minWidth="0"> {/* Container untuk text-overflow */}
-                <Text 
-                  fontSize="xs" 
-                  fontWeight="medium" 
-                  color={`${getStatusColor(status, action)}.800`}
-                  textOverflow="ellipsis"
-                  overflow="hidden"
-                  whiteSpace="nowrap"
-                  maxWidth={{base: "150px", sm: "200px", md: "300px", lg: "400px"}}
-                >
-                  {urlData.title}
-                </Text>
-                <Text 
-                  fontSize="2xs" 
-                  color={`${getStatusColor(status, action)}.600`} 
-                  textOverflow="ellipsis"
-                  overflow="hidden"
-                  whiteSpace="nowrap"
-                  fontFamily="monospace"
-                  maxWidth={{base: "150px", sm: "200px", md: "300px", lg: "400px"}}
-                >
-                  {urlData.domain}{urlData.path.length ? '/' + urlData.path.join('/') : ''}
-                </Text>
-              </Box>
-            </Flex>
+            {/* Favicon - selalu ditampilkan, namun lebih kecil di tampilan kecil */}
+            <Image 
+              src={urlData.favicon}
+              alt={urlData.domain}
+              width={{base: "14px", sm: "16px"}}
+              height={{base: "14px", sm: "16px"}}
+              borderRadius="sm"
+              mr={2}
+              flexShrink={0} // Mencegah favicon menyusut
+              fallback={
+                <Box width={{base: "14px", sm: "16px"}} height={{base: "14px", sm: "16px"}} p={0} color="gray.400" flexShrink={0}>
+                  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
+                  </svg>
+                </Box>
+              }
+            />
             
-            {/* Status label */}
-            <Text 
-              fontSize="2xs" 
-              fontWeight="semibold" 
-              color={`${getStatusColor(status, action)}.700`}
-              px={1.5}
-              py={0.5} 
-              bg={`${getStatusColor(status, action)}.100`}
-              borderRadius="md"
-              letterSpacing="0.02em"
-              whiteSpace="nowrap"
-            >
-              {status === ACTION_STATUSES.RUNNING ? 'NAVIGASI' : 
-               status === ACTION_STATUSES.SUCCESS ? 'SELESAI' : 
-               status === ACTION_STATUSES.ERROR ? 'GAGAL' : 'NAVIGASI'}
-            </Text>
+            {/* Title and domain - container dengan maxWidth untuk tampilan sempit */}
+            <Box minWidth="0" flex="1" maxWidth="100%"> {/* Container untuk text-overflow */}
+              <Text 
+                fontSize={{base: "2xs", sm: "xs"}} // Font lebih kecil di tampilan sempit
+                fontWeight="medium" 
+                color={`${statusColor}.800`}
+                textOverflow="ellipsis"
+                overflow="hidden"
+                whiteSpace="nowrap"
+                title={urlData.title} // Tooltip untuk teks yang terpotong
+              >
+                {urlData.title}
+              </Text>
+              <Text 
+                fontSize="2xs" 
+                color={`${statusColor}.600`} 
+                textOverflow="ellipsis"
+                overflow="hidden"
+                whiteSpace="nowrap"
+                fontFamily="monospace"
+                title={`${urlData.domain}${urlData.path.length ? '/' + urlData.path.join('/') : ''}`} // Tooltip untuk URL lengkap
+              >
+                {isSmallDevice 
+                  ? urlData.domain // Hanya tampilkan domain di layar kecil
+                  : `${urlData.domain}${urlData.path.length ? '/' + urlData.path.join('/') : ''}`
+                }
+              </Text>
+            </Box>
           </Flex>
         </Flex>
       </Box>
@@ -951,8 +981,8 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
         minWidth="24px" 
         height="24px" 
         borderRadius="full"
-        bg={`${getStatusColor(status, action)}.100`}
-        color={`${getStatusColor(status, action)}.600`}
+        bg={`${getStatusColorValue(status, action)}.100`}
+        color={`${getStatusColorValue(status, action)}.600`}
       >
         {status === ACTION_STATUSES.RUNNING ? (
           <Box animation="spin 1.5s linear infinite" sx={{
@@ -969,7 +999,7 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
       </Flex>
       <Text 
         fontSize="xs" 
-        color={`${getStatusColor(status, action)}.700`}
+        color={`${getStatusColorValue(status, action)}.700`}
         fontWeight="medium"
         letterSpacing="0.02em"
         textOverflow="ellipsis"
@@ -2192,31 +2222,53 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                                       boxShadow="sm"
                                       transition="all 0.2s"
                                       _hover={{ boxShadow: "md", borderColor: "blue.200" }}
+                                      maxW={{base: "100%", sm: "500px"}} // Responsif untuk layar kecil
+                                      width="100%" // Mengisi lebar yang tersedia pada tampilan vertikal
                                     >
-                                      <Flex p={3} align="center" borderBottomWidth="1px" borderColor="blue.50">
+                                      <Flex 
+                                        p={2} // Padding lebih kecil untuk tampilan vertikal
+                                        align="center" 
+                                        borderBottomWidth="1px" 
+                                        borderColor="blue.50"
+                                      >
                                         <Box 
-                                          mr={3} 
-                                          p={2} 
+                                          mr={2} // Margin lebih kecil untuk tampilan vertikal
+                                          p={1.5} // Padding lebih kecil
                                           borderRadius="md" 
                                           bg="blue.50"
+                                          color="blue.500"
                                         >
-                                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <polygon points="10 8 16 12 10 16 10 8"></polygon>
                                           </svg>
                                         </Box>
                                         <Box flex="1">
-                                          <Text fontWeight="medium" color="blue.700">Navigasi ke Website</Text>
+                                          <Text 
+                                            fontWeight="medium" 
+                                            color="blue.700" 
+                                            fontSize={{base: "xs", sm: "sm"}} // Font lebih kecil di tampilan sempit
+                                            noOfLines={1} // Batasi menjadi 1 baris
+                                          >
+                                            Navigasi ke Website
+                                          </Text>
                                         </Box>
                                       </Flex>
                                       
-                                      <Box p={3} bg="gray.50">
-                                        <Flex mb={3} align="center">
+                                      <Box p={2.5} bg="gray.50"> {/* Padding lebih kecil */}
+                                        {/* Responsive Layout: Stack vertikal di tampilan sempit (rasio 19:6), horizontal di tampilan lebih lebar */}
+                                        <Flex 
+                                          mb={2} 
+                                          direction={{base: "column", sm: "row"}} // Stack vertikal di tampilan sempit
+                                          align={{base: "flex-start", sm: "center"}}
+                                          gap={2} // Gap konsisten
+                                        >
                                           {/* Favicon preview */}
                                           <Box 
-                                            mr={3} 
-                                            width="32px" 
-                                            height="32px" 
+                                            mb={{base: 2, sm: 0}} // Margin bottom hanya di tampilan vertikal
+                                            mr={{base: 0, sm: 3}} // Margin right hanya di tampilan horizontal
+                                            width="28px" // Sedikit lebih kecil
+                                            height="28px" 
                                             borderRadius="md" 
                                             bg="white" 
                                             display="flex" 
@@ -2225,6 +2277,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                                             borderWidth="1px"
                                             borderColor="gray.200"
                                             overflow="hidden"
+                                            flexShrink={0} // Mencegah favicon menyusut
                                           >
                                             {(() => {
                                               try {
@@ -2235,7 +2288,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                                                     alt="Website favicon"
                                                     fallback={
                                                       <Box p={1} color="gray.400">
-                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                                           <path d="M12 2a10 10 0 100 20 10 10 0 000-20z"></path>
                                                           <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
                                                         </svg>
@@ -2246,7 +2299,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                                               } catch (e) {
                                                 return (
                                                   <Box p={1} color="gray.400">
-                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                                       <path d="M12 2a10 10 0 100 20 10 10 0 000-20z"></path>
                                                       <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
                                                     </svg>
@@ -2257,15 +2310,22 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                                           </Box>
                                           
                                           {/* URL and Title Section */}
-                                          <Box flex="1">
-                                            {/* Website title - we don't have title in the action data yet */}
-                                            <Text fontSize="sm" fontWeight="medium" color="gray.800" mb={1} noOfLines={1}>
+                                          <Box flex="1" width="100%">
+                                            {/* Website title */}
+                                            <Text 
+                                              fontSize={{base: "xs", sm: "sm"}} // Font lebih kecil di tampilan sempit
+                                              fontWeight="medium" 
+                                              color="gray.800" 
+                                              mb={1} 
+                                              noOfLines={1} // Batasi menjadi 1 baris
+                                              title={jsonData.action.args.title || "Navigasi ke Website"} // Tooltip untuk teks yang terpotong
+                                            >
                                               {jsonData.action.args.title || "Navigasi ke Website"}
                                             </Text>
                                             
                                             {/* URL display with truncation */}
                                             <Box
-                                              fontSize="xs"
+                                              fontSize={{base: "2xs", sm: "xs"}} // Font lebih kecil di tampilan sempit
                                               p={1.5}
                                               bg="white"
                                               borderRadius="md"
@@ -2278,20 +2338,47 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                                               overflow="hidden"
                                               textOverflow="ellipsis"
                                               whiteSpace="nowrap"
-                                              title={jsonData.action.args.url}
+                                              title={jsonData.action.args.url} // Tooltip untuk URL lengkap
+                                              maxW={{base: "100%", sm: "400px"}} // Lebar maksimum yang responsif
                                             >
-                                              {jsonData.action.args.url}
+                                              {(() => {
+                                                try {
+                                                  // Tampilkan URL dengan format yang lebih baik untuk tampilan sempit
+                                                  const url = new URL(jsonData.action.args.url);
+                                                  // Pada tampilan kecil, tampilkan URL yang dipersingkat
+                                                  const isMobile = window.innerWidth < 400;
+                                                  if (isMobile) {
+                                                    return `${url.hostname.replace('www.', '')}${url.pathname.length > 1 ? '/...' : ''}`;
+                                                  }
+                                                  // Pada tampilan normal, tampilkan full URL
+                                                  return jsonData.action.args.url;
+                                                } catch (e) {
+                                                  return jsonData.action.args.url;
+                                                }
+                                              })()}
                                             </Box>
                                           </Box>
                                         </Flex>
                                         
                                         {/* Additional info if available */}
                                         {jsonData.action.args.details && jsonData.action.args.details.length > 0 && (
-                                          <Box mt={2} p={2} fontSize="xs" bg="white" borderRadius="md" borderWidth="1px" borderColor="gray.200">
-                                            <Text fontWeight="medium" color="gray.600" mb={1}>Informasi Tambahan:</Text>
-                                            <UnorderedList pl={3} spacing={1} color="gray.600">
+                                          <Box 
+                                            mt={2} 
+                                            p={2} 
+                                            fontSize={{base: "2xs", sm: "xs"}} // Font lebih kecil di tampilan sempit
+                                            bg="white" 
+                                            borderRadius="md" 
+                                            borderWidth="1px" 
+                                            borderColor="gray.200"
+                                            maxH={{base: "80px", sm: "120px"}} // Batasi tinggi agar tidak terlalu panjang di tampilan vertikal
+                                            overflowY="auto" // Scroll jika kontennya terlalu panjang
+                                          >
+                                            <Text fontWeight="medium" color="gray.600" mb={1} fontSize={{base: "2xs", sm: "xs"}}>
+                                              Informasi Tambahan:
+                                            </Text>
+                                            <UnorderedList pl={2} spacing={0.5} color="gray.600"> {/* Spacing dan padding lebih kecil */}
                                               {jsonData.action.args.details.map((detail: string, idx: number) => (
-                                                <ListItem key={idx}>{detail}</ListItem>
+                                                <ListItem key={idx} fontSize={{base: "2xs", sm: "xs"}}>{detail}</ListItem>
                                               ))}
                                             </UnorderedList>
                                           </Box>
@@ -2308,29 +2395,58 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                                     }
                                     
                                     return (
-                                      <HStack key={keyIdx} spacing={2} p={2} bg="white" borderRadius="md" borderWidth="1px" borderColor="gray.200" _hover={{ borderColor: "teal.200", bg: "gray.50" }} transition="all 0.2s">
-                                        <Text fontSize="sm" fontWeight="medium" color="teal.600" w="80px" flexShrink={0}>
+                                      <Stack 
+                                        key={keyIdx} 
+                                        direction={{base: "column", sm: "row"}} // Vertikal pada tampilan sempit, horizontal pada tampilan besar
+                                        spacing={1} 
+                                        p={2} 
+                                        bg="white" 
+                                        borderRadius="md" 
+                                        borderWidth="1px" 
+                                        borderColor="gray.200" 
+                                        _hover={{ borderColor: "teal.200", bg: "gray.50" }} 
+                                        transition="all 0.2s"
+                                        w="100%" // Mengisi lebar yang tersedia
+                                      >
+                                        <Text 
+                                          fontSize={{base: "xs", sm: "sm"}} 
+                                          fontWeight="medium" 
+                                          color="teal.600" 
+                                          w={{base: "100%", sm: "80px"}} // Full width di mobile, fixed di desktop
+                                          flexShrink={0}
+                                        >
                                           {key}:
                                         </Text>
                                         {typeof value === 'object' ? (
                                           <Box 
                                             borderRadius="md"
-                                            p={2}
+                                            p={{base: 1.5, sm: 2}} // Padding lebih kecil di tampilan sempit
                                             bg="white"
                                             borderWidth="1px"
                                             borderColor="teal.100"
                                             boxShadow="xs"
                                             w="full"
-                                            ml={2}
+                                            ml={{base: 0, sm: 2}} // Tidak ada margin left di tampilan sempit
+                                            fontSize={{base: "xs", sm: "sm"}} // Font lebih kecil di tampilan sempit
+                                            maxH={{base: "120px", sm: "200px"}} // Batasi tinggi di tampilan vertikal
+                                            overflowY="auto" // Scroll jika terlalu panjang
                                           >
                                             <JsonViewerForInvalidJson data={value} level={1} />
                                           </Box>
                                         ) : (
-                                          <Text fontSize="sm" color="gray.700" fontFamily={key === 'url' ? 'monospace' : 'inherit'}>
+                                          <Text 
+                                            fontSize={{base: "xs", sm: "sm"}} 
+                                            color="gray.700" 
+                                            fontFamily={key === 'url' ? 'monospace' : 'inherit'}
+                                            wordBreak="break-word" // Memungkinkan text wrapping untuk kata panjang
+                                            overflowWrap="break-word" // Mengatasi overflow pada kata panjang
+                                            whiteSpace="pre-wrap" // Pertahankan line breaks tapi wrap text
+                                            maxW={{base: "100%", sm: "calc(100% - 80px)"}} // Width yang responsif
+                                          >
                                             {String(value)}
                                           </Text>
                                         )}
-                                      </HStack>
+                                      </Stack>
                                     );
                                   })}
                                 </VStack>

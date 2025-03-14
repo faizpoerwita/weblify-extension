@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.0.1.56 (05-05-2025)
+- Peningkatan UI untuk rasio vertikal (19:6) pada bagian Tindakan:
+  - Optimasi layout bagian navigasi website dengan susunan yang lebih compact di tampilan vertikal
+  - Implementasi desain responsif dengan tampilan stack untuk layar sempit
+  - Penanganan teks panjang dengan text ellipsis dan tooltip untuk judul dan URL website 
+  - Pengoptimalan ukuran font dan spacing untuk konsistensi visual di berbagai ukuran layar
+  - Penyederhanaan tampilan URL di layar kecil dengan hanya menampilkan domain
+  - Peningkatan kartu tindakan dengan struktur fleksibel untuk menampilkan data JSON secara lebih optimal
+  - Layout dinamis pada indikator status dengan penyesuaian untuk moda vertikal
+
 ## v1.0.1.55 (05-05-2025)
 - Peningkatan UI pada status navigasi dengan tampilan yang lebih informatif dan menarik:
   - Implementasi kartu status khusus dengan informasi website yang komprehensif
