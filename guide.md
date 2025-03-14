@@ -2,6 +2,16 @@
 
 ## Current Version
 
+### **v1.0.1.44 (05-05-2025)**
+#### Penyempurnaan Visualisasi JSON
+- **Tampilan Non-Kode**: Menghilangkan semua elemen yang membuat JSON terlihat seperti kode, seperti tanda kutip dan font monospace
+- **Tampilan String yang Natural**: Penghapusan tanda kutip pada nilai string untuk tampilan yang lebih mudah dibaca dan alami
+- **Konsistensi Font**: Penggantian font monospace dengan font normal pada semua elemen JSON termasuk kurung dan tanda kurung
+- **UI yang Lebih Bersih**: Penyesuaian tampilan kurung dan tanda kurung untuk terlihat lebih seperti elemen UI daripada kode
+- **Pengalaman Pengguna yang Ditingkatkan**: Optimasi tampilan nilai primitif untuk pengalaman pengguna yang lebih intuitif
+- **Konsistensi Visual**: Memastikan semua data JSON ditampilkan dengan gaya yang konsisten di seluruh aplikasi
+
+Perubahan versi sebelumnya:
 ### **v1.0.1.43 (05-05-2025)**
 #### Peningkatan Visualisasi JSON
 - **Tampilan UI yang Lebih Menarik**: Menghilangkan tampilan JSON sebagai kode mentah dan menggantinya dengan komponen visual interaktif yang lebih user-friendly

@@ -304,3 +304,11 @@
 - Penambahan efek hover dan transisi untuk meningkatkan interaksi pengguna
 - Pewarnaan berbeda untuk tipe data yang berbeda (string, number, boolean) untuk meningkatkan keterbacaan
 - Optimasi tampilan nilai primitif dan array sederhana dengan desain card yang konsisten 
+
+## v1.0.1.44 (05-05-2025)
+- Penyempurnaan visualisasi JSON dengan menghilangkan semua elemen yang terlihat seperti kode
+- Penghapusan tanda kutip pada nilai string untuk tampilan yang lebih natural
+- Penggantian font monospace dengan font normal pada semua elemen JSON
+- Penyesuaian tampilan kurung dan tanda kurung untuk terlihat lebih seperti UI
+- Peningkatan konsistensi visual dengan menghilangkan semua format kode pada data JSON
+- Optimasi tampilan nilai primitif untuk pengalaman pengguna yang lebih baik 

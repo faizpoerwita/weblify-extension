@@ -1130,7 +1130,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
             </Box>
             <Box p={4}>
               <VStack align="stretch" spacing={4}>
-                {parsed.data.map((item, index) => {
+                {parsed.data.map((item: any, index: number) => {
                   switch (item.type) {
                     case 'json':
                       return (
@@ -1495,7 +1495,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                       fontWeight="medium"
                       color={`${getStatusColor(parsed.action.status || 'idle', parsed.action)}.700`}
                     >
-                      {actionTitles[parsed.action.name]}
+                      {parsed.action.name && actionTitles[parsed.action.name as keyof typeof actionTitles] || parsed.action.name}
                     </Text>
                     <Text fontSize="xs" color={`${getStatusColor(parsed.action.status || 'idle', parsed.action)}.600`}>
                       {getStatusDisplay(parsed.action.status || 'idle', parsed.action)}
@@ -1661,7 +1661,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                         bg="gray.50"
                         borderRadius="md"
                         fontSize="xs"
-                        fontFamily="mono"
+                        fontFamily="inherit"
                       >
                         <Text color="gray.700">
                           {typeof value === 'object' ? (
@@ -1961,9 +1961,9 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                                         typeof value === 'boolean' ? "purple.600" :
                                         "gray.600"
                                       }
-                                      fontFamily={typeof value === 'string' ? "inherit" : "mono"}
+                                      fontFamily="inherit"
                                     >
-                                      {typeof value === 'string' ? `"${value}"` : String(value)}
+                                      {typeof value === 'string' ? value : String(value)}
                                     </Text>
                                   </HStack>
                                 );
@@ -2661,14 +2661,14 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ data, level = 0, isExpanded = t
           typeof data === 'boolean' ? colors.boolean :
           data === null ? colors.null : 'gray.600'
         }
-        fontFamily="mono"
+        fontFamily={typeof data === 'string' ? "inherit" : "mono"}
         fontSize="sm"
         borderRadius="sm"
         px={typeof data === 'string' ? 1 : 0}
         bg={typeof data === 'string' ? 'whiteAlpha.300' : 'transparent'}
       >
         {data === null ? 'null' : 
-         typeof data === 'string' ? `"${data}"` : 
+         typeof data === 'string' ? data : 
          String(data)}
       </Text>
     );
@@ -2679,7 +2679,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ data, level = 0, isExpanded = t
 
   if (isEmpty) {
     return (
-      <Text as="span" color={colors.bracket} fontFamily="mono" fontSize="sm">
+      <Text as="span" color={colors.bracket} fontFamily="inherit" fontSize="sm">
         {isArray ? '[ ]' : '{ }'}
       </Text>
     );
@@ -2708,11 +2708,11 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ data, level = 0, isExpanded = t
             <path d="M9 18l6-6-6-6"/>
           </svg>
         </Box>
-        <Text fontFamily="mono" color={colors.bracket} fontSize="sm">
+        <Text fontFamily="inherit" color={colors.bracket} fontSize="sm">
           {isArray ? '[' : '{'}
         </Text>
         {!expanded && (
-          <Text fontFamily="mono" color="gray.500" fontSize="xs" ml={1} fontStyle="italic">
+          <Text fontFamily="inherit" color="gray.500" fontSize="xs" ml={1} fontStyle="italic">
             {isArray ? `Array(${itemCount})` : `${itemCount} properti`}
           </Text>
         )}
@@ -2737,12 +2737,12 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ data, level = 0, isExpanded = t
               transition="all 0.2s"
             >
               <HStack spacing={2} wrap="nowrap">
-                <Text color={colors.key} fontFamily="mono" fontSize="sm" fontWeight="medium">
+                <Text color={colors.key} fontFamily={isArray ? "mono" : "inherit"} fontSize="sm" fontWeight="medium">
                   {isArray ? 
                     <Box as="span" px={1} fontSize="xs" bg={useColorModeValue("gray.100", "gray.600")} borderRadius="sm" mr={1}>
                       {key}
                     </Box> : 
-                    `"${key}":`
+                    key
                   }
                 </Text>
                 <JsonViewer data={value} level={level + 1} />
@@ -2755,7 +2755,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ data, level = 0, isExpanded = t
         </VStack>
       )}
       
-      <Text fontFamily="mono" color={colors.bracket} fontSize="sm" pl={expanded ? indent : 0}>
+      <Text fontFamily="inherit" color={colors.bracket} fontSize="sm" pl={expanded ? indent : 0}>
         {isArray ? ']' : '}'}
       </Text>
     </Box>
