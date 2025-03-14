@@ -1388,7 +1388,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                             {/* Code content */}
                             <Text
                               fontSize="sm"
-                              fontFamily="mono"
+                              fontFamily="inherit"
                               color={useColorModeValue("gray.700", "gray.300")}
                               whiteSpace="pre-wrap"
                               pl="45px"
@@ -2054,7 +2054,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                           </Box>
                           <Text
                             fontSize="sm"
-                            fontFamily="mono"
+                            fontFamily="inherit"
                             color={useColorModeValue("gray.700", "gray.300")}
                             whiteSpace="pre-wrap"
                           >
@@ -2230,9 +2230,9 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                                         typeof value === 'boolean' ? "purple.600" :
                                         "gray.600"
                                       }
-                                      fontFamily={typeof value === 'string' ? "inherit" : "mono"}
+                                      fontFamily="inherit"
                                     >
-                                      {typeof value === 'string' ? `"${value}"` : String(value)}
+                                      {typeof value === 'string' ? value : String(value)}
                                     </Text>
                                   </HStack>
                                 );
@@ -2363,7 +2363,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                 >
                   <Text
                     fontSize="sm"
-                    fontFamily="mono"
+                    fontFamily="inherit"
                     color={isUser ? "white" : "gray.700"}
                     whiteSpace="pre-wrap"
                   >

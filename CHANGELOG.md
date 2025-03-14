@@ -312,3 +312,10 @@
 - Penyesuaian tampilan kurung dan tanda kurung untuk terlihat lebih seperti UI
 - Peningkatan konsistensi visual dengan menghilangkan semua format kode pada data JSON
 - Optimasi tampilan nilai primitif untuk pengalaman pengguna yang lebih baik 
+
+## v1.0.1.45 (05-05-2025)
+- Penyempurnaan lanjutan visualisasi JSON dengan menghilangkan semua sisa elemen kode
+- Penghapusan tanda kutip pada nilai string yang masih tersisa di beberapa bagian
+- Penggantian font monospace dengan font normal pada semua tampilan kode dan nilai non-string
+- Standardisasi tampilan untuk memastikan konsistensi visual di seluruh aplikasi
+- Pemeriksaan menyeluruh untuk memastikan tidak ada JSON yang ditampilkan sebagai teks mentah 
