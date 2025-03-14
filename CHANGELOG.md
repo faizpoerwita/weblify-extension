@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.0.1.54 (05-05-2025)
+- Peningkatan UI/UX pada tampilan bagian "Tindakan" dalam chat dengan desain kartu yang lebih modern
+- Implementasi tampilan khusus untuk action "navigate" dengan informasi website yang komprehensif:
+  - Menampilkan favicon/logo website yang diambil secara otomatis dari domain
+  - Menampilkan URL website dengan format yang lebih informatif dan mudah dibaca
+  - Menampilkan judul website dalam format yang rapi dan elegan
+- Penyempurnaan struktur data ActionType dengan penambahan properti "title" untuk navigasi
+- Optimasi formatActionDisplay agar mendukung berbagai jenis aksi dengan tampilan yang sesuai konteks
+- Peningkatan visual teks dengan styling khusus untuk URL dan data teknis lainnya
+
 ## v1.0.1.53 (05-05-2025)
 - Peningkatan tampilan JSON dalam antarmuka chat dengan format khusus "Pemikiran AI" dan "Tindakan"
 - Perbaikan dalam deteksi dan pemrosesan format JSON yang tidak terurai dengan benar dalam chat

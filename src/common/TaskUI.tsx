@@ -18,6 +18,9 @@ import {
   Portal,
   useColorMode,
   useColorModeValue,
+  Image,
+  UnorderedList,
+  ListItem,
 } from "@chakra-ui/react";
 import { debugMode } from "../constants";
 import { useAppState } from "../state/store";
@@ -104,7 +107,9 @@ const ACTION_NAMES = {
   SCROLL: 'scroll',
   WAIT: 'wait',
   FINISH: 'finish',
-  SEARCH: 'search'
+  SEARCH: 'search',
+  EXTRACT: 'extract',
+  FILL: 'fill'
 } as const;
 
 const OPERATION_NAMES = {
@@ -141,6 +146,7 @@ interface ActionType {
     result?: string;
     details?: string[];
     message?: string;
+    title?: string; // Tambahkan properti title untuk menyimpan judul website
   };
   status?: ActionStatus;
 }
@@ -337,32 +343,70 @@ const actionTitles: Record<ActionName, string> = {
   [ACTION_NAMES.SCROLL]: 'Scroll',
   [ACTION_NAMES.WAIT]: 'Tunggu',
   [ACTION_NAMES.FINISH]: 'Selesai',
-  [ACTION_NAMES.SEARCH]: 'Cari'
+  [ACTION_NAMES.SEARCH]: 'Cari',
+  [ACTION_NAMES.EXTRACT]: 'Ekstrak',
+  [ACTION_NAMES.FILL]: 'Isi'
 };
 
 const formatActionDisplay = (action: ActionType): { title: string; description: string } => {
-  const title = actionTitles[action.name] || action.name;
-  let description = '';
+  let title = "Tindakan";
+  let description = "";
 
-  if (action.args) {
-    const { url, selector, text, duration, direction } = action.args;
-    if (url) {
-      try {
-        const urlData = processUrlData(url);
-        if (urlData) {
-          description = urlData.title;
-        } else {
-          const urlObj = new URL(url);
-          description = `${urlObj.hostname.replace('www.', '')}${urlObj.pathname !== '/' ? urlObj.pathname : ''}`;
-        }
-      } catch {
-        description = url;
+  const { name, args } = action;
+
+  const actionTitles: Record<string, string> = {
+    navigate: "Navigasi",
+    click: "Klik",
+    extract: "Ekstrak",
+    scroll: "Gulir",
+    wait: "Tunggu",
+    fill: "Isi"
+  };
+
+  title = actionTitles[name] || name;
+
+  switch (name) {
+    case "navigate":
+      if (args?.url) {
+        // Jika ada title yang disimpan di args, gunakan itu
+        description = args.title ? 
+          `${args.url} (${args.title})` : 
+          args.url;
       }
-    }
-    if (selector) description = `pada ${selector}`;
-    if (text) description = `"${text}"`;
-    if (duration) description = `selama ${duration}ms`;
-    if (direction) description = `ke ${direction}`;
+      break;
+    case "click":
+      if (args?.selector) {
+        description = `pada elemen ${args.selector}`;
+      }
+      break;
+    case ACTION_NAMES.EXTRACT:
+      if (args?.selector) {
+        description = `informasi dari ${args.selector}`;
+      }
+      break;
+    case "scroll":
+      if (args?.direction) {
+        description = `${args.direction === "up" ? "ke atas" : "ke bawah"}`;
+      }
+      break;
+    case "wait":
+      if (args?.duration) {
+        description = `selama ${args.duration} detik`;
+      }
+      break;
+    case ACTION_NAMES.FILL:
+      if (args?.selector && args?.text) {
+        description = `${args.selector} dengan '${args.text}'`;
+      }
+      break;
+    default:
+      // Jika ada args yang diberikan tetapi tidak termasuk dalam case di atas
+      if (args) {
+        description = Object.entries(args)
+          .filter(([key, value]) => value !== undefined && key !== 'success' && key !== 'error')
+          .map(([key, value]) => `${key}: ${typeof value === 'object' ? JSON.stringify(value) : value}`)
+          .join(", ");
+      }
   }
 
   return { title, description };
@@ -1970,31 +2014,159 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                               </HStack>
                               
                               {typeof jsonData.action === 'object' ? (
-                                <VStack align="stretch" spacing={2} pl={10}>
-                                  {Object.entries(jsonData.action).map(([key, value], keyIdx) => (
-                                    <HStack key={keyIdx} spacing={2}>
-                                      <Text fontSize="sm" fontWeight="medium" color="teal.600">
-                                        {key}:
-                                      </Text>
-                                      {typeof value === 'object' ? (
+                                <VStack align="stretch" spacing={3} pl={10}>
+                                  {/* Tampilan khusus untuk action navigate dengan website data */}
+                                  {jsonData.action.name === 'navigate' && jsonData.action.args && jsonData.action.args.url && (
+                                    <Box 
+                                      borderWidth="1px" 
+                                      borderColor="blue.100" 
+                                      borderRadius="lg"
+                                      overflow="hidden"
+                                      bg="white"
+                                      boxShadow="sm"
+                                      transition="all 0.2s"
+                                      _hover={{ boxShadow: "md", borderColor: "blue.200" }}
+                                    >
+                                      <Flex p={3} align="center" borderBottomWidth="1px" borderColor="blue.50">
                                         <Box 
-                                          borderRadius="md"
-                                          p={2}
-                                          bg="white"
-                                          borderWidth="1px"
-                                          borderColor="teal.100"
-                                          boxShadow="xs"
-                                          w="full"
+                                          mr={3} 
+                                          p={2} 
+                                          borderRadius="md" 
+                                          bg="blue.50"
                                         >
-                                          <JsonViewerForInvalidJson data={value} level={1} />
+                                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                                          </svg>
                                         </Box>
-                                      ) : (
-                                        <Text fontSize="sm" color="gray.700">
-                                          {String(value)}
+                                        <Box flex="1">
+                                          <Text fontWeight="medium" color="blue.700">Navigasi ke Website</Text>
+                                        </Box>
+                                      </Flex>
+                                      
+                                      <Box p={3} bg="gray.50">
+                                        <Flex mb={3} align="center">
+                                          {/* Favicon preview */}
+                                          <Box 
+                                            mr={3} 
+                                            width="32px" 
+                                            height="32px" 
+                                            borderRadius="md" 
+                                            bg="white" 
+                                            display="flex" 
+                                            alignItems="center" 
+                                            justifyContent="center"
+                                            borderWidth="1px"
+                                            borderColor="gray.200"
+                                            overflow="hidden"
+                                          >
+                                            {(() => {
+                                              try {
+                                                const url = new URL(jsonData.action.args.url);
+                                                return (
+                                                  <Image 
+                                                    src={`https://www.google.com/s2/favicons?domain=${url.hostname}&sz=32`}
+                                                    alt="Website favicon"
+                                                    fallback={
+                                                      <Box p={1} color="gray.400">
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                          <path d="M12 2a10 10 0 100 20 10 10 0 000-20z"></path>
+                                                          <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
+                                                        </svg>
+                                                      </Box>
+                                                    }
+                                                  />
+                                                );
+                                              } catch (e) {
+                                                return (
+                                                  <Box p={1} color="gray.400">
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                      <path d="M12 2a10 10 0 100 20 10 10 0 000-20z"></path>
+                                                      <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
+                                                    </svg>
+                                                  </Box>
+                                                );
+                                              }
+                                            })()}
+                                          </Box>
+                                          
+                                          {/* URL and Title Section */}
+                                          <Box flex="1">
+                                            {/* Website title - we don't have title in the action data yet */}
+                                            <Text fontSize="sm" fontWeight="medium" color="gray.800" mb={1} noOfLines={1}>
+                                              {jsonData.action.args.title || "Navigasi ke Website"}
+                                            </Text>
+                                            
+                                            {/* URL display with truncation */}
+                                            <Box
+                                              fontSize="xs"
+                                              p={1.5}
+                                              bg="white"
+                                              borderRadius="md"
+                                              borderWidth="1px"
+                                              borderColor="gray.200"
+                                              fontFamily="monospace"
+                                              color="blue.600"
+                                              _hover={{ borderColor: "blue.300" }}
+                                              transition="all 0.2s"
+                                              overflow="hidden"
+                                              textOverflow="ellipsis"
+                                              whiteSpace="nowrap"
+                                              title={jsonData.action.args.url}
+                                            >
+                                              {jsonData.action.args.url}
+                                            </Box>
+                                          </Box>
+                                        </Flex>
+                                        
+                                        {/* Additional info if available */}
+                                        {jsonData.action.args.details && jsonData.action.args.details.length > 0 && (
+                                          <Box mt={2} p={2} fontSize="xs" bg="white" borderRadius="md" borderWidth="1px" borderColor="gray.200">
+                                            <Text fontWeight="medium" color="gray.600" mb={1}>Informasi Tambahan:</Text>
+                                            <UnorderedList pl={3} spacing={1} color="gray.600">
+                                              {jsonData.action.args.details.map((detail: string, idx: number) => (
+                                                <ListItem key={idx}>{detail}</ListItem>
+                                              ))}
+                                            </UnorderedList>
+                                          </Box>
+                                        )}
+                                      </Box>
+                                    </Box>
+                                  )}
+                                  
+                                  {/* Display other type of actions */}
+                                  {Object.entries(jsonData.action).map(([key, value], keyIdx) => {
+                                    // Skip displaying the name and args for navigate action since we have special display for it
+                                    if (jsonData.action.name === 'navigate' && (key === 'name' || key === 'args')) {
+                                      return null;
+                                    }
+                                    
+                                    return (
+                                      <HStack key={keyIdx} spacing={2} p={2} bg="white" borderRadius="md" borderWidth="1px" borderColor="gray.200" _hover={{ borderColor: "teal.200", bg: "gray.50" }} transition="all 0.2s">
+                                        <Text fontSize="sm" fontWeight="medium" color="teal.600" w="80px" flexShrink={0}>
+                                          {key}:
                                         </Text>
-                                      )}
-                                    </HStack>
-                                  ))}
+                                        {typeof value === 'object' ? (
+                                          <Box 
+                                            borderRadius="md"
+                                            p={2}
+                                            bg="white"
+                                            borderWidth="1px"
+                                            borderColor="teal.100"
+                                            boxShadow="xs"
+                                            w="full"
+                                            ml={2}
+                                          >
+                                            <JsonViewerForInvalidJson data={value} level={1} />
+                                          </Box>
+                                        ) : (
+                                          <Text fontSize="sm" color="gray.700" fontFamily={key === 'url' ? 'monospace' : 'inherit'}>
+                                            {String(value)}
+                                          </Text>
+                                        )}
+                                      </HStack>
+                                    );
+                                  })}
                                 </VStack>
                               ) : (
                                 <Text fontSize="sm" color="gray.700" pl={10}>

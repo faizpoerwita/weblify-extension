@@ -2,6 +2,18 @@
 
 ## Current Version
 
+### **v1.0.1.54 (05-05-2025)**
+#### Peningkatan UI Tindakan dan Navigasi Website
+- **Tampilan Kartu Tindakan Modern**: Desain UI kartu tindakan yang lebih modern dengan efek hover dan transisi yang halus
+- **Visualisasi Website yang Komprehensif**: Tampilan khusus untuk action "navigate" yang menampilkan:
+  - Favicon/logo website yang diambil otomatis dari domain
+  - URL yang diformat dengan rapi dan mudah dibaca
+  - Judul website yang ditampilkan secara elegan
+- **Struktur Data yang Disempurnakan**: Penambahan properti "title" untuk menyimpan judul website
+- **Format Aksi Kontekstual**: Optimasi tampilan berbagai jenis aksi sesuai dengan konteksnya
+- **Styling Teknis yang Ditingkatkan**: Font khusus untuk URL dan elemen teknis lainnya
+
+Perubahan versi sebelumnya:
 ### **v1.0.1.53 (05-05-2025)**
 #### Format Visual Pemikiran AI dan Tindakan dalam Chat
 - **UI/UX Chat yang Ditingkatkan**: Implementasi tampilan khusus untuk JSON dengan format "thought" dan "action"
