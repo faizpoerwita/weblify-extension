@@ -2,14 +2,14 @@
 
 ## Current Version
 **v1.0.1.40 (04-05-2025)**
-- Intelligent JSON Detection & Visualization:
-  - Smart detection untuk menemukan dan memvalidasi JSON dalam pesan teks biasa
-  - Auto-repair untuk format JSON yang kurang sempurna (single quotes, missing quotes)
-  - Peningkatan UX dengan pemisahan teks reguler dan visualisasi JSON
-  - Deteksi khusus untuk codeblock ```json dengan visualisasi yang lebih baik
-  - Konsistensi visualisasi JSON pada seluruh konteks aplikasi
-  - Perbaikan tampilan JSON nested dengan indikator jumlah items saat collapsed
-  - Penanganan konsisten untuk berbagai format data dalam chat
+- Smart JSON Visualization:
+  - Deteksi dan visualisasi otomatis semua format JSON dalam chat AI Agent
+  - Parser cerdas yang dapat mengekstrak dan memvisualisasikan JSON embedded dalam teks
+  - Pencegahan tampilan raw JSON dengan konversi otomatis ke tampilan visual
+  - Standardisasi presentasi data terstruktur di seluruh aplikasi
+  - Penanganan error dengan fallback ke visualisasi alternatif
+  - Penerapan UX yang konsisten untuk semua jenis data terstruktur
+  - Peningkatan keterbacaan dengan pembedaan visual tiap bagian JSON
 
 Perubahan versi sebelumnya:
 **v1.0.1.39 (04-05-2025)**

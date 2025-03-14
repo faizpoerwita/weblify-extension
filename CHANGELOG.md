@@ -1,13 +1,13 @@
 # Changelog
 
 ## v1.0.1.40 (04-05-2025)
-- Perbaikan deteksi dan tampilan format JSON dalam pesan chat
-- Implementasi smart JSON detection untuk mengenali JSON dalam teks biasa
-- Penambahan auto-repair untuk format JSON yang tidak valid atau kurang tepat
-- Deteksi khusus untuk codeblock JSON dengan tag ```json
-- Peningkatan visualisasi JSON dalam semua konteks chat
-- Penyeragaman tampilan data JSON di seluruh aplikasi dengan desain glassmorphic yang konsisten
-- Pemisahan teks biasa dan JSON dalam pesan yang sama
+- Perbaikan visualisasi JSON pada semua konten chat AI Agent
+- Implementasi deteksi otomatis format JSON dalam teks untuk visualisasi yang optimal
+- Peningkatan kemampuan parser untuk mengenali dan memvisualisasikan JSON embedded dalam pesan
+- Standardisasi tampilan data JSON baik dalam respons API maupun teks biasa
+- Pencegahan tampilan raw JSON dengan transformasi otomatis ke tampilan visual
+- Peningkatan UX dengan feedback visual pada data structured dalam chat
+- Optimasi penanganan error saat parsing JSON untuk memberikan visualisasi alternatif
 
 ## v1.0.1.39 (04-05-2025)
 - Peningkatan visualisasi data JSON dengan desain glassmorphic modern
