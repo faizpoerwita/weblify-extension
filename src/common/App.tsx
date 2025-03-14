@@ -39,7 +39,7 @@ const floatKeyframes = keyframes`
   100% { transform: translate(0, 0); }
 `;
 
-// Variabel CSS custom untuk gradient yang lebih sleek dan elegant
+// Buat variabel CSS custom untuk gradient yang lebih sleek dan elegant
 const gradientColors = {
   light: {
     primary: "linear-gradient(165deg, rgba(230,245,255,1) 0%, rgba(179,229,252,1) 30%, rgba(120,190,240,1) 65%, rgba(80,160,230,1) 100%)", 
@@ -51,9 +51,9 @@ const gradientColors = {
   dark: {
     primary: "linear-gradient(165deg, rgba(15,25,40,1) 0%, rgba(25,35,60,1) 30%, rgba(35,45,80,1) 65%, rgba(45,55,100,1) 100%)",
     secondary: "linear-gradient(135deg, rgba(20,30,50,1) 0%, rgba(30,40,70,1) 50%, rgba(40,50,90,1) 100%)",
-    accent: "radial-gradient(circle, rgba(80,120,200,0.3) 0%, transparent 70%)",
-    accentAlt: "radial-gradient(circle, rgba(60,100,180,0.3) 0%, transparent 70%)",
-    card: "linear-gradient(135deg, rgba(30,40,60,0.85) 0%, rgba(40,50,70,0.85) 100%)"
+    accent: "radial-gradient(circle, rgba(80,120,230,0.2) 0%, transparent 70%)",
+    accentAlt: "radial-gradient(circle, rgba(100,140,250,0.2) 0%, transparent 70%)",
+    card: "linear-gradient(135deg, rgba(30,40,60,0.8) 0%, rgba(20,30,50,0.8) 100%)"
   }
 };
 
@@ -91,7 +91,7 @@ const theme = extendTheme({
       variants: {
         glassmorphic: {
           bg: "rgba(255, 255, 255, 0.25)",
-          backdropFilter: "blur(12px) saturate(180%)",
+          backdropFilter: "blur(12px)",
           color: "blue.700",
           border: "1px solid rgba(255, 255, 255, 0.5)",
           boxShadow: "0 4px 12px rgba(0,100,255,0.1)",
@@ -106,7 +106,7 @@ const theme = extendTheme({
       variants: {
         glassmorphic: {
           bg: "rgba(255, 255, 255, 0.25)",
-          backdropFilter: "blur(12px) saturate(180%)",
+          backdropFilter: "blur(12px)",
           color: "blue.700",
           border: "1px solid rgba(255, 255, 255, 0.5)",
           boxShadow: "0 4px 12px rgba(0,100,255,0.1)",
@@ -137,7 +137,7 @@ const theme = extendTheme({
       variants: {
         glass: {
           bg: "rgba(255, 255, 255, 0.25)",
-          backdropFilter: "blur(12px) saturate(180%)",
+          backdropFilter: "blur(12px)",
           borderRadius: "xl",
           border: "1px solid rgba(255, 255, 255, 0.5)",
           boxShadow: "0 8px 32px rgba(0,100,255,0.1)",
@@ -353,7 +353,7 @@ const App = () => {
             
             <Box
               bg={glassBackground}
-              backdropFilter="blur(12px) saturate(180%)"
+              backdropFilter="blur(12px)"
               borderRadius="xl"
               p={{ base: 4, md: 6 }}
               boxShadow="0 8px 32px rgba(0,100,255,0.1)"

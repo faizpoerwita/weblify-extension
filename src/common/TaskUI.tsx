@@ -24,7 +24,6 @@ import {
   Stack,
   useBreakpointValue,
   Icon,
-  Textarea,
 } from "@chakra-ui/react";
 import { debugMode } from "../constants";
 import { useAppState } from "../state/store";
@@ -37,7 +36,7 @@ import AutosizeTextarea from "./AutosizeTextarea";
 import type { TaskHistoryEntry as ImportedTaskHistoryEntry } from "../state/currentTask";
 import { css, Global } from "@emotion/react";
 import JsonViewerForInvalidJson from "./JsonViewerForInvalidJson";
-import { FaBrain, FaPlayCircle, FaVolumeUp, FaGlobe, FaMousePointer, FaKeyboard, FaArrowsAlt, FaClock, FaCheckCircle, FaSearch, FaFileExport, FaPen, FaCircle, FaPaperPlane, FaMicrophone } from "react-icons/fa";
+import { FaBrain, FaPlayCircle, FaVolumeUp, FaGlobe, FaMousePointer, FaKeyboard, FaArrowsAlt, FaClock, FaCheckCircle, FaSearch, FaFileExport, FaPen, FaCircle } from "react-icons/fa";
 
 // Gradient dan warna yang konsisten dengan App.tsx
 const gradientColors = {
@@ -1311,6 +1310,7 @@ const processUrlData = (url: string): UrlData | null => {
   }
 };
 
+// Mengupdate fungsi MessageContent untuk chat UI yang lebih modern
 const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ content, isUser }) => {
   // Fungsi untuk memformat icon tindakan
   const formatActionIcon = (action: any) => {
@@ -1336,7 +1336,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
       case 'fill':
         return <Icon as={FaPen} color="pink.500" boxSize="18px" />;
       default:
-        return <Icon as={FaCircle} color="gray.500" boxSize="18px" />;
+        return <Icon as={FaCircle} color="gray.700" boxSize="18px" />;
     }
   };
 
@@ -1439,34 +1439,54 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
             borderWidth="1px"
             borderColor="blue.100"
             transition="all 0.3s ease"
-            backdropFilter="blur(10px)"
+            backdropFilter="blur(12px)"
             _hover={{ 
               boxShadow: "0 8px 25px rgba(0, 100, 255, 0.15)",
               transform: "translateY(-2px)"
             }}
             transform="translateZ(0)"
+            position="relative"
           >
+            {/* Background dekoratif */}
+            <Box 
+              position="absolute" 
+              top="0" 
+              right="0" 
+              bottom="0" 
+              left="0" 
+              pointerEvents="none"
+              opacity="0.05"
+              background="radial-gradient(circle at 15% 85%, rgba(99,179,237,0.6) 0%, transparent 60%)"
+            />
+            
             <Box
               bgGradient="linear(to-r, blue.50, cyan.50)"
               px={4}
               py={3}
               borderBottom="1px solid"
               borderColor="blue.100"
+              position="relative"
             >
               <HStack spacing={3}>
-                <Icon 
-                  as={FaBrain} 
-                  color="blue.500"
-                  boxSize="18px"
-                  animation="pulse 4s infinite ease-in-out"
-                  sx={{
-                    "@keyframes pulse": {
-                      "0%": { opacity: 0.8, transform: "scale(1)" },
-                      "50%": { opacity: 1, transform: "scale(1.05)" },
-                      "100%": { opacity: 0.8, transform: "scale(1)" }
-                    }
-                  }}
-                />
+                <Box
+                  w="24px"
+                  h="24px"
+                  borderRadius="full"
+                  bg="blue.50"
+                  border="1px solid"
+                  borderColor="blue.200"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  boxShadow="0 2px 5px rgba(0,100,255,0.1)"
+                >
+                  <Icon 
+                    as={FaBrain} 
+                    color="blue.500"
+                    boxSize="14px"
+                    animation="pulse 4s infinite ease-in-out"
+                  />
+                </Box>
                 <Text
                   fontWeight="600" 
                   color="blue.700"
@@ -1476,7 +1496,7 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
                 </Text>
               </HStack>
             </Box>
-            <Box p={4} lineHeight="1.7" fontSize="sm">
+            <Box p={4} lineHeight="1.7" fontSize="sm" position="relative">
               <Text whiteSpace="pre-wrap" color="gray.700">
                 {parsed.thought}
               </Text>
@@ -1494,866 +1514,301 @@ const MessageContent: React.FC<{ content: string; isUser: boolean }> = ({ conten
             borderWidth="1px"
             borderColor="blue.100"
             transition="all 0.3s ease"
-            backdropFilter="blur(10px)"
+            backdropFilter="blur(12px)"
             _hover={{ 
               boxShadow: "0 8px 25px rgba(0, 100, 255, 0.15)",
               transform: "translateY(-2px)"
             }}
             transform="translateZ(0)"
+            position="relative"
           >
+            {/* Background dekoratif */}
+            <Box 
+              position="absolute" 
+              top="0" 
+              right="0" 
+              bottom="0" 
+              left="0" 
+              pointerEvents="none"
+              opacity="0.05"
+              background="radial-gradient(circle at 85% 15%, rgba(66,153,225,0.6) 0%, transparent 60%)"
+            />
+            
             <Box
-              bgGradient="linear(to-r, purple.50, blue.50)"
+              bgGradient="linear(to-r, blue.50, cyan.50)"
               px={4}
               py={3}
               borderBottom="1px solid"
               borderColor="blue.100"
+              position="relative"
             >
               <HStack spacing={3}>
-                <Icon 
-                  as={FaPlayCircle} 
-                  color="blue.500" 
-                  boxSize="18px"
-                  animation="pulse 4s infinite ease-in-out"
-                />
+                <Box
+                  w="24px"
+                  h="24px"
+                  borderRadius="full"
+                  bg="blue.50"
+                  border="1px solid"
+                  borderColor="blue.200"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  boxShadow="0 2px 5px rgba(0,100,255,0.1)"
+                >
+                  {formatActionIcon(parsed.action)}
+                </Box>
                 <Text
                   fontWeight="600" 
                   color="blue.700"
                   letterSpacing="0.01em"
                 >
-                  Tindakan
+                  {formatActionTitle(parsed.action)}
                 </Text>
               </HStack>
             </Box>
-            <Box p={4}>
-              <HStack align="flex-start" spacing={3}>
-                <Box 
-                  bg="blue.50" 
-                            borderRadius="lg"
-                  p={2}
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  {formatActionIcon(parsed.action)}
-                          </Box>
-                <VStack align="start" spacing={1} flex="1">
-                  <Text fontWeight="600" color="blue.800" fontSize="sm">
-                    {formatActionTitle(parsed.action)}
-                          </Text>
-                  <Text color="gray.600" fontSize="xs" lineHeight="1.5">
-                    {formatActionDescription(parsed.action)}
-                  </Text>
-                </VStack>
-              </HStack>
-                                  </Box>
-                                </Box>
-                              )}
-
-        {/* Bagian Speak (jika ada) */}
-        {parsed.speak && (
-          <Box
-            bg="rgba(255, 255, 255, 0.85)"
-            borderRadius="2xl"
-            overflow="hidden"
-            boxShadow="0 4px 20px rgba(0, 100, 255, 0.1)"
-            borderWidth="1px"
-            borderColor="blue.100"
-            transition="all 0.3s ease"
-            backdropFilter="blur(10px)"
-            _hover={{ 
-              boxShadow: "0 8px 25px rgba(0, 100, 255, 0.15)",
-              transform: "translateY(-2px)"
-            }}
-            transform="translateZ(0)"
-          >
-            <Box
-              bgGradient="linear(to-r, green.50, teal.50)"
-              px={4}
-              py={3}
-              borderBottom="1px solid"
-              borderColor="blue.100"
-            >
-              <HStack spacing={3}>
-                <Icon as={FaVolumeUp} color="green.500" boxSize="18px" />
-                <Text 
-                  fontWeight="600" 
-                  color="green.700"
-                  letterSpacing="0.01em"
-                >
-                  Ucapan
-                </Text>
-              </HStack>
-                                      </Box>
-            <Box p={4} lineHeight="1.7" fontSize="sm">
-              <Text whiteSpace="pre-wrap" color="gray.700">
-                {parsed.speak}
+            <Box p={4} position="relative">
+              <Text fontSize="sm" color="gray.700" mb={2}>
+                {formatActionDescription(parsed.action)}
               </Text>
-                                  </Box>
-                              </Box>
-        )}
-                          </VStack>
-    );
-  } catch {
-    // Jika bukan JSON, kita perlu memeriksa apakah konten berisi JSON yang belum di-parse
-    // Deteksi pola JSON dengan regexp yang ditingkatkan untuk menangkap lebih banyak pola JSON
-    const jsonPattern = /(\{[\s\S]*?\}|\[[\s\S]*?\])|```(?:json)?\s*(\{[\s\S]*?\}|\[[\s\S]*?\])\s*```/;
-    
-    // Coba deteksi dan visualisasikan konten JSON yang mungkin ada di dalam teks
-    if (!isUser && jsonPattern.test(content)) {
-      // Regex yang ditingkatkan untuk ekstrak JSON, termasuk nested objects dan arrays
-      // Termasuk JSON yang mungkin diformat dalam blok kode
-      const extractJsonRegex = /```(?:json)?\s*(\{[\s\S]*?\}|\[[\s\S]*?\])\s*```|(\{[\s\S]*?\}|\[[\s\S]*?\])/g;
-      // Extract JSON content
-      let possibleJsons = [];
-      let match;
-      while ((match = extractJsonRegex.exec(content)) !== null) {
-        possibleJsons.push(match[1] || match[2]); // Grup 1 untuk JSON dalam kode, grup 2 untuk JSON biasa
-      }
-      
-      if (possibleJsons && possibleJsons.length > 0) {
-        // Pisahkan teks dan JSON
-        const segments = [];
-        let lastIndex = 0;
-        let match;
-        const regex = new RegExp(extractJsonRegex);
-        
-        // Proses semua segmen teks dan JSON
-        while ((match = regex.exec(content)) !== null) {
-          // Tambahkan teks sebelum JSON jika ada
-          if (match.index > lastIndex) {
-            segments.push({
-              type: 'text',
-              content: content.substring(lastIndex, match.index)
-            });
-          }
-          
-          // Tambahkan JSON
-          segments.push({
-            type: 'json',
-            content: match[1] || match[2] // Ambil JSON dari grup regex yang cocok
-          });
-          
-          lastIndex = match.index + match[0].length;
-        }
-        
-        // Tambahkan teks yang tersisa setelah JSON terakhir
-        if (lastIndex < content.length) {
-          segments.push({
-            type: 'text',
-            content: content.substring(lastIndex)
-          });
-        }
-        
-                      return (
-          <Box
-            bg="white"
-            p={4}
-            borderRadius="2xl"
-                            borderWidth="1px"
-                            borderColor="gray.200"
-            boxShadow="sm"
-            transition="all 0.2s"
-            _hover={{ boxShadow: "md" }}
-          >
-            <VStack align="stretch" spacing={4}>
-              {segments.map((segment, idx) => {
-                if (segment.type === 'text' && segment.content.trim()) {
-                      return (
-                        <Text
-                      key={`text-${idx}`}
-                          fontSize="sm"
-                          color="gray.700"
-                          lineHeight="1.6"
-                      whiteSpace="pre-wrap"
-                        >
-                      {segment.content.trim()}
-                        </Text>
-                      );
-                } else if (segment.type === 'json') {
-                  try {
-                    const jsonData = JSON.parse(segment.content);
-                    
-                    // Deteksi format khusus dengan "thought" dan "action"
-                    if (jsonData && jsonData.thought && (jsonData.action || typeof jsonData.action === 'object')) {
-                      // Format khusus untuk JSON dengan format "thought" dan "action"
-                      return (
-                        <Box 
-                          key={`json-${idx}`}
-            bg="white"
-                          borderRadius="lg"
-            overflow="hidden"
-            boxShadow="sm"
-            borderWidth="1px"
-                          borderColor="blue.100"
-            transition="all 0.2s"
-            _hover={{ boxShadow: "md" }}
-                          mt={2}
-                          mb={2}
-                        >
-                          {/* Header Pemikiran AI */}
-                          <Flex
-                            bg="blue.50"
-                            px={3}
-                            py={2}
-              borderBottom="1px solid"
-                            borderColor="blue.100"
-                            align="center"
-            >
-                  <Box
-                    bg="white"
-                              p={1.5}
-                              borderRadius="md"
-                              color="blue.500"
-                    borderWidth="1px"
-                              borderColor="blue.200"
-                              mr={2}
-                  >
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M12 2a10 10 0 0110 10c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2m0 6v4m0 4h.01"/>
-                              </svg>
-                  </Box>
-                    <Text
-                              fontSize={{base: "xs", md: "sm"}}
-                      fontWeight="medium"
-                              color="blue.700"
-                    >
-                              Pemikiran AI
-                    </Text>
-                          </Flex>
-                          
-                          {/* Pemikiran - optimasi untuk tampilan vertical */}
-                          <Box p={3}>
-                            <Text 
-                              fontSize={{base: "xs", md: "sm"}} 
-                              color="gray.700" 
-                              lineHeight="1.5"
-                              maxHeight={{base: "120px", md: "none"}}
-                              overflowY={{base: "auto", md: "visible"}}
-                              sx={{
-                                scrollbarWidth: "thin",
-                                scrollbarColor: "blue.200 transparent",
-                                "&::-webkit-scrollbar": {
-                                  width: "4px",
-                                },
-                                "&::-webkit-scrollbar-track": {
-                                  background: "transparent",
-                                },
-                                "&::-webkit-scrollbar-thumb": {
-                                  background: "blue.200",
-                                  borderRadius: "full",
-                                },
-                              }}
-                            >
-                              {jsonData.thought}
-                    </Text>
-            </Box>
-
-                          {/* Action - optimasi untuk tampilan vertical */}
-                          {jsonData.action && (
-                            <Box
-                              borderTopWidth="1px"
-                              borderColor="blue.100"
-                              bg="blue.50"
-                    p={3}
-                            >
-                              <Flex align="center" mb={2}>
-                                <Box
-                              bg="white"
-                                  p={1.5}
-                                  borderRadius="md"
-                                  color="teal.500"
-                              borderWidth="1px"
-                                  borderColor="teal.200"
-                                  mr={2}
-                                >
-                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
-                                  </svg>
-                            </Box>
-                              <Text
-                                  fontSize={{base: "xs", md: "sm"}}
-                                fontWeight="medium"
-                                  color="teal.700"
-                              >
-                                  Tindakan
-                              </Text>
-                              </Flex>
-                              
-                              {typeof jsonData.action === 'object' ? (
-                                <VStack 
-                                  align="stretch" 
-                                  spacing={2} 
-                                  pl={{base: 2, md: 10}}
-                                  maxHeight={{base: "150px", md: "none"}}
-                                  overflowY={{base: "auto", md: "visible"}}
-                                  sx={{
-                                    scrollbarWidth: "thin",
-                                    scrollbarColor: "teal.200 transparent",
-                                    "&::-webkit-scrollbar": {
-                                      width: "4px",
-                                    },
-                                    "&::-webkit-scrollbar-track": {
-                                      background: "transparent",
-                                    },
-                                    "&::-webkit-scrollbar-thumb": {
-                                      background: "teal.200",
-                                      borderRadius: "full",
-                                    },
-                                  }}
-                                >
-                                  {/* Tampilan khusus untuk action navigate dengan website data */}
-                                  {jsonData.action.name === 'navigate' && jsonData.action.args && jsonData.action.args.url && (
-                                    <Box 
-                            borderWidth="1px"
-                                      borderColor="teal.100" 
-                                      borderRadius="md"
-                                      overflow="hidden"
-                                      bg="white"
-                                      boxShadow="sm"
-                                      transition="all 0.2s"
-                                      _hover={{ boxShadow: "md", borderColor: "teal.200" }}
-                                      mb={1}
-                                    >
-                                      <Flex direction="column" width="full">
-                                        <Flex p={2} alignItems="center" borderBottomWidth="1px" borderColor="teal.50">
-                                          <Box 
-                                            mr={2} 
-                                            p={1} 
-                                            borderRadius="sm" 
-                                            bg="teal.50"
-                                            display="flex"
-                                            alignItems="center"
-                                            justifyContent="center"
-                                          >
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                              <circle cx="12" cy="12" r="10"></circle>
-                                              <polygon points="10 8 16 12 10 16 10 8"></polygon>
-                                </svg>
-                              </Box>
-                                          
-                              <Text
-                                fontSize="xs"
-                                            fontWeight="medium" 
-                                            color="teal.700"
-                                            flex="1"
-                                            isTruncated
-                                          >
-                                            Navigasi Website
-                              </Text>
-                                        </Flex>
-                                        
-                                        <Flex p={2} bg="gray.50" alignItems="center">
-                                          {/* Website info dengan URL yang lebih ringkas */}
-                                          <Box 
-                                            width="12px" 
-                                            height="12px" 
-                                            mr={2}
-                                            flexShrink={0}
-                                          >
-                                            <Image 
-                                              src={`https://www.google.com/s2/favicons?domain=${new URL(jsonData.action.args.url).hostname}&sz=16`}
-                                              alt="favicon"
-                                              width="12px"
-                                              height="12px"
-                                              fallback={<Box bg="gray.100" borderRadius="sm" width="12px" height="12px" />}
-                                            />
-                                </Box>
-                                          
-                                          <Text 
-                                            fontSize="2xs" 
-                                            color="gray.700" 
-                                            fontFamily="monospace"
-                                            textOverflow="ellipsis"
-                                            overflow="hidden"
-                                            whiteSpace="nowrap"
-                                            flex="1"
-                                            title={jsonData.action.args.url}
-                                          >
-                                            {/* Tampilkan URL dalam format yang lebih ringkas */}
-                                            {window.innerWidth < 400 || window.innerHeight > window.innerWidth * 2.5
-                                              ? new URL(jsonData.action.args.url).hostname
-                                              : jsonData.action.args.url.replace(/^(https?:\/\/)?(www\.)?/, '')
-                                            }
-                                </Text>
-                                        </Flex>
-                                      </Flex>
-                  </Box>
-                )}
-
-                                  {/* Display other type of actions - optimasi untuk mode vertikal */}
-                                  {Object.entries(jsonData.action).map(([key, value], keyIdx) => {
-                                    // Skip displaying the name and args for navigate action since we have special display for it
-                                    if (jsonData.action.name === 'navigate' && (key === 'name' || key === 'args')) {
-                                      return null;
-                                    }
-                                    
-                    return (
-                                      <HStack 
-                                        key={keyIdx} 
-                                        spacing={2} 
-                                        p={1.5} 
-                                        bg="white" 
-                                        borderRadius="md" 
-                                        borderWidth="1px" 
-                                        borderColor="gray.200" 
-                                        _hover={{ borderColor: "teal.200", bg: "gray.50" }} 
-                                        transition="all 0.2s"
-                                      >
-                                        <Text 
-                                          fontSize="2xs" 
-                                          fontWeight="medium" 
-                                          color="teal.600" 
-                                          width="60px"
-                                          flexShrink={0}
-                                        >
-                                          {key}:
-                        </Text>
-                                        {typeof value === 'object' ? (
-                                          <Box 
-                                            borderRadius="sm"
-                                            p={1.5}
-                                            bg="white"
-                                            borderWidth="1px"
-                                            borderColor="teal.100"
-                                            boxShadow="xs"
-                                            width="full"
-                                            maxHeight="80px"
-                                            overflowY="auto"
-                                            sx={{
-                                              scrollbarWidth: "thin",
-                                              scrollbarColor: "teal.100 transparent",
-                                              "&::-webkit-scrollbar": {
-                                                width: "3px",
-                                              },
-                                              "&::-webkit-scrollbar-track": {
-                                                background: "transparent",
-                                              },
-                                              "&::-webkit-scrollbar-thumb": {
-                                                background: "teal.100",
-                                                borderRadius: "full",
-                                              },
-                                            }}
-                                          >
-                                            <JsonViewerForInvalidJson data={value} level={1} />
-                                          </Box>
-                                        ) : (
-                                          <Text 
-                                            fontSize="2xs" 
-                                            color="gray.700" 
-                                            fontFamily={key === 'url' ? 'monospace' : 'inherit'}
-                                            isTruncated
-                                            title={String(value)}
-                                            flex="1"
-                                          >
-                                            {String(value)}
-                              </Text>
-                                        )}
-                            </HStack>
-                                    );
-                                  })}
-                        </VStack>
-                              ) : (
-                                <Text 
-                                  fontSize="xs" 
-                                  color="gray.700" 
-                                  pl={{base: 2, md: 10}}
-                                  fontFamily="monospace"
-                                >
-                                  {typeof jsonData.action === 'string' ? jsonData.action : JSON.stringify(jsonData.action)}
-                                </Text>
-                              )}
-                            </Box>
-                          )}
-                      </Box>
-                    );
-                  }
-                    
-                    // Format visual default untuk JSON lainnya
-                  return (
-                      <Box 
-                        key={`json-${idx}`}
-                        bg="white"
-                        borderRadius="lg"
-                        overflow="hidden"
-                        boxShadow="sm"
-                        borderWidth="1px"
-                        borderColor="teal.100"
-                        transition="all 0.2s"
-                        _hover={{ boxShadow: "md" }}
-                        mt={2}
-                        mb={2}
-                      >
-                        
-                        {/* Lanjutkan dengan kode yang ada */}
-                      </Box>
-                    );
-                  } catch (parseError) {
-                    // Jika parsing gagal, tampilkan sebagai kode biasa dengan style yang lebih baik
-                    return (
-                      <Box key={`code-${idx}`}>
-                        <Text fontSize="xs" fontWeight="medium" color="gray.500" mb={2}>
-                          Format Kode
-                      </Text>
-                      <Box
-                          p={3}
-                          bg={useColorModeValue("gray.50", "gray.700")}
-                          borderRadius="lg"
-                          borderWidth="1px"
-                          borderColor={useColorModeValue("gray.200", "gray.600")}
-                          position="relative"
-                          overflow="hidden"
-                        >
-                          <Box
-                            position="absolute"
-                            top="6px"
-                            right="6px"
-                            borderRadius="full"
-                            bg={useColorModeValue("orange.50", "orange.900")}
-                            color={useColorModeValue("orange.500", "orange.200")}
-                            px={2}
-                            py={0.5}
-                        fontSize="xs"
-                            fontWeight="medium"
-                          >
-                            CODE
-                          </Box>
-                          <Text
-                            fontSize="sm"
-                            fontFamily="inherit"
-                            color={useColorModeValue("gray.700", "gray.300")}
-                            whiteSpace="pre-wrap"
-                          >
-                            <JsonViewerForInvalidJson data={segment.content} />
-                        </Text>
-                      </Box>
-                      </Box>
-                  );
-                  }
-                }
-                return null;
-                })}
-              </VStack>
-            </Box>
-        );
-      }
-    }
-    
-    // Jika bukan JSON dan tidak ada JSON di dalamnya, cek untuk format JSON dalam teks
-    // Coba regex yang lebih agresif untuk mencari JSON
-    const jsonRegex = /(\{|\[)[\s\S]*?(\}|\])/g;
-    const matches = content.match(jsonRegex);
-    
-    if (!isUser && matches && matches.length > 0) {
-      // Ada potensi JSON dalam teks, coba proses
-      const segments = [];
-      let lastIndex = 0;
-      
-      for (const match of matches) {
-        const index = content.indexOf(match, lastIndex);
-        
-        // Tambah teks sebelum JSON
-        if (index > lastIndex) {
-          segments.push({
-            type: 'text',
-            content: content.substring(lastIndex, index)
-          });
-        }
-        
-        // Coba parse JSON
-        try {
-          JSON.parse(match);
-          segments.push({ type: 'json', content: match });
-        } catch {
-          // Bukan JSON valid, tretap sebagai teks
-          segments.push({ type: 'text', content: match });
-        }
-        
-        lastIndex = index + match.length;
-      }
-      
-      // Tambah teks setelah JSON terakhir
-      if (lastIndex < content.length) {
-        segments.push({
-          type: 'text',
-          content: content.substring(lastIndex)
-        });
-      }
-      
-      // Jika ada JSON valid, render dengan visualisasi
-      if (segments.some(s => s.type === 'json')) {
-        return (
-          <Box
-            bg="white"
-            p={4}
-            borderRadius="2xl"
-            borderWidth="1px"
-            borderColor="gray.200"
-            boxShadow="sm"
-            transition="all 0.2s"
-            _hover={{ boxShadow: "md" }}
-          >
-            <VStack align="stretch" spacing={4}>
-              {segments.map((segment, idx) => {
-                if (segment.type === 'text') {
-                  return (
-                    <Text
-                      key={`text-${idx}`}
-                      fontSize="sm"
-                      color="gray.700"
-                      lineHeight="1.6"
-                      whiteSpace="pre-wrap"
-                    >
-                      {segment.content.trim()}
-                    </Text>
-                  );
-                } else if (segment.type === 'json') {
-                  try {
-                    const jsonData = JSON.parse(segment.content);
-                    
-                    // Tampilkan JSON dengan format yang lebih menarik seperti "Pemikiran AI"
-                    return (
-                      <Box 
-                        key={`json-${idx}`}
-            bg="white"
-            borderRadius="2xl"
-            overflow="hidden"
-            boxShadow="sm"
-            borderWidth="1px"
-                        borderColor="blue.100"
-            transition="all 0.2s"
-            _hover={{ boxShadow: "md" }}
-                        mt={2}
-                        mb={2}
-          >
-            <Box
-                          bg="blue.50"
-              px={4}
-              py={3}
-              borderBottom="1px solid"
-                          borderColor="blue.100"
-            >
-              <HStack spacing={3}>
+              
+              {parsed.action.args && Object.keys(parsed.action.args).length > 0 && (
                 <Box
-                  bg="white"
-                  p={2}
-                  borderRadius="lg"
-                              color="blue.500"
-                  borderWidth="1px"
-                              borderColor="blue.200"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M20 6H4a2 2 0 00-2 2v8a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2z"/>
-                                <path d="M12 6v12M6 10v4M18 10v4"/>
-                  </svg>
-                </Box>
-                <Text
-                  fontSize="sm"
-                  fontWeight="medium"
-                              color="blue.700"
-                >
-                              Data JSON
-                </Text>
-              </HStack>
-            </Box>
-            <Box p={4}>
-                          {/* Visualisasi data berdasarkan tipe */}
-                          {typeof jsonData === 'object' && jsonData !== null ? (
-                            // Jika objek, tampilkan sebagai tabel properti
-                            <VStack align="stretch" spacing={2}>
-                              {Object.entries(jsonData).map(([key, value], keyIdx) => {
-                                // Jika nilai adalah objek kompleks, gunakan JsonViewer
-                                if (typeof value === 'object' && value !== null) {
-                    return (
-                                    <Box key={keyIdx} mb={2}>
-                                      <Text fontSize="xs" fontWeight="semibold" color="gray.500" mb={1}>
-                                        {key}:
-                        </Text>
-                                      <Box 
-                                        p={2} 
-                        bg="gray.50"
-                                        borderRadius="md" 
-                        borderWidth="1px"
-                        borderColor="gray.200"
-                      >
-                                        <JsonViewerForInvalidJson data={value} level={1} />
-                                      </Box>
-                      </Box>
-                    );
-                  }
-
-                                // Untuk nilai primitif, tampilkan sebagai baris
-                    return (
-                                  <HStack key={keyIdx} justify="space-between" p={2} borderRadius="md" _hover={{ bg: "gray.50" }}>
-                                    <Text fontSize="sm" fontWeight="medium" color="gray.600">
-                                      {key}
-                                    </Text>
-                                    <Text 
-                                      fontSize="sm" 
-                                      color={
-                                        typeof value === 'string' ? "green.600" :
-                                        typeof value === 'number' ? "blue.600" :
-                                        typeof value === 'boolean' ? "purple.600" :
-                                        "gray.600"
-                                      }
-                                      fontFamily="inherit"
-                                    >
-                                      {typeof value === 'string' ? value : String(value)}
-                                    </Text>
-                                  </HStack>
-                                );
-                              })}
-                            </VStack>
-                          ) : (
-                            // Untuk nilai primitif atau array sederhana
-                            <Box>
-                              {Array.isArray(jsonData) ? (
-                                <VStack align="stretch" spacing={2} p={2} bg="blue.50" borderRadius="md">
-                                  <HStack>
-                                    <Box bg="blue.100" p={1} borderRadius="md">
-                                      <Text fontSize="xs" fontWeight="bold" color="blue.700">ARRAY</Text>
-                                    </Box>
-                                    <Text fontSize="xs" color="blue.600">{jsonData.length} item</Text>
-                                  </HStack>
-                                  {jsonData.map((item: any, arrayIdx: number) => (
-                                    <Box 
-                                      key={arrayIdx} 
-                        p={2}
-                                      bg="white" 
-                        borderRadius="md"
-                                      borderWidth="1px" 
-                                      borderColor="blue.100"
-                                      _hover={{ borderColor: "blue.300", transform: "translateY(-1px)" }}
-                                      transition="all 0.2s"
-                                      boxShadow="sm"
-                                    >
-                                      {typeof item === 'object' && item !== null ? (
-                                        <JsonViewerForInvalidJson data={item} level={1} />
-                                      ) : (
-                                        <Text 
-                        fontSize="sm"
-                                          color={
-                                            typeof item === 'string' ? "green.600" :
-                                            typeof item === 'number' ? "blue.600" :
-                                            typeof item === 'boolean' ? "purple.600" :
-                                            "gray.600"
-                                          }
-                                        >
-                                          {typeof item === 'string' ? item : String(item)}
-                                        </Text>
-                                      )}
-                                    </Box>
-                                  ))}
-                                </VStack>
-                              ) : (
-                                <Box p={2} bg="gray.50" borderRadius="md">
-                                  <Text fontSize="sm" color="gray.700">
-                                    {typeof jsonData === 'string' ? jsonData : String(jsonData)}
-                                  </Text>
-                                </Box>
-                              )}
-                            </Box>
-                          )}
-                        </Box>
-                      </Box>
-                    );
-                  } catch {
-                    // Render sebagai teks biasa jika parsing gagal
-                  return (
-                    <Text
-                        key={`text-${idx}`}
-                      fontSize="sm"
-                      color="gray.700"
-                      lineHeight="1.6"
-                        whiteSpace="pre-wrap"
-                    >
-                        {segment.content.trim()}
-                    </Text>
-                  );
-                  }
-                }
-                return null;
-                })}
-              </VStack>
-            </Box>
-        );
-      }
-    }
-    
-    // Jika bukan JSON dan tidak ada JSON di dalamnya, tampilkan sebagai teks biasa
-    return (
-      <Box
-        bg={isUser ? "transparent" : "white"}
-        p={4}
-        borderRadius="2xl"
-        borderWidth={isUser ? "0" : "1px"}
-        borderColor="gray.200"
-        boxShadow={isUser ? "none" : "sm"}
-        transition="all 0.2s"
-        _hover={{ boxShadow: isUser ? "none" : "md" }}
-      >
-        <VStack align="stretch" spacing={3}>
-          {content.split('\n').map((line, idx) => {
-            if (line.trim().startsWith('•')) {
-              return (
-                <HStack key={idx} spacing={3} align="start">
-                  <Box
-                    w="2px"
-                    h="2px"
-                    borderRadius="full"
-                    bg={isUser ? "white" : "gray.400"}
-                    mt={2.5}
-                  />
-                  <Text
-                    fontSize="sm"
-                    color={isUser ? "white" : "gray.700"}
-                    flex={1}
-                    lineHeight="1.6"
-                  >
-                    {line.trim().replace('•', '')}
-                  </Text>
-                </HStack>
-              );
-            }
-
-            if (line.includes('```')) {
-              const code = line.replace(/```[a-z]*|```/g, '').trim();
-              return (
-                <Box
-                  key={idx}
+                  mt={3}
                   p={3}
-                  bg={isUser ? "whiteAlpha.200" : "gray.50"}
+                  bg="rgba(240, 247, 255, 0.6)"
                   borderRadius="lg"
                   borderWidth="1px"
-                  borderColor={isUser ? "whiteAlpha.300" : "gray.200"}
+                  borderColor="blue.100"
                 >
-                  <Text
-                    fontSize="sm"
-                    fontFamily="inherit"
-                    color={isUser ? "white" : "gray.700"}
-                    whiteSpace="pre-wrap"
-                  >
-                    {code}
-                  </Text>
+                  <JsonViewer data={parsed.action.args} isExpanded={true} />
                 </Box>
-              );
-            }
-
-            return (
-              <Text
-                key={idx}
-                fontSize="sm"
-                color={isUser ? "white" : "gray.700"}
-                lineHeight="1.6"
-                whiteSpace="pre-wrap"
-              >
-                {line}
-              </Text>
-            );
-          })}
-        </VStack>
-      </Box>
+              )}
+            </Box>
+          </Box>
+        )}
+      </VStack>
     );
-  }
+  } catch (e) {
+    // Jika content bukan JSON yang valid, tampilkan sebagai teks biasa
+    const processedContent = isUser ? formatUserMessage(content) : formatAIResponse(content);
+    
+    // Function to detect if the content is AI JSON response but not parsed correctly
+    const detectJsonBlocks = (text: string) => {
+      // Match pattern with "thought" and "action"
+      const jsonPattern = /```(?:json)?\s*\{\s*"thought"\s*:|^\{\s*"thought"\s*:|"thought"\s*:|"action"\s*:/;
+      return jsonPattern.test(text);
+    };
+    
+    if (!isUser && detectJsonBlocks(content)) {
+      try {
+        // Try to extract JSON part
+        let jsonContent = content;
+        if (content.includes("```json")) {
+          jsonContent = content.replace(/```json\s*([\s\S]*?)\s*```/g, "$1");
+        } else if (content.includes("```")) {
+          jsonContent = content.replace(/```\s*([\s\S]*?)\s*```/g, "$1");
+        }
+        
+        // Try to parse with some basic fixes
+        jsonContent = jsonContent.trim();
+        if (!jsonContent.startsWith("{")) jsonContent = "{" + jsonContent;
+        if (!jsonContent.endsWith("}")) jsonContent = jsonContent + "}";
+        
+        const parsedJson = JSON.parse(jsonContent);
+        
+        // Check if has thought or action
+        if (parsedJson.thought || parsedJson.action) {
+          return (
+            <VStack align="stretch" spacing={4} animation="fadeIn 0.5s ease-out">
+              {parsedJson.thought && (
+                <Box
+                  bg="rgba(255, 255, 255, 0.85)"
+                  borderRadius="2xl"
+                  overflow="hidden"
+                  boxShadow="0 4px 20px rgba(0, 100, 255, 0.1)"
+                  borderWidth="1px" 
+                  borderColor="blue.100"
+                  transition="all 0.3s ease"
+                  backdropFilter="blur(12px)"
+                  _hover={{ 
+                    boxShadow: "0 8px 25px rgba(0, 100, 255, 0.15)",
+                    transform: "translateY(-2px)"
+                  }}
+                  transform="translateZ(0)"
+                  position="relative"
+                >
+                  {/* Background dekoratif */}
+                  <Box 
+                    position="absolute" 
+                    top="0" 
+                    right="0" 
+                    bottom="0" 
+                    left="0" 
+                    pointerEvents="none"
+                    opacity="0.05"
+                    background="radial-gradient(circle at 15% 85%, rgba(99,179,237,0.6) 0%, transparent 60%)"
+                  />
+                  
+                  <Box
+                    bgGradient="linear(to-r, blue.50, cyan.50)" 
+                    px={4}
+                    py={3}
+                    borderBottom="1px solid" 
+                    borderColor="blue.100"
+                    position="relative"
+                  >
+                    <HStack spacing={3}>
+                      <Box
+                        w="24px"
+                        h="24px"
+                        borderRadius="full"
+                        bg="blue.50"
+                        border="1px solid"
+                        borderColor="blue.200"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        boxShadow="0 2px 5px rgba(0,100,255,0.1)"
+                      >
+                        <Icon 
+                          as={FaBrain} 
+                          color="blue.500"
+                          boxSize="14px" 
+                          animation="pulse 4s infinite ease-in-out"
+                        />
+                      </Box>
+                      <Text 
+                        fontWeight="600"
+                        color="blue.700"
+                        letterSpacing="0.01em"
+                      >
+                        Pemikiran AI
+                      </Text>
+                    </HStack>
+                  </Box>
+                  <Box p={4} lineHeight="1.7" fontSize="sm" position="relative">
+                    <Text whiteSpace="pre-wrap" color="gray.700">
+                      {parsedJson.thought}
+                    </Text>
+                  </Box>
+                </Box>
+              )}
+              
+              {parsedJson.action && (
+                <Box
+                  bg="rgba(255, 255, 255, 0.85)"
+                  borderRadius="2xl" 
+                  overflow="hidden"
+                  boxShadow="0 4px 20px rgba(0, 100, 255, 0.1)"
+                  borderWidth="1px"
+                  borderColor="blue.100"
+                  transition="all 0.3s ease"
+                  backdropFilter="blur(12px)"
+                  _hover={{ 
+                    boxShadow: "0 8px 25px rgba(0, 100, 255, 0.15)",
+                    transform: "translateY(-2px)"
+                  }}
+                  transform="translateZ(0)"
+                  position="relative"
+                >
+                  {/* Background dekoratif */}
+                  <Box 
+                    position="absolute" 
+                    top="0" 
+                backgroundColor: "rgba(255, 255, 255, 0.75)",
+                boxShadow: "0 6px 16px rgba(0, 100, 255, 0.08)",
+                borderColor: "rgba(200, 230, 255, 0.9)",
+                transform: "translateY(-1px)"
+              }}
+            />
+              {/* Decorative accent for textarea */}
+              <Box
+                position="absolute"
+                bottom="6px"
+                left="16px"
+                width="30%"
+                height="2px"
+                background="linear-gradient(90deg, rgba(99,179,237,0.3) 0%, rgba(99,179,237,0) 100%)"
+                borderRadius="full"
+                opacity="0.7"
+                pointerEvents="none"
+            />
+          </Box>
+          <Button
+            onClick={runTask}
+            isDisabled={taskInProgress || state.isListening || !state.instructions?.trim()}
+            size="sm"
+            borderRadius="full"
+              h="42px"
+              w="42px"
+              minW="42px"
+            p={0}
+              bg="blue.500"
+              color="white"
+              _hover={{
+                bg: "blue.600",
+                transform: "translateY(-2px)",
+                boxShadow: "0 4px 12px rgba(66, 153, 225, 0.4)"
+              }}
+              _active={{
+                bg: "blue.700",
+                transform: "translateY(0)",
+                boxShadow: "0 2px 4px rgba(66, 153, 225, 0.3)"
+              }}
+              transition="all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+            _disabled={{
+              opacity: 0.4,
+              cursor: "not-allowed",
+                boxShadow: "none",
+                transform: "none"
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </Button>
+          {state.voiceMode && (
+            <VoiceButton
+              taskInProgress={taskInProgress}
+              onStopSpeaking={runTask}
+            />
+          )}
+        </Box>
+
+        {state.voiceMode && (
+            <Alert 
+              status="info" 
+              borderRadius="xl" 
+              mt={2} 
+              py={1} 
+              px={2.5} 
+              size="sm"
+              bg="rgba(235, 248, 255, 0.8)"
+              borderColor="rgba(144, 205, 244, 0.4)"
+            >
+            <AlertIcon boxSize="14px" />
+            <AlertDescription fontSize="xs">
+              Press Space to start/stop speaking
+            </AlertDescription>
+          </Alert>
+        )}
+      </Box>
+
+      {!state.voiceMode && !state.instructions && !taskInProgress && (
+          <Box 
+            px={4} 
+            pb={4}
+            bg="rgba(255, 255, 255, 0.5)"
+            backdropFilter="blur(5px)"
+          >
+          <RecommendedTasks runTask={runTaskWithNewInstructions} />
+        </Box>
+      )}
+
+      {debugMode && <ActionExecutor />}
+    </Box>
+    </>
+  );
 };
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ 
@@ -2386,8 +1841,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     >
       {!isUser && (
         <Box
-          w="34px"
-          h="34px"
+          w="36px"
+          h="36px"
           mr={2}
           borderRadius="xl"
           bg="blue.50"
@@ -2397,7 +1852,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
           alignItems="center"
           justifyContent="center"
           flexShrink={0}
-          boxShadow="0 3px 10px rgba(0, 100, 255, 0.1)"
+          boxShadow="0 4px 12px rgba(0, 100, 255, 0.1)"
           _hover={{ transform: "scale(1.05)" }}
           transition="transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
           position="relative"
@@ -2410,11 +1865,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             left="0"
             right="0"
             bottom="0"
-            bg="linear-gradient(135deg, rgba(195, 235, 254, 0.7) 0%, rgba(130, 198, 245, 0.5) 100%)"
-            opacity="0.9"
+            bg="linear-gradient(135deg, rgba(214, 238, 255, 0.8) 0%, rgba(227, 246, 255, 0.4) 100%)"
+            opacity="0.8"
           />
           <Text 
-            color="blue.600" 
+            color="blue.500" 
             fontSize="sm" 
             fontWeight="bold"
             position="relative"
@@ -2423,26 +1878,26 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
         </Box>
       )}
       <Box
-        maxW={isUser ? "80%" : "85%"}
+        maxW={{ base: isUser ? "75%" : "80%", md: isUser ? "65%" : "70%" }}
         bg={isUser 
           ? "linear-gradient(135deg, #3182ce 0%, #4299e1 100%)" 
           : "rgba(255, 255, 255, 0.85)"}
         color={isUser ? "white" : "gray.700"}
         borderRadius={isUser ? "2xl 2xl 0 2xl" : "0 2xl 2xl 2xl"}
         boxShadow={isUser 
-          ? "0 6px 16px rgba(66, 153, 225, 0.3)" 
-          : "0 6px 16px rgba(0, 100, 255, 0.1)"}
+          ? "0 4px 12px rgba(66, 153, 225, 0.24)" 
+          : "0 4px 12px rgba(0, 100, 255, 0.1)"}
         border="1px solid"
-        borderColor={isUser ? "blue.500" : "rgba(226, 232, 240, 0.8)"}
+        borderColor={isUser ? "blue.500" : "rgba(226, 232, 240, 0.6)"}
         overflow="hidden"
-        transition="all 0.3s ease"
+        transition="all 0.2s ease"
         _hover={{
           transform: "translateY(-2px)",
           boxShadow: isUser 
-            ? "0 8px 20px rgba(66, 153, 225, 0.35)" 
-            : "0 8px 20px rgba(0, 100, 255, 0.15)"
+            ? "0 6px 16px rgba(66, 153, 225, 0.3)" 
+            : "0 6px 16px rgba(0, 100, 255, 0.15)"
         }}
-        backdropFilter={isUser ? "none" : "blur(15px) saturate(150%)"}
+        backdropFilter={isUser ? "none" : "blur(12px)"}
         position="relative"
       >
         {/* Latar belakang dekoratif untuk pesan */}
@@ -2451,713 +1906,35 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             position="absolute"
             top="0"
             left="0"
-            right="0"
-            bottom="0"
-            bg="linear-gradient(135deg, rgba(240, 249, 255, 0.95) 0%, rgba(230, 245, 255, 0.95) 100%)"
-            zIndex="-1"
+            width="100%"
+            height="100%"
+            opacity="0.05"
+            background="radial-gradient(circle at 30% 30%, rgba(99,179,237,0.6) 0%, transparent 70%)"
+            zIndex="0"
+            pointerEvents="none"
           />
         )}
-
-        <Box p={3}>
+        
+        <Box p={4} position="relative" zIndex="1">
           <MessageContent content={content} isUser={isUser} />
-          
-          {metadata?.action && (
-            <Box mt={2}>
-              <StatusIndicator status={status} action={action} />
-            </Box>
-          )}
         </Box>
+
+        {!isUser && status && (
+          <Box 
+            borderTop="1px solid"
+            borderColor="rgba(226, 232, 240, 0.6)"
+            bg={`${getStatusColor(status, action)}.50`}
+            px={{base: 4, sm: 4}}
+            py={{base: 3, sm: 3}}
+            position="relative"
+            zIndex="1"
+          >
+            <StatusIndicator status={status} action={action} />
+          </Box>
+        )}
       </Box>
     </Flex>
   );
 };
-
-const transformTaskHistory = (history: BaseTaskHistoryEntry[]): DisplayTaskHistoryEntry[] => {
-  let lastUserMessage = '';
-  let lastAssistantMessage = '';
-  let isProcessing = false;
-  
-  return history.reduce<DisplayTaskHistoryEntry[]>((entries, entry, index) => {
-    // Cek status processing di awal
-    if (entry.action?.operation.name === OPERATION_NAMES.PROCESSING) {
-      isProcessing = true;
-    }
-
-    // Format pesan user
-    if (entry.prompt) {
-      const normalizedPrompt = formatUserMessage(entry.prompt).trim();
-      
-      // Hanya tambahkan jika berbeda dari pesan terakhir
-      if (normalizedPrompt && normalizedPrompt !== lastUserMessage) {
-        lastUserMessage = normalizedPrompt;
-        
-        entries.push({
-          type: "user",
-          message: normalizedPrompt,
-          status: ACTION_STATUSES.IDLE,
-          metadata: {
-            timestamp: new Date().toISOString()
-          },
-          isNewGroup: true,
-          isLastInGroup: true
-        });
-      }
-    }
-
-    // Format respons AI
-    if (entry.response) {
-      const normalizedResponse = entry.response.trim();
-      
-      // Hanya tambahkan jika ada respons dan berbeda dari respons terakhir
-      if (normalizedResponse && normalizedResponse !== lastAssistantMessage) {
-        lastAssistantMessage = normalizedResponse;
-        
-        entries.push({
-          type: "assistant",
-          message: normalizedResponse,
-          status: entry.action?.operation.name === OPERATION_NAMES.PROCESSING 
-            ? ACTION_STATUSES.RUNNING 
-            : ACTION_STATUSES.IDLE,
-          metadata: {
-            timestamp: new Date().toISOString(),
-            action: mapOperationToAction(entry.action?.operation)
-          },
-          isNewGroup: true,
-          isLastInGroup: true
-        });
-      }
-    }
-
-    // Tambahkan status processing hanya di akhir jika sedang memproses
-    if (index === history.length - 1 && isProcessing && 
-        !entries.some(e => e.status === ACTION_STATUSES.RUNNING)) {
-      entries.push({
-        type: "assistant",
-        message: "Sedang memproses permintaan Anda...",
-        status: ACTION_STATUSES.RUNNING,
-        metadata: {
-          timestamp: new Date().toISOString()
-        },
-        isNewGroup: true,
-        isLastInGroup: true
-      });
-    }
-
-    return entries;
-  }, []);
-};
-
-const mapOperationToAction = (operation?: ActionOperation): ActionName | undefined => {
-  if (!operation) return undefined;
-
-  const nameMap: Record<OperationName | 'finish', ActionName> = {
-    [OPERATION_NAMES.CLICK]: ACTION_NAMES.CLICK,
-    [OPERATION_NAMES.SET_VALUE]: ACTION_NAMES.TYPE,
-    [OPERATION_NAMES.SET_VALUE_AND_ENTER]: ACTION_NAMES.TYPE,
-    [OPERATION_NAMES.NAVIGATE]: ACTION_NAMES.NAVIGATE,
-    [OPERATION_NAMES.SCROLL]: ACTION_NAMES.SCROLL,
-    [OPERATION_NAMES.WAIT]: ACTION_NAMES.WAIT,
-    [OPERATION_NAMES.FAIL]: ACTION_NAMES.FINISH,
-    [OPERATION_NAMES.PROCESSING]: ACTION_NAMES.WAIT,
-    'finish': ACTION_NAMES.FINISH
-  };
-
-  return nameMap[operation.name];
-};
-
-const WELCOME_MESSAGE = `Selamat datang! Saya weblify.id, asisten browser Anda.
-
-Saya dapat membantu Anda dengan:
-• Membuka situs web
-• Mencari informasi
-• Mengklik elemen
-• Mengisi formulir
-• Menggulir halaman
-
-Apa yang bisa saya bantu hari ini?`;
-
-interface AIJsonResponse {
-  // Definisikan properti yang diperlukan
-  [key: string]: any;
-}
-
-interface JsonViewerProps {
-  data: any;
-  level?: number;
-  isExpanded?: boolean;
-}
-
-const JsonViewer: React.FC<JsonViewerProps> = ({ data, level = 0, isExpanded = true }) => {
-  const [expanded, setExpanded] = React.useState(isExpanded);
-  const indent = React.useMemo(() => level * 20, [level]);
-  const colorMode = useColorMode().colorMode;
-  const isDark = colorMode === "dark";
-
-  // Warna berbasis mode tema
-  const colors = {
-    string: useColorModeValue("green.600", "green.300"),
-    number: useColorModeValue("blue.600", "blue.300"),
-    boolean: useColorModeValue("purple.600", "purple.300"),
-    null: useColorModeValue("red.500", "red.300"),
-    key: useColorModeValue("blue.600", "blue.300"),
-    bracket: useColorModeValue("gray.700", "gray.300"),
-    background: useColorModeValue("gray.50", "gray.700"),
-    hoverBg: useColorModeValue("gray.100", "gray.600"),
-  };
-
-  if (typeof data !== 'object' || data === null) {
-    // Visualisasi nilai primitif
-    return (
-      <Text 
-        as="span" 
-        color={
-          typeof data === 'string' ? colors.string :
-          typeof data === 'number' ? colors.number :
-          typeof data === 'boolean' ? colors.boolean :
-          data === null ? colors.null : 'gray.600'
-        }
-        fontFamily="inherit"
-        fontSize="sm"
-        borderRadius="sm"
-        px={typeof data === 'string' ? 1 : 0}
-        bg={typeof data === 'string' ? 'whiteAlpha.300' : 'transparent'}
-      >
-        {data === null ? 'null' : 
-         typeof data === 'string' ? data : 
-         String(data)}
-      </Text>
-    );
-  }
-
-  const isArray = Array.isArray(data);
-  const isEmpty = Object.keys(data).length === 0;
-
-  if (isEmpty) {
-    return (
-      <Text as="span" color={colors.bracket} fontFamily="inherit" fontSize="sm">
-        {isArray ? '[ ]' : '{ }'}
-      </Text>
-    );
-  }
-
-  const itemCount = Object.keys(data).length;
-
-  return (
-    <Box pl={indent}>
-      <HStack 
-        spacing={1} 
-        onClick={() => setExpanded(!expanded)} 
-        cursor="pointer" 
-        mb={1}
-        borderRadius="md"
-        p={1}
-        _hover={{ bg: colors.hoverBg }}
-        transition="background 0.2s"
-      >
-        <Box 
-          transform={expanded ? 'rotate(90deg)' : 'rotate(0deg)'}
-          transition="transform 0.2s"
-          color={useColorModeValue("gray.600", "gray.400")}
-        >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M9 18l6-6-6-6"/>
-          </svg>
-        </Box>
-        <Text fontFamily="inherit" color={colors.bracket} fontSize="sm">
-          {isArray ? '[' : '{'}
-        </Text>
-        {!expanded && (
-          <Text fontFamily="inherit" color="gray.500" fontSize="xs" ml={1} fontStyle="italic">
-            {isArray ? `Array(${itemCount})` : `${itemCount} properti`}
-          </Text>
-        )}
-      </HStack>
-      
-      {expanded && (
-        <VStack align="stretch" spacing={1} 
-          animation="fadeIn 0.2s ease-out"
-          sx={{
-            "@keyframes fadeIn": {
-              "0%": { opacity: 0, transform: "translateY(-5px)" },
-              "100%": { opacity: 1, transform: "translateY(0)" }
-            }
-          }}
-        >
-          {Object.entries(data).map(([key, value], index) => (
-            <Box key={key} 
-              borderLeft="1px solid" 
-              borderColor="gray.200"
-              pl={2}
-              _hover={{ borderColor: "blue.200" }}
-              transition="all 0.2s"
-            >
-              <HStack spacing={2} wrap="nowrap">
-                <Text color={colors.key} fontFamily="inherit" fontSize="sm" fontWeight="medium">
-                  {isArray ? 
-                    <Box as="span" px={1} fontSize="xs" bg={useColorModeValue("gray.100", "gray.600")} borderRadius="sm" mr={1}>
-                      {key}
-                    </Box> : 
-                    key
-                  }
-                </Text>
-                <JsonViewer data={value} level={level + 1} />
-                {index < Object.entries(data).length - 1 && !isArray && (
-                  <Text color="gray.400" fontSize="sm">,</Text>
-                )}
-              </HStack>
-            </Box>
-          ))}
-        </VStack>
-      )}
-      
-      <Text fontFamily="inherit" color={colors.bracket} fontSize="sm" pl={expanded ? indent : 0}>
-        {isArray ? ']' : '}'}
-      </Text>
-    </Box>
-  );
-};
-
-const TaskUI = () => {
-  const state = useAppState((state) => ({
-    taskHistory: state.currentTask.history,
-    taskStatus: state.currentTask.status,
-    runTask: state.currentTask.actions.runTask,
-    interruptTask: state.currentTask.actions.interrupt,
-    instructions: state.ui.instructions,
-    setInstructions: state.ui.actions.setInstructions,
-    voiceMode: state.settings.voiceMode,
-    isListening: state.currentTask.isListening,
-  }));
-  const taskInProgress = state.taskStatus === "running";
-  const chatContainerRef = useRef<HTMLDivElement>(null);
-  const toast = useToast();
-
-  // State untuk tracking scroll direction
-  const [isScrollingDown, setIsScrollingDown] = useState(false);
-  const [lastScrollTop, setLastScrollTop] = useState(0);
-  
-  // Track scroll direction - tidak digunakan untuk TaskProgressBar karena selalu terlihat
-  useEffect(() => {
-    const handleScroll = () => {
-      if (chatContainerRef.current) {
-        const st = chatContainerRef.current.scrollTop;
-        if (st > lastScrollTop && st > 50) {
-          // Scrolling down & past the threshold
-          setIsScrollingDown(true);
-        } else {
-          // Scrolling up
-          setIsScrollingDown(false);
-        }
-        setLastScrollTop(st);
-      }
-    };
-
-    const container = chatContainerRef.current;
-    if (container) {
-      container.addEventListener('scroll', handleScroll);
-      return () => {
-        container.removeEventListener('scroll', handleScroll);
-      };
-    }
-  }, [lastScrollTop]);
-
-  const toastError = useCallback(
-    (message: string) => {
-      toast({
-        title: "Error",
-        description: message,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    },
-    [toast],
-  );
-
-  const runTask = useCallback(() => {
-    state.instructions && state.runTask(toastError);
-  }, [state, toastError]);
-
-  const runTaskWithNewInstructions = (newInstructions: string = "") => {
-    if (!newInstructions) {
-      return;
-    }
-    state.setInstructions(newInstructions);
-    state.runTask(toastError);
-  };
-
-  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter") {
-      if (!e.shiftKey) {
-        e.preventDefault();
-        runTask();
-      }
-    }
-  };
-
-  const displayTaskHistory = useMemo(() => {
-    return transformTaskHistory(state.taskHistory);
-  }, [state.taskHistory]);
-
-  // Global styles untuk TaskUI
-  const globalStyles = css`
-    @keyframes float {
-      0% { transform: translate(0, 0); }
-      50% { transform: translate(5px, 10px); }
-      100% { transform: translate(0, 0); }
-    }
-    
-    @keyframes gradient-flow {
-      0% { background-position: 0% 25%; }
-      25% { background-position: 50% 50%; }
-      50% { background-position: 100% 75%; }
-      75% { background-position: 50% 50%; }
-      100% { background-position: 0% 25%; }
-    }
-    
-    @keyframes pulse-subtle {
-      0% { opacity: 0.3; }
-      50% { opacity: 0.6; }
-      100% { opacity: 0.3; }
-    }
-    
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-  `;
-
-  return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      height="100%"
-      position="relative"
-      overflow="hidden"
-    >
-      {/* Global styles untuk animasi */}
-      <Global styles={globalStyles} />
-
-      {/* Background gradient dan animasi */}
-      <Box
-        position="absolute"
-        top="0"
-        left="0"
-        right="0"
-        bottom="0"
-        bg="linear-gradient(135deg, rgba(240,249,255,0.6) 0%, rgba(225,240,255,0.6) 100%)"
-        zIndex="-1"
-        borderRadius="xl"
-        overflow="hidden"
-      >
-        {/* Animated background effects */}
-        <Box
-          position="absolute"
-          top="-5%"
-          left="-5%"
-          width="110%"
-          height="110%"
-          opacity="0.5"
-          animation="rotate 60s linear infinite"
-          sx={{
-            background: "radial-gradient(ellipse at center, rgba(90,170,235,0.15) 0%, rgba(90,170,235,0) 70%)"
-          }}
-        />
-
-        {/* Animated blue blobs */}
-        <Box
-          position="absolute"
-          top="10%"
-          left="5%"
-          width="40%"
-          height="40%"
-          opacity="0.4"
-          animation="float 18s infinite ease-in-out"
-          sx={{
-            background: "radial-gradient(circle, rgba(90,170,235,0.15) 0%, transparent 70%)",
-            borderRadius: "50%"
-          }}
-        />
-        
-        <Box
-          position="absolute"
-          bottom="10%"
-          right="10%"
-          width="35%"
-          height="35%"
-          opacity="0.4"
-          animation="float 22s infinite ease-in-out reverse"
-          sx={{
-            background: "radial-gradient(circle, rgba(110,190,250,0.15) 0%, transparent 70%)",
-            borderRadius: "50%"
-          }}
-        />
-        
-        <Box
-          position="absolute"
-          top="40%"
-          right="15%"
-          width="25%"
-          height="25%"
-          opacity="0.3"
-          animation="float 15s infinite ease-in-out"
-          sx={{
-            background: "radial-gradient(circle, rgba(70,150,225,0.15) 0%, transparent 70%)",
-            borderRadius: "50%"
-          }}
-        />
-      </Box>
-
-      {/* Task history container */}
-      <Box
-        ref={chatContainerRef}
-        flex="1"
-        overflowY="auto"
-        px={{ base: 3, md: 4 }}
-        py={4}
-        css={{
-          "&::-webkit-scrollbar": {
-            width: "8px",
-          },
-          "&::-webkit-scrollbar-track": {
-            backgroundColor: "rgba(240, 249, 255, 0.6)",
-            borderRadius: "10px",
-          },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "rgba(66, 153, 225, 0.35)",
-            borderRadius: "10px",
-            "&:hover": {
-              backgroundColor: "rgba(66, 153, 225, 0.5)",
-            },
-          },
-        }}
-      >
-        {displayTaskHistory.map((entry, index) => (
-          <ChatMessage
-            key={index}
-            isUser={entry.type === 'user'}
-            content={entry.message}
-            status={entry.status}
-            metadata={entry.metadata}
-          />
-        ))}
-
-        {/* Task Progress Bar - dipindahkan ke komponen terpisah dan selalu muncul di atas */}
-        {taskInProgress && (
-          <TaskProgressBar
-            isRunning={taskInProgress}
-            onStop={() => state.interruptTask()}
-            currentTask={state.instructions}
-            isScrollingDown={isScrollingDown}
-            currentAction={state.taskHistory[state.taskHistory.length - 1]?.action?.name as ActionName}
-          />
-        )}
-      </Box>
-
-      {/* Input area */}
-      <Box
-        p={{ base: 3, md: 4 }}
-        borderTop="1px solid"
-        borderColor="rgba(226, 232, 240, 0.8)"
-        bg="linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(240, 249, 255, 0.85) 100%)"
-        backdropFilter="blur(15px) saturate(150%)"
-        position="relative"
-        transition="all 0.3s ease"
-      >
-        <HStack spacing={3} align="flex-end">
-          <Textarea
-            value={state.instructions}
-            onChange={(e) => state.setInstructions(e.target.value)}
-            onKeyDown={onKeyDown}
-            placeholder="Kirim perintah untuk tugas web..."
-            size="md"
-            resize="none"
-            rows={1}
-            py={2}
-            px={4}
-            borderRadius="xl"
-            bg="white"
-            border="1px solid"
-            borderColor="blue.200"
-            _hover={{ borderColor: "blue.300" }}
-            _focus={{ 
-              borderColor: "blue.400", 
-              boxShadow: "0 0 0 1px rgba(66, 153, 225, 0.6)",
-              bg: "white" 
-            }}
-            fontSize="sm"
-            fontWeight="medium"
-            transition="all 0.3s ease"
-          />
-          <IconButton
-            aria-label="Send message"
-            icon={<SendIcon />}
-            onClick={runTask}
-            isLoading={taskInProgress}
-            isDisabled={!state.instructions || taskInProgress}
-            colorScheme="blue"
-            borderRadius="full"
-            size="md"
-            boxShadow="0 4px 12px rgba(66, 153, 225, 0.2)"
-            transition="all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-            _hover={{
-              transform: "translateY(-2px)",
-              boxShadow: "0 6px 16px rgba(66, 153, 225, 0.3)"
-            }}
-            _active={{
-              transform: "translateY(0)",
-              boxShadow: "0 2px 6px rgba(66, 153, 225, 0.2)"
-            }}
-          />
-          {state.voiceMode && (
-            <IconButton
-              aria-label="Voice input"
-              icon={<MicIcon />}
-              onClick={() => {}}
-              isDisabled={taskInProgress}
-              colorScheme={state.isListening ? "red" : "blue"}
-              variant={state.isListening ? "solid" : "outline"}
-              borderRadius="full"
-              size="md"
-              transition="all 0.3s ease"
-              boxShadow="0 4px 12px rgba(66, 153, 225, 0.15)"
-              _hover={{
-                transform: "translateY(-2px)",
-                boxShadow: "0 6px 16px rgba(66, 153, 225, 0.25)"
-              }}
-              _active={{
-                transform: "translateY(0)",
-                boxShadow: "0 2px 6px rgba(66, 153, 225, 0.15)"
-              }}
-            />
-          )}
-        </HStack>
-        
-        {/* Recommended tasks */}
-        <RecommendedTasks onSelectTask={runTaskWithNewInstructions} />
-      </Box>
-
-      {/* Portal untuk TaskProgressBar */}
-      {taskInProgress && (
-        <Portal>
-          <Box
-            position="fixed"
-            top="16px"
-            left="50%"
-            transform="translateX(-50%) scale(1.05)"
-            width={["calc(100% - 32px)", "90%", "80%", "600px"]}
-            maxWidth="700px"
-            zIndex="100000" // Super tinggi zIndex
-            borderRadius="xl"
-            boxShadow="0 12px 40px rgba(0, 0, 0, 0.25)"
-            transition="all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-            className="task-progress-notification"
-            bg="transparent"
-            animation="task-notification-appear 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-            sx={{
-              "@keyframes task-notification-appear": {
-                "0%": { opacity: 0, transform: "translateX(-50%) translateY(-20px) scale(1.05)" },
-                "100%": { opacity: 1, transform: "translateX(-50%) translateY(0) scale(1.05)" }
-              }
-            }}
-          >
-            <TaskProgressBar
-              isRunning={taskInProgress}
-              onStop={() => state.interruptTask()}
-              currentTask={state.instructions}
-              isScrollingDown={false} // Selalu tampilkan
-              currentAction={state.taskHistory[state.taskHistory.length - 1]?.action?.name as ActionName}
-            />
-          </Box>
-        </Portal>
-      )}
-    </Box>
-  );
-};
-
-const RecommendedTasks: React.FC<{ onSelectTask: (task: string) => void }> = ({ onSelectTask }) => {
-  const tasks = [
-    "Buatkan rangkuman artikel dari halaman ini",
-    "Cari informasi tentang produk X",
-    "Ambil kontak dari halaman ini",
-    "Ambil tabel data dari halaman ini",
-    "Isi form pendaftaran",
-  ];
-
-  return (
-    <Box mt={4}>
-      <Text mb={2} fontSize="sm" fontWeight="medium" color="blue.700">
-        Tugas yang disarankan:
-      </Text>
-      <Flex flexWrap="wrap" gap={2}>
-        {tasks.map((task, index) => (
-          <Button
-            key={index}
-            onClick={() => onSelectTask(task)}
-            size="sm"
-            px={3}
-            py={1}
-            height="auto"
-            minH="30px"
-            fontSize="xs"
-            variant="unstyled"
-            bg="rgba(255, 255, 255, 0.7)"
-            color="blue.600"
-            border="1px solid"
-            borderColor="rgba(226, 232, 240, 0.8)"
-            borderRadius="full"
-            fontWeight="medium"
-            whiteSpace="normal"
-            textAlign="left"
-            _hover={{
-              bg: "linear-gradient(135deg, rgba(235, 248, 255, 0.9) 0%, rgba(215, 240, 255, 0.9) 100%)",
-              borderColor: "blue.200",
-              transform: "translateY(-2px)",
-              boxShadow: "0 6px 12px rgba(66, 153, 225, 0.15)",
-              color: "blue.700"
-            }}
-            _active={{
-              bg: "rgba(235, 248, 255, 0.95)",
-              transform: "translateY(0)",
-              boxShadow: "0 2px 4px rgba(66, 153, 225, 0.1)"
-            }}
-            position="relative"
-            overflow="hidden"
-            transition="all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-            backdropFilter="blur(8px)"
-            boxShadow="0 2px 6px rgba(66, 153, 225, 0.08)"
-          >
-            {/* Subtle background glow effect */}
-            <Box
-              position="absolute"
-              top="0"
-              left="0"
-              right="0"
-              bottom="0"
-              bg={`radial-gradient(circle at ${index % 2 === 0 ? 'top left' : 'bottom right'}, rgba(66, 153, 225, 0.08) 0%, transparent 70%)`}
-              opacity="0.8"
-              animation={`float ${12 + index * 2}s infinite ease-in-out ${index * 1.5}s`}
-              zIndex="0"
-              pointerEvents="none"
-            />
-            
-            <Text position="relative" zIndex="1">
-              {task}
-            </Text>
-          </Button>
-        ))}
-      </Flex>
-    </Box>
-  );
-};
-
-// SendIcon dan MicIcon components
-const SendIcon = () => <Icon as={FaPaperPlane} />;
-const MicIcon = () => <Icon as={FaMicrophone} />;
 
 export default TaskUI;

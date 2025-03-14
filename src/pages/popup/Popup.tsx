@@ -14,9 +14,9 @@ const Popup = () => {
   return (
     <div className="App" style={{
       background: isDark 
-        ? "linear-gradient(165deg, rgba(15,25,40,0.98) 0%, rgba(25,35,60,0.98) 30%, rgba(35,45,80,0.98) 65%, rgba(45,55,100,0.98) 100%)"
-        : "linear-gradient(165deg, rgba(230,245,255,0.98) 0%, rgba(179,229,252,0.98) 30%, rgba(120,190,240,0.98) 65%, rgba(80,160,230,0.98) 100%)",
-      backdropFilter: "blur(15px) saturate(180%)",
+        ? "linear-gradient(165deg, rgba(15,25,40,0.95) 0%, rgba(25,35,60,0.95) 30%, rgba(35,45,80,0.95) 70%, rgba(45,55,100,0.95) 100%)"
+        : "linear-gradient(165deg, rgba(230,245,255,0.95) 0%, rgba(179,229,252,0.95) 30%, rgba(120,190,240,0.95) 70%, rgba(80,160,230,0.95) 100%)",
+      backdropFilter: "blur(15px)",
       transition: "all 0.4s ease",
       height: "100vh",
       display: "flex",
@@ -136,7 +136,7 @@ const Popup = () => {
           background: isDark 
             ? "rgba(26, 32, 44, 0.7)" 
             : "rgba(255, 255, 255, 0.7)",
-          backdropFilter: "blur(15px) saturate(180%)",
+          backdropFilter: "blur(15px)",
           borderRadius: "24px",
           border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.2)" : "rgba(255, 255, 255, 0.7)"}`,
           boxShadow: `0 12px 36px ${isDark ? "rgba(0, 0, 0, 0.25)" : "rgba(0, 100, 255, 0.15)"}`,
@@ -147,29 +147,64 @@ const Popup = () => {
           justifyContent: "center",
           transition: "all 0.3s ease",
           transform: "translateZ(0)",
+          position: "relative",
+          overflow: "hidden"
         }}>
+          {/* Background decorative effects */}
+          <div style={{
+            position: "absolute",
+            top: "0",
+            left: "0",
+            right: "0",
+            bottom: "0", 
+            opacity: "0.05",
+            background: isDark
+              ? "radial-gradient(circle at 70% 30%, rgba(99,179,237,0.8) 0%, transparent 60%), radial-gradient(circle at 20% 80%, rgba(66,153,225,0.6) 0%, transparent 60%)"
+              : "radial-gradient(circle at 70% 30%, rgba(99,179,237,0.4) 0%, transparent 60%), radial-gradient(circle at 20% 80%, rgba(66,153,225,0.3) 0%, transparent 60%)",
+            pointerEvents: "none",
+            zIndex: "0"
+          }}></div>
+          
           <div className="logo-container" style={{
-            marginBottom: "16px"
+            marginBottom: "16px",
+            position: "relative",
+            zIndex: "1"
           }}>
-            <img 
-              src={logo} 
-              className="App-logo" 
-              alt="logo" 
-              style={{
-                animation: "pulse 4s infinite ease-in-out",
-                filter: "drop-shadow(0 6px 8px rgba(0, 0, 0, 0.15))",
-                transition: "transform 0.3s ease",
-                width: "80px",
-                height: "80px",
-              }}
-            />
+            <div style={{
+              width: "84px",
+              height: "84px",
+              borderRadius: "50%",
+              background: isDark 
+                ? "linear-gradient(135deg, rgba(49, 130, 206, 0.4) 0%, rgba(79, 209, 197, 0.4) 100%)"
+                : "linear-gradient(135deg, rgba(235, 248, 255, 0.8) 0%, rgba(49, 130, 206, 0.3) 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 8px 32px rgba(0, 100, 255, 0.2)",
+              border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.8)"}`,
+              animation: "pulse 4s infinite ease-in-out"
+            }}>
+              <img 
+                src={logo} 
+                className="App-logo" 
+                alt="logo" 
+                style={{
+                  filter: "drop-shadow(0 6px 8px rgba(0, 0, 0, 0.15))",
+                  transition: "transform 0.3s ease",
+                  width: "56px",
+                  height: "56px",
+                }}
+              />
+            </div>
           </div>
           
           <div className="App-title" style={{
             marginBottom: "8px",
             display: "flex",
             alignItems: "center",
-            gap: "10px"
+            gap: "10px",
+            position: "relative",
+            zIndex: "1"
           }}>
             <span className="App-title-emoji" style={{
               animation: "float 3s infinite ease-in-out",
@@ -201,7 +236,9 @@ const Popup = () => {
             letterSpacing: "0.02em",
             marginBottom: "24px",
             fontSize: "1rem",
-            textAlign: "center"
+            textAlign: "center",
+            position: "relative",
+            zIndex: "1"
           }}>
             From Browsing to Automation
           </div>
@@ -213,7 +250,7 @@ const Popup = () => {
                 ? "linear-gradient(135deg, #4299e1 0%, #63b3ed 100%)" 
                 : "linear-gradient(135deg, #3182ce 0%, #4299e1 100%)",
               color: "white",
-              backdropFilter: "blur(15px) saturate(180%)",
+              backdropFilter: "blur(15px)",
               border: "1px solid rgba(255, 255, 255, 0.3)",
               boxShadow: `0 8px 20px ${isDark ? "rgba(0, 0, 0, 0.3)" : "rgba(66, 153, 225, 0.35)"}`,
               borderRadius: "30px",
@@ -224,7 +261,9 @@ const Popup = () => {
               letterSpacing: "0.01em",
               transform: "translateY(0)",
               transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-              width: "100%"
+              width: "100%",
+              position: "relative",
+              zIndex: "1"
             }}
             onClick={exampleThemeStorage.toggle}
             onMouseOver={(e) => {
@@ -248,21 +287,23 @@ const Popup = () => {
               ? "rgba(255, 255, 255, 0.1)" 
               : "rgba(66, 153, 225, 0.1)",
             border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(66, 153, 225, 0.2)"}`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            backdropFilter: "blur(8px) saturate(180%)",
-            animation: "fadeIn 1.2s ease-out",
-            width: "100%"
+            fontSize: "0.8rem",
+            color: isDark ? "#a0aec0" : "#2c5282",
+            textAlign: "center",
+            width: "100%",
+            position: "relative",
+            zIndex: "1",
+            transition: "all 0.3s ease",
+            animation: "fadeIn 1s ease-out"
           }}>
-            <span style={{
-              fontSize: "0.85rem",
-              color: isDark ? "#a0aec0" : "#2c5282",
-              textAlign: "center",
-              fontWeight: "500"
+            <div style={{
+              display: "inline-block", 
+              marginRight: "5px",
+              animation: "pulse 2s infinite ease-in-out"
             }}>
-              Open Sidepanel for more options
-            </span>
+              ✨
+            </div>
+            Klik pada ikon ekstensi untuk akses cepat dan mudah
           </div>
         </div>
       </header>
@@ -270,4 +311,4 @@ const Popup = () => {
   );
 };
 
-export default withErrorBoundary(withSuspense(Popup, <div>Loading...</div>), <div>Error Occurred</div>);
+export default withErrorBoundary(withSuspense(Popup, <div>Loading...</div>), <div>Error Occured</div>);
