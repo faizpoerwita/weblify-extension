@@ -2,6 +2,17 @@
 
 ## Current Version
 
+### **v1.0.1.58 (06-05-2025)**
+#### Peningkatan Keterbacaan Teks di Rasio Vertikal Ekstrem
+- **Tipografi Optimasi Vertikal**: Peningkatan ukuran font dan ketebalan teks untuk teks penting di tampilan vertikal
+- **Enhanced Color Contrast**: Penguatan kontras warna dengan background yang lebih jelas dan teks yang lebih gelap
+- **Efisiensi Layout Vertikal**: Optimasi spacing, padding, dan margin untuk pemanfaatan ruang yang lebih efisien
+- **URL Formatting Adaptif**: Sistem display URL dengan 3 tingkat keringkasan yang menyesuaikan rasio layar
+- **Visual Enhancement**: Pembesaran ikon, label, dan elemen visual hingga 30% untuk tampilan yang lebih jelas
+- **Kontras Background**: Penambahan area kontras pada panel informasi untuk meningkatkan keterbacaan
+- **Expanded Scrollable Areas**: Area konten yang lebih tinggi dan dapat di-scroll untuk data yang lebih kompleks
+
+Perubahan versi sebelumnya:
 ### **v1.0.1.57 (06-05-2025)**
 #### Optimasi UI Tindakan Untuk Rasio Vertikal Ekstrem (19:6)
 - **Layout Stack Efisien**: Restrukturisasi komponen dengan orientasi vertikal yang dioptimalkan untuk rasio 19:6

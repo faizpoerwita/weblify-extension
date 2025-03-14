@@ -323,3 +323,13 @@
 - Implementasi penyimpanan context eksekusi saat pause untuk lanjutkan saat resume
 - Peningkatan visual feedback saat task di-pause
 - Optimasi loop eksekusi untuk mendukung pause/resume tanpa kehilangan state 
+
+## v1.0.1.58 (06-05-2025)
+- Penyempurnaan keterbacaan teks untuk tampilan rasio vertikal 19:6 di bagian Tindakan:
+  - Peningkatan ukuran font untuk teks penting di tampilan vertikal
+  - Penguatan kontras warna teks dan background untuk keterbacaan maksimal
+  - Optimasi spacing dan padding yang lebih efisien untuk rasio vertikal ekstrem
+  - Reformatasi URL menjadi 3 tingkat keringkasan berdasarkan rasio layar
+  - Penambahan background kontras pada panel informasi website
+  - Pembesaran ikon dan elemen visual untuk UX yang lebih baik di layar vertikal
+  - Peningkatan scrollable area untuk konten dengan tinggi maksimum yang lebih besar 

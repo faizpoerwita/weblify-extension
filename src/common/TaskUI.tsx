@@ -842,7 +842,7 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
         overflow="hidden"
         boxShadow="sm"
         maxWidth="100%"
-        width="100%" // Selalu gunakan lebar penuh untuk rasio vertikal
+        width="100%" 
         transition="all 0.2s"
         _hover={{ boxShadow: "md" }}
       >
@@ -857,15 +857,15 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
             borderColor={`${getStatusColor(status, action)}.100`}
             width="full"
           >
-            {/* Status icon */}
+            {/* Status icon dengan ukuran yang ditingkatkan */}
             <Flex 
               align="center" 
               justify="center"
-              minWidth="24px" 
-              height="24px" 
+              minWidth={{base: "28px", sm: "24px"}} // Lebih besar di vertikal
+              height={{base: "28px", sm: "24px"}} // Lebih besar di vertikal
               borderRadius="md"
               bg={`${getStatusColor(status, action)}.100`}
-              color={`${getStatusColor(status, action)}.600`}
+              color={`${getStatusColor(status, action)}.700`} // Warna lebih gelap untuk kontras
               boxShadow={`inset 0 0 0 1px ${getStatusColor(status, action)}.200`}
               flexShrink={0}
             >
@@ -883,11 +883,11 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
               )}
             </Flex>
             
-            {/* Status label */}
+            {/* Status label dengan kontras yang ditingkatkan */}
             <Text 
-              fontSize="2xs" 
-              fontWeight="semibold" 
-              color={`${getStatusColor(status, action)}.700`}
+              fontSize={{base: "xs", sm: "2xs"}} // Lebih besar di vertikal 
+              fontWeight="bold" // Lebih bold di vertikal
+              color={`${getStatusColor(status, action)}.800`} // Warna lebih gelap
               px={1.5}
               py={0.5} 
               bg={`${getStatusColor(status, action)}.100`}
@@ -902,36 +902,41 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
             </Text>
           </Flex>
           
-          {/* Website favicon and info */}
+          {/* Website favicon and info dengan kontras yang ditingkatkan */}
           <Flex 
             flex="1" 
             minWidth="0" 
             direction="column"
             justify="space-between"
-            gap={1} 
-            px={{base: 1, sm: 2}}
-            py={{base: 0.5, sm: 1}}
+            gap={1.5} // Gap yang lebih besar
+            px={{base: 2, sm: 2}}
+            py={{base: 1, sm: 1}}
+            bg="rgba(255,255,255,0.7)" // Background lebih kontras
+            borderRadius="md"
           >
-            {/* Website Title */}
+            {/* Website Title dengan ukuran yang ditingkatkan */}
             <Flex align="center" width="full">
-              {/* Favicon */}
+              {/* Favicon dengan ukuran yang ditingkatkan */}
               <Box
-                width="16px"
-                height="16px"
-                mr={2}
+                width="20px" // Lebih besar
+                height="20px" // Lebih besar
+                mr={2.5} // Margin lebih besar
                 flexShrink={0}
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
+                borderRadius="sm" 
+                overflow="hidden"
+                border="1px solid" 
+                borderColor="gray.200"
               >
                 <Image 
                   src={urlData.favicon}
                   alt={urlData.domain}
-                  width="16px"
-                  height="16px"
-                  borderRadius="sm"
+                  width="20px"
+                  height="20px"
                   fallback={
-                    <Box p={0} color="gray.400">
+                    <Box p={0} color="gray.500"> {/* Warna lebih gelap */}
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="2" y1="12" x2="22" y2="12"></line>
@@ -942,11 +947,11 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
                 />
               </Box>
               
-              {/* Title */}
+              {/* Title dengan ukuran yang ditingkatkan */}
               <Text 
-                fontSize="xs" 
-                fontWeight="medium" 
-                color={`${getStatusColor(status, action)}.800`}
+                fontSize={{base: "sm", sm: "xs"}} // Lebih besar di vertikal
+                fontWeight="semibold" // Lebih bold
+                color="gray.800" // Warna lebih gelap untuk keterbacaan
                 textOverflow="ellipsis"
                 overflow="hidden"
                 whiteSpace="nowrap"
@@ -957,19 +962,20 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
               </Text>
             </Flex>
             
-            {/* URL dengan format yang lebih kompak */}
+            {/* URL dengan format yang lebih mudah dibaca */}
             <Box 
               width="full" 
               mt={0.5}
-              fontSize="2xs" 
-              px={1.5}
-              py={1}
+              fontSize={{base: "xs", sm: "2xs"}} // Lebih besar di vertikal
+              px={2}
+              py={1.5} // Padding vertikal lebih besar
               bg="white"
               borderRadius="md"
               borderWidth="1px"
               borderColor="gray.200"
-              color={`${getStatusColor(status, action)}.700`}
+              color="gray.700" // Warna lebih gelap
               fontFamily="monospace"
+              fontWeight="medium" // Lebih bold
             >
               <Text
                 textOverflow="ellipsis"
@@ -977,11 +983,23 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
                 whiteSpace="nowrap" 
                 title={urlData.fullUrl} // Show full URL on hover
               >
-                {/* Tampilkan format URL yang lebih ringkas di tampilan vertikal */}
-                {window.innerWidth < 400 || window.innerHeight > window.innerWidth * 2.5 
-                  ? urlData.domain 
-                  : `${urlData.domain}${urlData.path.length ? '/' + urlData.path.join('/') : ''}`
-                }
+                {/* Tampilan URL yang lebih ringkas namun mudah dibaca */}
+                {(() => {
+                  // Deteksi rasio vertikal ekstrem
+                  const isExtremeVertical = window.innerHeight > window.innerWidth * 2.5;
+                  const isMobile = window.innerWidth < 400;
+                  
+                  if (isExtremeVertical || isMobile) {
+                    // Format super ringkas untuk rasio vertikal ekstrem
+                    return urlData.domain;
+                  } else if (window.innerHeight > window.innerWidth * 1.5) {
+                    // Format ringkas untuk rasio vertikal sedang
+                    return `${urlData.domain}${urlData.path.length ? '/...' : ''}`;
+                  } else {
+                    // Format lengkap
+                    return `${urlData.domain}${urlData.path.length ? '/' + urlData.path.join('/') : ''}`;
+                  }
+                })()}
               </Text>
             </Box>
           </Flex>
@@ -997,7 +1015,7 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
       gap={2}
       maxWidth="100%"
       overflow="hidden"
-      p={1}
+      p={{base: 2, sm: 1}} // Padding lebih besar di vertikal
       borderRadius="md"
       bg={`${getStatusColor(status, action)}.50`}
       borderWidth="1px"
@@ -1006,11 +1024,11 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
       <Flex 
         align="center" 
         justify="center"
-        minWidth="20px" 
-        height="20px" 
+        minWidth={{base: "24px", sm: "20px"}} // Lebih besar di vertikal
+        height={{base: "24px", sm: "20px"}} // Lebih besar di vertikal
         borderRadius="full"
         bg={`${getStatusColor(status, action)}.100`}
-        color={`${getStatusColor(status, action)}.600`}
+        color={`${getStatusColor(status, action)}.700`} // Warna lebih gelap
         flexShrink={0}
       >
         {status === ACTION_STATUSES.RUNNING ? (
@@ -1027,8 +1045,8 @@ const StatusIndicator: React.FC<{ status: ActionStatus; action?: ActionType }> =
         )}
       </Flex>
       <Text 
-        fontSize="xs" 
-        color={`${getStatusColor(status, action)}.700`}
+        fontSize={{base: "sm", sm: "xs"}} // Lebih besar di vertikal
+        color={`${getStatusColor(status, action)}.800`} // Warna lebih gelap
         fontWeight="medium"
         letterSpacing="0.02em"
         textOverflow="ellipsis"
@@ -2950,8 +2968,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             borderTop="1px solid"
             borderColor="rgba(226, 232, 240, 0.6)"
             bg={`${getStatusColor(status, action)}.50`}
-            px={4}
-            py={3}
+            px={{base: 4, sm: 4}}
+            py={{base: 4, sm: 3}} // Padding Y lebih besar di vertikal
             position="relative"
             zIndex="1"
           >
