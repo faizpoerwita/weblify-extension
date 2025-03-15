@@ -2,6 +2,34 @@
 
 ## Current Version
 
+### **v1.0.1.63 (14-05-2025)**
+#### DOM-First Vision Enhanced Mode
+- **DOM Priority Processing**: Analisis struktur DOM terlebih dahulu sebelum menggunakan data visual
+- **Enhanced DOM Format**: Format representasi DOM terstruktur khusus untuk pembacaan AI yang lebih efektif
+- **Optimized System Prompt**: Instruksi eksplisit untuk model AI agar memprioritaskan struktur DOM
+- **Dual Context Navigation**: Navigasi web dengan pemahaman ganda (DOM + visual) untuk akurasi lebih tinggi
+- **Smart Fallback Mechanism**: Sistem fallback otomatis ke mode Vision standard jika mode enhanced gagal
+
+Perubahan versi sebelumnya:
+### **v1.0.1.62 (11-05-2025)**
+#### Peningkatan Mode Vision Enhanced dengan Kemampuan Text
+- **DOM Integration**: Penambahan kemampuan analisis DOM dari mode Text ke dalam mode Vision Enhanced
+- **Comprehensive Context Understanding**: Pemahaman konteks ganda (visual + DOM) untuk akurasi navigasi yang lebih tinggi
+- **Graceful Fallback**: Sistem fallback otomatis ke mode Vision standar jika mode Enhanced mengalami kendala
+- **Performance Optimization**: Pemrosesan DOM terstruktur dengan format yang efisien untuk performa yang lebih baik
+- **Enhanced Content Analysis**: Kemampuan ekstraksi dan analisis konten halaman web yang lebih mendalam
+
+Perubahan versi sebelumnya:
+### **v1.0.1.61 (10-05-2025)**
+#### Perbaikan Stabilitas dan Konektivitas API
+- **Enhanced API Reliability**: Sistem retry otomatis dengan exponential backoff untuk koneksi API Gemini yang lebih stabil
+- **Smart Fallback System**: Mekanisme fallback model yang cerdas saat model utama tidak tersedia
+- **Improved Communication**: Peningkatan timeout dan mekanisme reconnect untuk mencegah error "message port closed"
+- **Optimized DOM Detection**: Sistem baru untuk deteksi stabilitas DOM dengan toleransi perubahan yang lebih baik
+- **Visual API Status**: Indikator status koneksi API real-time untuk monitoring yang lebih baik
+- **Comprehensive Error Logging**: Sistem logging error komprehensif untuk analisis dan troubleshooting
+
+Perubahan versi sebelumnya:
 ### **v1.0.1.60 (08-05-2025)**
 #### Peningkatan Akses ke Website Resmi weblify.id
 - **Direct Brand Access**: Penggantian tombol GitHub dengan tombol akses langsung ke website resmi weblify.id

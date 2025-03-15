@@ -44,6 +44,7 @@ export async function waitTillStable(
   let lastSize = 0;
   let countStableSizeIterations = 0;
   const minStableSizeIterations = 3;
+  const stabilityThreshold = 100; // Toleransi perubahan ukuran yang diizinkan
 
   return waitFor(
     async () => {
@@ -51,10 +52,17 @@ export async function waitTillStable(
 
       console.log("last: ", lastSize, " <> curr: ", currentSize);
 
-      if (lastSize != 0 && currentSize === lastSize) {
+      // Cek apakah ukuran stabil dengan toleransi threshold
+      const isStable = Math.abs(currentSize - lastSize) <= stabilityThreshold;
+      
+      if (lastSize != 0 && isStable) {
         countStableSizeIterations++;
+        console.log(`DOM stabil iterasi ${countStableSizeIterations}/${minStableSizeIterations}`);
       } else {
-        countStableSizeIterations = 0; //reset the counter
+        if (countStableSizeIterations > 0) {
+          console.log("Perubahan DOM terdeteksi, reset counter stabilitas");
+        }
+        countStableSizeIterations = 0; // reset counter
       }
 
       if (countStableSizeIterations >= minStableSizeIterations) {
@@ -79,4 +87,42 @@ export function enumKeys<O extends object, K extends keyof O = keyof O>(
 
 export function enumValues<O extends object>(obj: O): O[keyof O][] {
   return enumKeys(obj).map((key) => obj[key]);
+}
+
+// Fungsi helper baru dengan timeout yang lebih baik
+export async function isDOMRendered(
+  maxAttempts = 10, 
+  interval = 300
+): Promise<boolean> {
+  let previousDOMSize = 0;
+  let stableCount = 0;
+  const requiredStability = 3;
+  const allowedDiff = 100; // Toleransi perbedaan ukuran
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const currentSize = document.documentElement.innerHTML.length;
+    console.log(`DOM size check ${attempt+1}/${maxAttempts}: ${previousDOMSize} -> ${currentSize}`);
+    
+    if (previousDOMSize > 0) {
+      const diff = Math.abs(currentSize - previousDOMSize);
+      if (diff <= allowedDiff) {
+        stableCount++;
+        if (stableCount >= requiredStability) {
+          console.log("DOM stabil setelah", attempt + 1, "percobaan");
+          return true;
+        }
+      } else {
+        stableCount = 0; // Reset jika terjadi perubahan besar
+      }
+    }
+    
+    previousDOMSize = currentSize;
+    
+    if (attempt < maxAttempts - 1) {
+      await new Promise(resolve => setTimeout(resolve, interval));
+    }
+  }
+  
+  console.log("Batas waktu terlampaui, menganggap DOM stabil");
+  return true;
 }

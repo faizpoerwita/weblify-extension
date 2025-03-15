@@ -1,5 +1,35 @@
 # Changelog
 
+## v1.0.1.63 (14-05-2025)
+- DOM-First Vision Enhanced Mode:
+  - Implementasi mekanisme DOM-prioritas dalam mode Vision Enhanced
+  - Pengembangan format DOM terstruktur untuk analisis model AI yang lebih baik
+  - Optimasi prompt sistem dengan instruksi untuk memprioritaskan DOM daripada visual
+  - Peningkatan pemahaman struktur halaman dengan kombinasi DOM dan konteks visual
+  - Integrasi fallback ke mode Vision standard jika terjadi kesalahan dalam mode enhanced
+
+## v1.0.1.62 (11-05-2025)
+- Peningkatan mode Vision Enhanced:
+  - Integrasi kemampuan dari mode Text untuk analisis DOM lebih mendalam
+  - Peningkatan pemahaman konteks dengan menggabungkan data visual dan struktur DOM
+  - Implementasi mekanisme fallback ke mode standar jika enhanced mode gagal
+  - Optimasi performa dengan pemrosesan DOM terstruktur dan efisien
+
+## v1.0.1.61 (10-05-2025)
+- Perbaikan bug koneksi API Gemini:
+  - Implementasi sistem retry dengan exponential backoff untuk mengatasi error 503
+  - Penambahan mekanisme fallback model otomatis saat model utama tidak tersedia
+  - Peningkatan ketahanan terhadap gangguan koneksi API
+- Peningkatan stabilitas ekstensi:
+  - Perbaikan timeout komunikasi untuk mengurangi error "message port closed"
+  - Implementasi mekanisme reconnect debugger otomatis
+  - Peningkatan deteksi stabilitas DOM dengan toleransi perubahan
+  - Penambahan fungsi isDOMRendered untuk deteksi stabilitas yang lebih baik
+- Penambahan sistem monitoring dan UI:
+  - Komponen ApiStatusIndicator untuk menampilkan status koneksi API
+  - Sistem logging komprehensif untuk melacak dan menganalisis error
+  - Kategorisasi error berdasarkan jenis untuk penanganan yang lebih tepat
+
 ## v1.0.1.60 (08-05-2025)
 - Perubahan tombol navigasi pada header aplikasi:
   - Penggantian tombol GitHub dengan tombol untuk mengakses website resmi weblify.id

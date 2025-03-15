@@ -28,6 +28,8 @@ import buildAnnotatedScreenshots from "../helpers/buildAnnotatedScreenshots";
 import { voiceControl } from "../helpers/voiceControl";
 import { fetchKnowledge, type Knowledge } from "../helpers/knowledge";
 import { isValidModelSettings, AgentMode } from "../helpers/aiSdkUtils";
+import { determineNextActionEnhanced } from "../helpers/vision-agent/determineNextActionEnhanced";
+import { getEnhancedDomForVision } from "../helpers/enhancedDomExtractor";
 
 export type TaskHistoryEntry = {
   prompt: string;
@@ -96,8 +98,8 @@ export const createCurrentTaskSlice: MyStateCreator<CurrentTaskSlice> = (
         !isValidModelSettings(
           get().settings.selectedModel,
           get().settings.agentMode,
-          get().settings.openAIKey,
-          get().settings.anthropicKey,
+          undefined,
+          undefined,
           get().settings.geminiKey,
         )
       ) {
@@ -264,6 +266,12 @@ export const createCurrentTaskSlice: MyStateCreator<CurrentTaskSlice> = (
               state.currentTask.knowledgeInUse = knowledge;
             });
 
+            // Tambahkan langkah pengambilan DOM untuk mode Vision Enhanced
+            setActionStatus("pulling-dom");
+            const domStructure = await getEnhancedDomForVision();
+            
+            if (wasStopped()) break;
+
             setActionStatus("annotating-page");
             const [imgData, labelData] = await buildAnnotatedScreenshots(
               tabId,
@@ -274,19 +282,39 @@ export const createCurrentTaskSlice: MyStateCreator<CurrentTaskSlice> = (
               "getViewportPercentage",
               [],
             );
+            
             if (wasStopped()) break;
             setActionStatus("generating-action");
-            query = await determineNextActionWithVision(
-              instructions,
-              url,
-              knowledge,
-              previousActions,
-              imgData,
-              labelData,
-              viewportPercentage,
-              3,
-              onError,
-            );
+            
+            // Gunakan mode enhanced yang memprioritaskan DOM
+            try {
+              query = await determineNextActionEnhanced(
+                instructions,
+                url,
+                knowledge,
+                previousActions,
+                imgData,
+                labelData,
+                viewportPercentage,
+                domStructure,
+                3,
+                onError,
+              );
+            } catch (error) {
+              console.warn("Enhanced mode gagal, menggunakan mode vision standard:", error);
+              // Gunakan mode standar sebagai fallback
+              query = await determineNextActionWithVision(
+                instructions,
+                url,
+                knowledge,
+                previousActions,
+                imgData,
+                labelData,
+                viewportPercentage,
+                3,
+                onError,
+              );
+            }
           } else {
             setActionStatus("pulling-dom");
             const pageDOM = await getSimplifiedDom();
@@ -457,23 +485,18 @@ export const createCurrentTaskSlice: MyStateCreator<CurrentTaskSlice> = (
 });
 
 function openBase64InNewTab(base64Data: string, contentType: string) {
-  // Remove the prefix (e.g., "data:image/png;base64,") from the base64 data
-  const base64 = base64Data.split(";base64,").pop();
-  if (!base64) {
-    console.error("Invalid base64 data");
-    return;
+  const byteCharacters = atob(base64Data);
+  const byteArrays = [];
+  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+    const slice = byteCharacters.slice(offset, offset + 512);
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
   }
-
-  // Convert base64 to a Blob
-  const byteCharacters = atob(base64);
-  const byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
-  }
-  const byteArray = new Uint8Array(byteNumbers);
-  const blob = new Blob([byteArray], { type: contentType });
-
-  // Create a URL for the Blob and open it in a new tab
+  const blob = new Blob(byteArrays, { type: contentType });
   const blobUrl = URL.createObjectURL(blob);
   window.open(blobUrl, "_blank");
 }

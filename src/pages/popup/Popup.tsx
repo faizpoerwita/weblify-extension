@@ -6,6 +6,7 @@ import exampleThemeStorage from "@src/shared/storages/exampleThemeStorage";
 import withSuspense from "@src/shared/hoc/withSuspense";
 import withErrorBoundary from "@src/shared/hoc/withErrorBoundary";
 import { Global, css } from "@emotion/react";
+import ApiStatusIndicator from "@src/common/components/StatusIndicator";
 
 const Popup = () => {
   const theme = useStorage(exampleThemeStorage);
@@ -248,22 +249,20 @@ const Popup = () => {
               ? "rgba(255, 255, 255, 0.1)" 
               : "rgba(66, 153, 225, 0.1)",
             border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(66, 153, 225, 0.2)"}`,
-            fontSize: "0.8rem",
-            color: isDark ? "#a0aec0" : "#2c5282",
             display: "flex",
             alignItems: "center",
+            justifyContent: "center",
             gap: "8px",
-            animation: "fadeIn 1s ease-out",
-            backdropFilter: "blur(10px)",
+            flexDirection: "column"
           }}>
-            <div style={{
-              width: "8px",
-              height: "8px",
-              borderRadius: "50%",
-              background: isDark ? "#63b3ed" : "#3182ce",
-              animation: "pulse 2s infinite ease-in-out",
-            }}></div>
-            <span>Assistant ready to help</span>
+            <ApiStatusIndicator />
+            <span style={{
+              fontSize: "0.8rem",
+              color: isDark ? "#a0aec0" : "#4a5568",
+              marginTop: "4px"
+            }}>
+              API Status
+            </span>
           </div>
         </div>
       </header>
